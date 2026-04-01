@@ -1,0 +1,46 @@
+.video-section {
+  position: relative;
+  width: 100%;
+  height: 400px;  /* adjust height as needed */
+  margin: 2rem 0;
+
+  .video-content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .watch-now {
+      padding: 10px 20px;
+      background-color: #10548f;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: #080707;
+      }
+    }
+  }
+}

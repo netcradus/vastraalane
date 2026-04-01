@@ -1,0 +1,98 @@
+.customer-care-page {
+  padding: 100px 20px;
+  min-height: 100vh;
+  background: #f4f4f4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .page-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 30px;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: #e63946;
+      margin: 10px auto 0 auto;
+      border-radius: 2px;
+    }
+  }
+
+  .intro-text {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 40px;
+    line-height: 1.8;
+    max-width: 800px;
+    font-weight: 500;
+  }
+
+  .email {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: #fff;
+    padding: 20px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    a {
+      color: #e63946;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        color: #b71c1c;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* ✅ Responsive Design */
+  @media (max-width: 768px) {
+    padding: 70px 15px;
+
+    .page-title {
+      font-size: 2.2rem;
+    }
+
+    .intro-text {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+
+    .email {
+      font-size: 1.1rem;
+      padding: 15px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-title {
+      font-size: 1.8rem;
+    }
+
+    .intro-text {
+      font-size: 1rem;
+    }
+
+    .email {
+      font-size: 1rem;
+      padding: 12px 20px;
+    }
+  }
+}

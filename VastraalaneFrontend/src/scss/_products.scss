@@ -1,0 +1,407 @@
+.products-page {
+  padding: 162px 20px 20px; 
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  background-color: #f9f9f9;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+  }
+
+  /* Filters Section */
+  .products-filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    input,
+    select {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      outline: none;
+
+      &:focus {
+        border-color: #122191;
+      }
+    }
+
+    select {
+      cursor: pointer;
+      background-color: #fff;
+    }
+
+    .price-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: bold;
+
+      label {
+        margin-right: 0.5rem;
+      }
+
+      .price-range {
+        display: flex;
+        flex: 1 1 150px;
+        align-items: center;
+        gap: 0.5rem;
+
+        span {
+          min-width: 60px;
+          text-align: center;
+        }
+
+        input[type="range"] {
+          -webkit-appearance: none;
+          width: 150px;
+          height: 5px;
+          border-radius: 5px;
+          background: #ccc;
+          outline: none;
+
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #2c0c78;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  /* Product Grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+
+    .product-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      img.product-image {
+        width: 100%;
+        height: 180px;
+        object-fit: contain;
+        margin-bottom: 0.8rem;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
+        color: #333;
+      }
+
+      p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ff4b2b;
+      }
+    }
+  }
+
+  /* Product Detail */
+  .product-detail-expanded {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 3rem;
+    justify-content: center;
+
+    .product-detail-left {
+      flex: 1 1 400px;
+      text-align: center;
+
+      img.product-image-large {
+        width: 100%;
+        max-width: 400px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+      }
+
+      .product-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        button {
+          padding: 0.6rem 1rem;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+          transition: all 0.2s ease;
+        }
+
+        .btn-add-cart {
+          background-color: #ff9800;
+          color: #fff;
+        }
+
+        .btn-buy-now {
+          background-color: #211e1e;
+          color: #fff;
+        }
+
+        .btn-wishlist {
+          background-color: #146ca2;
+          color: #fff;
+        }
+      }
+
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        label {
+          font-weight: bold;
+        }
+
+        .quantity-box {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          button {
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+
+            &:hover {
+              background: #eee;
+            }
+          }
+
+          input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.2rem;
+          }
+        }
+      }
+    }
+
+    .product-detail-right {
+      flex: 1 1 400px;
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .product-price {
+        font-size: 1.5rem;
+        color: #3c098e;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .product-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        button {
+          padding: 0.6rem 1rem;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  /* Related Products */
+  .related-products {
+    margin-top: 3rem;
+
+    h3 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+
+      .related-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        img.related-image {
+          width: 100%;
+          height: 150px;
+          object-fit: contain;
+          margin-bottom: 0.8rem;
+        }
+
+        h4 {
+          font-size: 1rem;
+          margin: 0.5rem 0;
+          color: #333;
+        }
+
+        p {
+          font-size: 0.95rem;
+          font-weight: bold;
+          color: #ff4b2b;
+        }
+      }
+    }
+  }
+
+  /* ===== Responsive ===== */
+  @media screen and (max-width: 1024px) {
+    .products-filters {
+      flex-wrap: wrap;
+      gap: 0.8rem;
+
+      input,
+      select {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.95rem;
+      }
+
+      .price-box .price-range input[type="range"] {
+        width: 120px;
+      }
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .product-detail-expanded {
+      gap: 1.5rem;
+
+      .product-detail-left,
+      .product-detail-right {
+        flex: 1 1 45%;
+      }
+
+      .product-actions button {
+        width: auto;
+      }
+    }
+
+    .related-products .related-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .products-filters {
+      flex-direction: column;
+      align-items: center;
+
+      input,
+      select {
+        width: 90%;
+        font-size: 0.9rem;
+      }
+
+      .price-box {
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .price-range {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .price-range input[type="range"] {
+          width: 100%;
+        }
+      }
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .product-detail-expanded {
+      flex-direction: column;
+      align-items: center;
+
+      .product-detail-left,
+      .product-detail-right {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+
+      .product-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+
+        button {
+          width: 80%;
+        }
+      }
+    }
+
+    .related-products .related-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr); /* ✅ Force 2 items per row */
+      gap: 0.8rem;
+    }
+
+    .product-detail-left img.product-image-large {
+      max-width: 280px;
+    }
+
+    .related-products .related-grid {
+      grid-template-columns: repeat(2, 1fr); /* ✅ 2 items per row for related */
+      gap: 0.8rem;
+    }
+
+    .product-actions button {
+      width: 100%;
+    }
+  }
+}

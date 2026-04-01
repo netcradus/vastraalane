@@ -1,0 +1,312 @@
+/* ---------------- Main Sunglasses Grid ---------------- */
+.sunglasses-container {
+  padding: 20px;
+  text-align: center;
+
+  .section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 60px;
+    color: #222;
+  }
+
+  .sunglasses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .sunglasses-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .sunglasses-image {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .sunglasses-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 8px 0;
+      color: #333;
+    }
+
+    .sunglasses-price {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 6px;
+
+      .old-price {
+        text-decoration: line-through;
+        font-size: 14px;
+        color: #999;
+        margin-left: 6px;
+      }
+    }
+
+    .discount {
+      font-size: 14px;
+      font-weight: bold;
+      color: #e63946;
+      margin-bottom: 12px;
+    }
+
+    /* Buttons hidden by default */
+    .btn-group {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+
+      button {
+        padding: 10px 16px;
+        font-size: 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .buy-btn {
+        background: #ff5722;
+        color: #fff;
+
+        &:hover {
+          background: #e64a19;
+        }
+      }
+
+      .cart-btn {
+        background: #4caf50;
+        color: #fff;
+
+        &:hover {
+          background: #388e3c;
+        }
+      }
+
+      .wishlist-btn {
+        background: #eee;
+        color: #444;
+
+        &.active {
+          background: #610b28;
+          color: #7c1b1b;
+        }
+      }
+    }
+
+    /* Show buttons when card is active */
+    &.active .btn-group {
+      display: flex;
+    }
+  }
+}
+
+/* ---------------- Product Detail Page ---------------- */
+.product-detail-page {
+  padding: 40px 20px;
+
+  .back-btn {
+    margin-bottom: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #333;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+
+    .detail-left {
+      flex: 1;
+      text-align: center;
+
+      .detail-image {
+        max-width: 400px;
+        width: 100%;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+    }
+
+    .detail-right {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+
+      h2 {
+        font-size: 26px;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #e60023;
+        margin-bottom: 20px;
+      }
+
+      .size-selector,
+      .quantity-selector {
+        margin-bottom: 20px;
+
+        label {
+          font-weight: 600;
+          margin-right: 8px;
+        }
+
+        select,
+        input {
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+          outline: none;
+        }
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+button {
+  padding: 12px 16px;  // reduced width
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+        .btn-wishlist {
+          background: #eee;
+          color: #444;
+        }
+        .btn-cart {
+          background: #4caf50;
+          color: #fff;
+        }
+        .btn-buy {
+          background: #ff5722;
+          color: #fff;
+        }
+      }
+
+      .product-features {
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        list-style: disc inside;
+        background: #f9f9f9;
+
+        li {
+          margin-bottom: 8px;
+          color: #333;
+        }
+      }
+    }
+  }
+
+  /* ---------------- Related Products ---------------- */
+  .related-sunglasses-section {
+    width: 100%;
+    margin-top: 50px;
+    text-align: center;
+
+    .related-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .related-items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .related-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      img {
+        width: 100%;
+        height: 140px;
+        object-fit: contain;
+        margin-bottom: 10px;
+      }
+
+      .related-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .related-price {
+        font-size: 14px;
+        color: #e60023;
+      }
+    }
+  }
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .sunglasses-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+    gap: 15px;
+  }
+
+  .detail-content {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .sunglasses-grid {
+    grid-template-columns: 1fr; /* 1 column on very small screens */
+  }
+}
+

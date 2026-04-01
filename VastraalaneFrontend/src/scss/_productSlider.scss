@@ -1,0 +1,186 @@
+:root{
+ --gap: 12px;
+  --slides-per-view: 4; /* desktop default */
+}
+
+/* Container */
+.product-slider{
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.25rem;
+  background: var(--bg);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Title */
+.product-slider .slider-title{
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--title);
+}
+
+/* Slick wrapper */
+.product-slider .slick-wrap{
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+/* ---------- Fix: ensure slides fill width and not squeeze ---------- */
+.slick-slider {
+  .slick-track {
+    display: flex !important;
+    align-items: stretch;
+  }
+
+  .slick-slide {
+    display: block;
+    height: auto !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* immediate child of .slick-slide is the div created by react-slick.
+     make it fill column width and use padding for gaps */
+  .slick-slide > div {
+    width: 100% !important;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    padding-left: calc(var(--gap) / 2);
+    padding-right: calc(var(--gap) / 2);
+  }
+
+  /* Optional: keep slick-list margin neutral (we handle gaps via padding) */
+  .slick-list {
+    margin: 0 !important;
+    overflow: visible; /* prevents clipping of shadows/arrows if needed */
+  }
+}
+
+/* Product card inside each slide */
+.product-card{
+  width: 100%;
+  background: var(--card-bg);
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform .28s ease, box-shadow .28s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.product-card:hover{
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 20px var(--shadow);
+}
+
+/* Media wrap ensures consistent thumbnail heights */
+.media-wrap {
+  width: 100%;
+  height: 260px; /* base thumbnail height - tweak for your design */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+/* Media element scales naturally inside media-wrap */
+.slide-media {
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Title in card */
+.product-card h3{
+  margin-top: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* Arrows */
+.slick-prev,
+.slick-next{
+  z-index: 20;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+
+.slick-prev:before,
+.slick-next:before{
+  color: #000;
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+.slick-prev{ left: -18px; }
+.slick-next{ right: -18px; }
+
+.slick-prev:hover,
+.slick-next:hover{
+  background: #000;
+}
+.slick-prev:hover:before,
+.slick-next:hover:before{
+  color: #fff;
+}
+
+/* ===== Responsive adjustments ===== */
+@media (max-width: 1200px) {
+  .media-wrap { height: 240px; }
+}
+
+@media (max-width: 1024px){
+  .media-wrap { height: 220px; }
+  .slick-prev{ left: -26px; }
+  .slick-next{ right: -26px; }
+}
+
+@media (max-width: 768px){
+  .media-wrap { height: 180px; }
+  .slick-prev, .slick-next{ width: 36px; height: 36px; }
+  .slick-prev:before, .slick-next:before{ font-size: 16px; }
+  .slick-prev{ left: -20px; }
+  .slick-next{ right: -20px; }
+  .product-slider .slick-wrap{ padding: 0 4px; }
+}
+
+@media (max-width: 480px){
+  .media-wrap { height: 140px; }
+  .product-card h3{ font-size: .95rem; }
+  .slick-prev, .slick-next{ width: 32px; height: 32px; }
+  .slick-prev{ left: -12px; }
+  .slick-next{ right: -12px; }
+  .product-slider .slider-title{ font-size: 1.25rem; margin-bottom: .75rem; }
+  .product-slider .slick-wrap{ padding: 0 6px; }
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; animation: none !important; }
+}

@@ -1,0 +1,204 @@
+/* CartPage.scss - mobile-first responsive styles */
+
+$bg: #ffffff;
+$muted: #666;
+$primary: #007bff;
+$danger: #ff4d4d;
+$card-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+.cart-page {
+  padding: 18px;
+  margin-top: 80px;
+  box-sizing: border-box;
+  background: transparent;
+
+  .cart-title {
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  /* Mobile: stack items and summary vertically */
+  .cart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: $bg;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: $card-shadow;
+  }
+
+  .cart-item-img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f9f9f9;
+    padding: 6px;
+    flex: 0 0 72px;
+  }
+
+  .cart-item-details {
+    flex: 1;
+    min-width: 0; /* allow truncation/flex shrink */
+
+    .cart-item-name {
+      font-size: 1rem;
+      margin: 0 0 4px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item-size {
+      font-size: 0.85rem;
+      color: $muted;
+      margin: 2px 0;
+    }
+
+    .cart-item-price {
+      font-size: 0.95rem;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+  }
+
+  .cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+
+  .remove-btn {
+    background: $danger;
+    border: none;
+    color: white;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.18s ease;
+    font-size: 0.9rem;
+  }
+  .remove-btn:hover { background: darken($danger, 8%); }
+
+  /* Summary box appears below items on mobile */
+  .cart-summary {
+    background: #fafafa;
+    padding: 14px;
+    border-radius: 10px;
+    box-shadow: $card-shadow;
+
+    h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    p { margin: 8px 0; font-size: 0.97rem; }
+
+    .checkout-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: $primary;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.18s ease;
+    }
+    .checkout-btn:hover { background: darken($primary, 8%); }
+  }
+
+  .empty-cart {
+    text-align: center;
+    font-size: 1.05rem;
+    margin-top: 36px;
+  }
+}
+
+/* ---------------------------
+  Larger screens (tablet/desktop)
+   make layout side-by-side
+   --------------------------- */
+
+@media (min-width: 768px) {
+  .cart-page {
+    padding: 28px;
+
+    .cart-title { font-size: 1.75rem; margin-bottom: 22px; }
+
+    .cart-container {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .cart-items { flex: 2; }
+
+    .cart-item {
+      gap: 18px;
+      padding: 14px;
+      border-radius: 12px;
+    }
+
+    .cart-item-img {
+      width: 90px;
+      height: 90px;
+      padding: 8px;
+      flex: 0 0 90px;
+    }
+
+    .cart-item-details {
+      .cart-item-name { font-size: 1.05rem; }
+      .cart-item-price { font-size: 1rem; }
+    }
+
+    .cart-summary {
+      flex: 1;
+      max-width: 360px;
+      padding: 18px;
+      border-radius: 12px;
+      position: sticky;
+      top: 100px; /* keeps summary visible while scrolling on tall carts */
+      height: fit-content;
+    }
+  }
+}
+
+/* Desktop wide screens */
+@media (min-width: 1024px) {
+  .cart-page {
+    padding: 69px;
+
+    .cart-title { font-size: 2rem; }
+
+    .cart-item-img {
+      width: 100px;
+      height: 100px;
+      flex: 0 0 100px;
+    }
+
+    .cart-summary {
+      max-width: 420px;
+      padding: 22px;
+    }
+  }
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
