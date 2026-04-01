@@ -27,27 +27,26 @@ import Loafers19 from "../assets/LoroO piana loafers.png";
 
 // ✅ Products array
 const loafers = [
-  { id: 1, name: "Loro Piana Loafers", price: "2799.00", image: Loafers1 },
-  { id: 2, name: "Loro Piana Loafers", price: "2500", image: Loafers2 },
-  { id: 3, name: "Loro Piana Loafers Brown", price: "3000", image: Loafers3 },
-  { id: 4, name: "Loro Piana Loafers", price: "1500", image: Loafers4 },
-  { id: 5, name: "Loro Piana Loafers", price: "2000", image: Loafers5 },
-  { id: 6, name: "Loro Piana Loafers", price: "3000", image: Loafers6 },
-  { id: 7, name: "Loro Piana Loafers", price: "2789.00", image: Loafers7 },
-  { id: 8, name: "Loro Piana Loafers", price: "1299.00", image: Loafers8 },
-  { id: 9, name: "Loro Piana Loafers", price: "2,000", image: Loafers9 },
-  { id: 10, name: "Loro Piana Loafers", price: "2,000", image: Loafers10 },
-  { id: 11, name: "Loro Piana Loafers", price: "3,500", image: Loafers11 },
-  { id: 12, name: "Loro Piana Loafers", price: "1,000", image: Loafers12 },
-  { id: 13, name: "Loro Piana Loafers Beige", price: "3,000", image: Loafers13 },
-  { id: 14, name: "Loro Piana Loafers Blue", price: "2500", image: Loafers14 },
-  { id: 15, name: "Loro Piana Loafers Green", price: "2,000", image: Loafers15 },
-  { id: 16, name: "Loro Piana Loafers Grey", price: "1500", image: Loafers16 },
-  { id: 17, name: "Loro Piana Loafers Grey", price: "1,500", image: Loafers17 },
-  { id: 18, name: "Loro Piana Loafers Navy", price: "2,500", image: Loafers18 },
-  { id: 19, name: "Loro Piana Loafers", price: "2,000", image: Loafers19 },
+  { id: 1, name: "Premium Loafers – Classic Tan", price: "2799", image: Loafers1 },
+  { id: 2, name: "Luxury Loafers – Soft Finish", price: "2500", image: Loafers2 },
+  { id: 3, name: "Elite Loafers – Brown Edition", price: "3000", image: Loafers3 },
+  { id: 4, name: "Classic Loafers – Everyday Comfort", price: "1500", image: Loafers4 },
+  { id: 5, name: "Premium Loafers – Smooth Leather", price: "2000", image: Loafers5 },
+  { id: 6, name: "Luxury Loafers – Elegant Finish", price: "3000", image: Loafers6 },
+  { id: 7, name: "Elite Loafers – Signature Style", price: "2789", image: Loafers7 },
+  { id: 8, name: "Classic Loafers – Minimal Look", price: "1299", image: Loafers8 },
+  { id: 9, name: "Premium Loafers – Modern Fit", price: "2000", image: Loafers9 },
+  { id: 10, name: "Luxury Loafers – Comfort Plus", price: "2000", image: Loafers10 },
+  { id: 11, name: "Elite Loafers – Premium Finish", price: "3500", image: Loafers11 },
+  { id: 12, name: "Classic Loafers – Daily Wear", price: "1000", image: Loafers12 },
+  { id: 13, name: "Premium Loafers – Beige Edition", price: "3000", image: Loafers13 },
+  { id: 14, name: "Luxury Loafers – Blue Edition", price: "2500", image: Loafers14 },
+  { id: 15, name: "Elite Loafers – Green Edition", price: "2000", image: Loafers15 },
+  { id: 16, name: "Classic Loafers – Grey Comfort", price: "1500", image: Loafers16 },
+  { id: 17, name: "Premium Loafers – Grey Edition", price: "1500", image: Loafers17 },
+  { id: 18, name: "Luxury Loafers – Navy Edition", price: "2500", image: Loafers18 },
+  { id: 19, name: "Elite Loafers – Timeless Style", price: "2000", image: Loafers19 },
 ];
-
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);
 const loafersList = loafers.map((loafer) => {
   const numericPrice = Number(loafer.price.replace(/[₹,]/g, ""));

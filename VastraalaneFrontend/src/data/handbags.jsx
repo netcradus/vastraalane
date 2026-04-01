@@ -27,25 +27,43 @@ import MKSullivanCoffee from "../assets/Micheal_Kors_MK_Sullivan_Zipper_Tote_Bag
 
 // ✅ Products array
 const handbags = [
-  { id: 1, name: "Burberry Leather Tote (Black)", price: "₹2,000", oldPrice: "₹50,000", discount: "16% off", image: BurberryBlack },
-  { id: 2, name: "Burberry Leather Tote (Brown)", price: "₹1,500", oldPrice: "₹48,000", discount: "14% off", image: BurberryBrown },
-  { id: 3, name: "Coach Sling Bag 198", price: "₹18,00", oldPrice: "₹22,000", discount: "18% off", image: Coach198 },
-  { id: 4, name: "Coach Sling Bag 200", price: "₹2500", oldPrice: "₹23,000", discount: "20% off", image: Coach200 },
-  { id: 5, name: "Coach Sling Bag 201", price: "₹2789.0", oldPrice: "₹23,500", discount: "19% off", image: Coach201 },
-  { id: 6, name: "Coach Dempsey Tote Beige", price: "₹22,00", oldPrice: "₹26,000", discount: "15% off", image: CoachBeige },
-  { id: 7, name: "Coach Dempsey Tote Blue", price: "₹22,50", oldPrice: "₹27,000", discount: "16% off", image: CoachBlue },
-  { id: 8, name: "Trendy Girls Purse", price: "₹2500", oldPrice: "₹9,000", discount: "17% off", image: GirlsPurse1 },
-  { id: 9, name: "Gucci Dionysus Apricot Black", price: "₹5000", oldPrice: "₹65,000", discount: "15% off", image: GucciApricotBlack },
-  { id: 10, name: "Gucci Dionysus Apricot Brown", price: "₹5000", oldPrice: "₹66,000", discount: "15% off", image: GucciApricotBrown },
-  { id: 11, name: "Handbag Classic 78", price: "₹2,000", oldPrice: "₹9,500", discount: "16% off", image: Handbag78 },
-  { id: 12, name: "Louis Vuitton Keepall Blue", price: "₹6000", oldPrice: "₹80,000", discount: "15% off", image: LouisBlue },
-  { id: 13, name: "Louis Vuitton Keepall Neon", price: "₹1500", oldPrice: "₹79,000", discount: "15% off", image: LouisNeon },
-  { id: 14, name: "Michael Kors Eliza Tote (45)", price: "₹2000", oldPrice: "₹30,000", discount: "16% off", image: MKEliza45 },
-  { id: 15, name: "Michael Kors Eliza Tote (546)", price: "₹2000", oldPrice: "₹31,000", discount: "16% off", image: MKEliza546 },
-  { id: 16, name: "Michael Kors Medium Backpack", price: "₹2000", oldPrice: "₹33,000", discount: "15% off", image: MKBeigeBrown },
-  { id: 17, name: "Michael Kors Parker Shoulder Bag", price: "₹3000", oldPrice: "₹35,000", discount: "14% off", image: MKParker },
-  { id: 18, name: "Michael Kors Sullivan Tote Beige", price: "₹2500", oldPrice: "₹32,000", discount: "14% off", image: MKSullivanBeige },
-  { id: 19, name: "Michael Kors Sullivan Tote Coffee", price: "₹2000", oldPrice: "₹31,500", discount: "14% off", image: MKSullivanCoffee },
+  { id: 1, name: "Premium Leather Tote – Black Edition", price: "₹3999", oldPrice: "₹6999", discount: "16% off", image: BurberryBlack },
+
+  { id: 2, name: "Premium Leather Tote – Brown Edition", price: "₹4500", oldPrice: "₹8000", discount: "14% off", image: BurberryBrown },
+
+  { id: 3, name: "Premium Sling Bag – Model 198", price: "₹3500", oldPrice: "₹34000", discount: "18% off", image: Coach198 },
+
+  { id: 4, name: "Premium Sling Bag – Model 200", price: "₹3500", oldPrice: "₹3899", discount: "20% off", image: Coach200 },
+
+  { id: 5, name: "Premium Sling Bag – Model 201", price: "₹3199", oldPrice: "₹55500", discount: "19% off", image: Coach201 },
+
+  { id: 6, name: "Luxury Tote – Beige Edition", price: "₹2200", oldPrice: "₹4500", discount: "15% off", image: CoachBeige },
+
+  { id: 7, name: "Luxury Tote – Blue Edition", price: "₹2100", oldPrice: "₹3000", discount: "16% off", image: CoachBlue },
+
+  { id: 8, name: "Trendy Handbag – Everyday Style", price: "₹2791", oldPrice: "₹3000", discount: "17% off", image: GirlsPurse1 },
+
+  { id: 9, name: "Luxury Handbag – Apricot Black Edition", price: "₹5500", oldPrice: "₹6500", discount: "15% off", image: GucciApricotBlack },
+
+  { id: 10, name: "Luxury Handbag – Apricot Brown Edition", price: "₹5600", oldPrice: "₹6600", discount: "15% off", image: GucciApricotBrown },
+
+  { id: 11, name: "Premium Handbag – Classic 78", price: "₹6000", oldPrice: "₹8500", discount: "16% off", image: Handbag78 },
+
+  { id: 12, name: "Luxury Travel Bag – Blue Edition", price: "₹2000", oldPrice: "₹8000", discount: "15% off", image: LouisBlue },
+
+  { id: 13, name: "Luxury Travel Bag – Neon Edition", price: "₹2500", oldPrice: "₹7000", discount: "15% off", image: LouisNeon },
+
+  { id: 14, name: "Premium Tote – Classic 45", price: "₹2500", oldPrice: "₹3000", discount: "16% off", image: MKEliza45 },
+
+  { id: 15, name: "Premium Tote – Classic 546", price: "₹2600", oldPrice: "₹3100", discount: "16% off", image: MKEliza546 },
+
+  { id: 16, name: "Premium Backpack – Medium Edition", price: "₹2800", oldPrice: "₹3300", discount: "15% off", image: MKBeigeBrown },
+
+  { id: 17, name: "Luxury Shoulder Bag – Classic Edition", price: "₹2900", oldPrice: "₹3500", discount: "14% off", image: MKParker },
+
+  { id: 18, name: "Premium Tote – Beige Edition", price: "₹2700", oldPrice: "₹3200", discount: "14% off", image: MKSullivanBeige },
+
+  { id: 19, name: "Premium Tote – Coffee Edition", price: "₹2799", oldPrice: "₹3100", discount: "14% off", image: MKSullivanCoffee },
 ];
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);
 const handbagsList = handbags.map(handbag => {

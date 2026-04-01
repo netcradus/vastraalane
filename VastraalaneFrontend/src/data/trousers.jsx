@@ -22,23 +22,22 @@ import ZaraCream from "../assets/Zar a Cream Stripes Premium Classic Linen Pant.
 import ZaraGrey from "../assets/Zar a Grey Stripes Premium Classic Linen Pant.png";
 
 const trackpants = [
-  { id: 1, name: "Adidas Beige Classic Embroidery Logo Premium Trackpant", image: AdidasBeige, price: "₹1,200", oldPrice: "₹12,500", discount: "74% off" },
-  { id: 2, name: "Adidas Black Classic Embroidery Logo Premium Trackpant", image: AdidasBlack1, price: "₹1,000", oldPrice: "₹11,000", discount: "72% off" },
-  { id: 3, name: "Adidas Black Embroidery Logo Premium Trackpant", image: AdidasBlack2, price: "₹1,900", oldPrice: "₹10,500", discount: "72% off" },
-  { id: 4, name: "Adidas Dark Grey Embroidery Logo Premium Trackpant", image: AdidasDarkGrey, price: "₹1,100", oldPrice: "₹12,000", discount: "74% off" },
-  { id: 5, name: "Adidas Light Grey Embroidery Logo Premium Trackpant", image: AdidasLightGrey, price: "₹1,800", oldPrice: "₹9,500", discount: "71% off" },
-  { id: 6, name: "Adidas Olive Embroidery Logo Premium Trackpant", image: AdidasOlive, price: "₹,300", oldPrice: "₹12,200", discount: "73% off" },
-  { id: 7, name: "Adidas Premium Logo Designer Track Beige (312)", image: AdidasPremium1, price: "₹1,600", oldPrice: "₹13,000", discount: "72% off" },
-  { id: 8, name: "Adidas Premium Logo Designer Track Beige (3122)", image: AdidasPremium2, price: "₹1,400", oldPrice: "₹12,500", discount: "72% off" },
-  { id: 9, name: "Armani Exchange Black Logo Patch Imported Trackpant", image: ArmaniBlack, price: "₹1,200", oldPrice: "₹15,000", discount: "72% off" },
-  { id: 10, name: "Armani Exchange Grey Logo Patch Imported Trackpant", image: ArmaniGrey, price: "₹1,000", oldPrice: "₹14,500", discount: "72% off" },
-  { id: 11, name: "Nike Black Embroidery Logo Premium Trackpant", image: NikeBlack, price: "₹2,700", oldPrice: "₹13,000", discount: "72% off" },
-  { id: 12, name: "Nike Watch Edition 2339", image: NikeWatch, price: "₹6,500", oldPrice: "₹2,000", discount: "74% off" },
-  { id: 13, name: "Zara Black Stripes Premium Classic Linen Pant", image: ZaraBlack, price: "₹2,500", oldPrice: "₹9,000", discount: "72% off" },
-  { id: 14, name: "Zara Cream Stripes Premium Classic Linen Pant", image: ZaraCream, price: "₹2,760", oldPrice: "₹9,200", discount: "72% off" },
-  { id: 15, name: "Zara Grey Stripes Premium Classic Linen Pant", image: ZaraGrey, price: "₹2289", oldPrice: "₹9,400", discount: "72% off" },
+  { id: 1, name: "Premium Beige Classic Embroidered Trackpant", image: AdidasBeige, price: "₹1,200", oldPrice: "₹12,500", discount: "74% off" },
+  { id: 2, name: "Premium Black Classic Embroidered Trackpant", image: AdidasBlack1, price: "₹1,000", oldPrice: "₹11,000", discount: "72% off" },
+  { id: 3, name: "Elite Black Embroidered Trackpant", image: AdidasBlack2, price: "₹1,900", oldPrice: "₹10,500", discount: "72% off" },
+  { id: 4, name: "Premium Dark Grey Embroidered Trackpant", image: AdidasDarkGrey, price: "₹1,100", oldPrice: "₹12,000", discount: "74% off" },
+  { id: 5, name: "Luxury Light Grey Embroidered Trackpant", image: AdidasLightGrey, price: "₹1,800", oldPrice: "₹9,500", discount: "71% off" },
+  { id: 6, name: "Premium Olive Embroidered Trackpant", image: AdidasOlive, price: "₹1,300", oldPrice: "₹12,200", discount: "73% off" },
+  { id: 7, name: "Exclusive Beige Designer Trackpant (312)", image: AdidasPremium1, price: "₹1,600", oldPrice: "₹13,000", discount: "72% off" },
+  { id: 8, name: "Exclusive Beige Designer Trackpant (3122)", image: AdidasPremium2, price: "₹1,400", oldPrice: "₹12,500", discount: "72% off" },
+  { id: 9, name: "Premium Black Logo Patch Trackpant", image: ArmaniBlack, price: "₹1,200", oldPrice: "₹15,000", discount: "72% off" },
+  { id: 10, name: "Premium Grey Logo Patch Trackpant", image: ArmaniGrey, price: "₹1,000", oldPrice: "₹14,500", discount: "72% off" },
+  { id: 11, name: "Elite Black Embroidered Sports Trackpant", image: NikeBlack, price: "₹2,700", oldPrice: "₹13,000", discount: "72% off" },
+  { id: 12, name: "Premium Edition Casual Trackpant 2339", image: NikeWatch, price: "₹2,000", oldPrice: "₹6,500", discount: "74% off" },
+  { id: 13, name: "Premium Black Striped Linen Trackpant", image: ZaraBlack, price: "₹2,500", oldPrice: "₹9,000", discount: "72% off" },
+  { id: 14, name: "Premium Cream Striped Linen Trackpant", image: ZaraCream, price: "₹2,760", oldPrice: "₹9,200", discount: "72% off" },
+  { id: 15, name: "Premium Grey Striped Linen Trackpant", image: ZaraGrey, price: "₹2,289", oldPrice: "₹9,400", discount: "72% off" },
 ];
-
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);
 const trackpantsList = trackpants.map(trackpant => {
   const numericPrice = Number(trackpant.price.replace(/[₹,]/g, ""));

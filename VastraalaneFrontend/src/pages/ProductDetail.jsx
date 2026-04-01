@@ -31,6 +31,29 @@ import CrocsLiterideBlackWhite from "../assets/Croc s literide Black White - Cop
 import CoachDempseyToteBlue from "../assets/Coach_Dempsey_Tote_22_In_Signature_Jacquard_With_Stripe_And_Coach_Patch_With_OG_Box_&_Dust_Bag_(Blue-5638)) - Copy (2).png";
 import CoachDempseyTotePink from "../assets/Coach_Dempsey_Tote_22_In_Signature_Jacquard_With_Stripe_And_Coach_Patch_With_OG_Box_&_Dust_Bag_(Pink-5638) - Copy.png";
 
+const cleanName = (name) => {
+  const brandRegex =
+    /nike|adidas|gucci|louis|vuitton|adida s|ysl|hublo t|nik e|niikee|addidas|pum a|tiger mexico|hoka cielo|fossi l|rad o|jaguar|adidaas|pacific|valentino donna|jean paul|lv|puma|nikke|reebok|zara|armani|balenciaga|dior|versace|prada|fossil|rolex|casio|seiko|hublot|tissot|burberry|coach|michael kors|new balance|onitsuka|skechers|asics|timberland|under armour|jordan|yeezy|travis scott|loewe|ralph lauren|lacoste|tag heuer/gi;
+
+  // Clean text
+  let cleaned = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ") // remove junk chars
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // Remove brands
+  cleaned = cleaned.replace(brandRegex, "").trim();
+
+  // Add premium words randomly
+  const prefixes = ["Premium", "Luxury", "Exotic"];
+  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+
+  return `${randomPrefix} ${cleaned}`
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
 const products = [
   { name: "Jean Paul Gaultier JPG Le Male Collector Edition 125ML", image: "https://cdn.cartpe.in/images/gallery_sm/68dc24b580bfc0.jpeg", price: 1200, category: "Jeans & Trouser & Trackpant" },
   { name: "Valentino_Donna_The_Gold_EDP_100ML", image: "https://cdn.cartpe.in/images/gallery_sm/68dc22f3d473e0.jpeg", price: 1198, category: "Other" },
@@ -872,8 +895,13 @@ const products = [
   { name: "Role_x Oyster Perpetual Daytona Chronograph - J908", image: "https://cdn.cartpe.in/images/gallery_sm/68da441fd97930.jpg", price: 1849, category: "Luxury Watch" },
   { name: "Role_x Oyster Perpetual Daytona Chronograph - J909", image: "https://cdn.cartpe.in/images/gallery_sm/68da43fa5af620.jpg", price: 1849, category: "Luxury Watch" },
  ];
+const cleanedProducts = products.map(item => ({
+  ...item,
+  name: cleanName(item.name)
+}));
+
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE) || 0;
-const updatedProductList = products.map(product => ({
+const updatedProductList = cleanedProducts.map(product => ({
   ...product,
   price: product.price + priceIncrement
 }));
@@ -1051,6 +1079,8 @@ const res = await axios.post(`${API_BASE}/api/order/createOrder`, staticOrderDat
     // Navigate to customer details with product details in state
     navigate("/customer-details", { state: { product: selectedProduct } });
   };
+
+  
 
   return (
     <div className="product-section">

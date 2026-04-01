@@ -42,40 +42,62 @@ import CoachEspadrille from "../assets/Coach_Collins_Espadrille_In_Signature_Den
 
 // ✅ Product List
 const productList = [
-  { name: "Michael Kors Eliza Tote 45", image: MichaelTote45, price: 4500, category: "Bags" },
-  { name: "Michael Kors Eliza Tote 456", image: MichaelTote456, price: 2600, category: "Bags" },
-  { name: "COAC_H Sling Bag 201", image: COAC_H201, price: 2789.0, category: "Bags" },
-  { name: "COAC_H Sling Bag 200", image: COAC_H200, price: 2560, category: "Bags" },
-  { name: "COAC_H Sling Bag 198", image: COAC_H198, price: 2200, category: "Bags" },
-  { name: "Boss Ice 0618", image: BossIce0618, price: 1500, category: "Accessories" },
-  { name: "Prada 21 Grey Blue", image: Prada21GreyBlue, price: 2000, category: "Bags" },
-  { name: "Gucci White Tshirt", image: GucciWhiteTshirt, price: 1800, category: "Clothing" },
-  { name: "Balmain Track Suit", image: BalmainTrackSuit, price: 2000, category: "Clothing" },
-  { name: "Gucci Black Tshirt", image: GucciBlackTshirt, price: 1900, category: "Clothing" },
-  { name: "Gucci Beige Tshirt", image: GucciBeigeTshirt, price: 1700, category: "Clothing" },
-  { name: "Louis Vuitton Silver Blue", image: LouisVuitton, price: 1200, category: "Bags" },
-  { name: "Dior WMNS 8875", image: DiorWMNS, price: 5000, category: "Shoes" },
-  { name: "Balenciaga Pink 58185", image: BalenciagaPink, price: 2000, category: "Clothing" },
-  { name: "Burberry Tote Brown", image: BurberryBrown, price: 2300, category: "Bags" },
-  { name: "Burberry Tote Black", image: BurberryBlack, price: 1500, category: "Bags" },
-  { name: "Tag Heuer Watch", image: TagHeuer, price: 1500, category: "Accessories" },
-  { name: "Birkenstock Arizona Sky Blue", image: BirkenstockSkyBlue, price: 1600, category: "Sandals" },
-  { name: "air max 1 flip flop grey green", image: ZaraGreyPant, price: 2200, category: "Clothing" },
-  { name: "Tommy Jeans Dark Blue", image: TommyJeansDarkBlue, price: 2500, category: "Clothing" },
-  { name: "Toomy Hilfiger Shirt", image: TommyShirt2, price: 1800, category: "Clothing" },
-  { name: "Calvin Klein C_K Shirt", image: CalvinShirt, price: 2000, category: "Clothing" },
-  { name: "Ralph Lauren Polo Pink", image: RalphPoloPink, price: 2400, category: "Clothing" },
-  { name: "Adidas Track Beige 312", image: AdidasTrackBeige, price: 3500, category: "Clothing" },
-  { name: "Adidas Track Beige 3122", image: AdidasTrackBeige2, price: 3600, category: "Clothing" },
-  { name: "Rolex Couple", image: RolexCouple, price: 2000, category: "Accessories" },
-  { name: "David Beckham 70066", image: DavidBeckham, price: 1800, category: "Fragrance" },
-  { name: "Loro Piana Loafers", image: LoroPiana, price: 8000, category: "Shoes" },
-  { name: "My Burberry Gift Set", image: MyBurberry, price: 3000, category: "Fragrance" },
-  { name: "Tommy Hilfiger Teal Polo", image: TommyHilfiger, price: 2500, category: "Clothing" },
-  { name: "Crocs Literide Black White", image: Crocs, price: 1200, category: "Shoes" },
-  { name: "Alexander McQueen White Sneaker", image: AlexanderMcQueen, price: 3800, category: "Shoes" },
-  { name: "Birkenstock Arizona Black", image: Birkenstock, price: 1500, category: "Sandals" },
-  { name: "Coach Espadrille", image: CoachEspadrille, price: 3000, category: "Shoes" },
+  { name: "Luxury Tote Bag – Classic 45", image: MichaelTote45, price: 4500, category: "Bags" },
+  { name: "Premium Tote Bag – Classic 456", image: MichaelTote456, price: 2600, category: "Bags" },
+
+  { name: "Premium Sling Bag – Model 201", image: COAC_H201, price: 2789, category: "Bags" },
+  { name: "Premium Sling Bag – Model 200", image: COAC_H200, price: 2560, category: "Bags" },
+  { name: "Premium Sling Bag – Model 198", image: COAC_H198, price: 2200, category: "Bags" },
+
+  { name: "Classic Accessory – Ice Edition 0618", image: BossIce0618, price: 1500, category: "Accessories" },
+
+  { name: "Luxury Bag – Grey Blue Edition", image: Prada21GreyBlue, price: 2000, category: "Bags" },
+
+  { name: "Premium T-Shirt – White Edition", image: GucciWhiteTshirt, price: 1800, category: "Clothing" },
+  { name: "Luxury Tracksuit – Classic Edition", image: BalmainTrackSuit, price: 2000, category: "Clothing" },
+  { name: "Premium T-Shirt – Black Edition", image: GucciBlackTshirt, price: 1900, category: "Clothing" },
+  { name: "Premium T-Shirt – Beige Edition", image: GucciBeigeTshirt, price: 1700, category: "Clothing" },
+
+  { name: "Luxury Bag – Silver Blue Edition", image: LouisVuitton, price: 1200, category: "Bags" },
+
+  { name: "Premium Sneakers – Model 8875", image: DiorWMNS, price: 5000, category: "Shoes" },
+
+  { name: "Luxury Apparel – Pink Edition 58185", image: BalenciagaPink, price: 2000, category: "Clothing" },
+
+  { name: "Premium Tote Bag – Brown Edition", image: BurberryBrown, price: 2300, category: "Bags" },
+  { name: "Premium Tote Bag – Black Edition", image: BurberryBlack, price: 1500, category: "Bags" },
+
+  { name: "Premium Watch – Classic Edition", image: TagHeuer, price: 1500, category: "Accessories" },
+
+  { name: "Comfort Sandals – Sky Blue Edition", image: BirkenstockSkyBlue, price: 1600, category: "Sandals" },
+
+  { name: "Casual Wear – Grey Green Flip Style", image: ZaraGreyPant, price: 2200, category: "Clothing" },
+
+  { name: "Premium Jeans – Dark Blue Edition", image: TommyJeansDarkBlue, price: 2500, category: "Clothing" },
+  { name: "Premium Shirt – Classic Fit", image: TommyShirt2, price: 1800, category: "Clothing" },
+  { name: "Premium Shirt – Minimal Edition", image: CalvinShirt, price: 2000, category: "Clothing" },
+  { name: "Premium Polo – Pink Edition", image: RalphPoloPink, price: 2400, category: "Clothing" },
+
+  { name: "Premium Trackpant – Beige Edition 312", image: AdidasTrackBeige, price: 3500, category: "Clothing" },
+  { name: "Premium Trackpant – Beige Edition 3122", image: AdidasTrackBeige2, price: 3600, category: "Clothing" },
+
+  { name: "Premium Watch – Couple Edition", image: RolexCouple, price: 2000, category: "Accessories" },
+
+  { name: "Signature Perfume – Classic Edition 70066", image: DavidBeckham, price: 1800, category: "Fragrance" },
+
+  { name: "Luxury Loafers – Classic Edition", image: LoroPiana, price: 8000, category: "Shoes" },
+
+  { name: "Premium Gift Set – Fragrance Collection", image: MyBurberry, price: 3000, category: "Fragrance" },
+
+  { name: "Premium Polo – Teal Edition", image: TommyHilfiger, price: 2500, category: "Clothing" },
+
+  { name: "Comfort Footwear – Black White Edition", image: Crocs, price: 1200, category: "Shoes" },
+
+  { name: "Premium Sneakers – White Classic", image: AlexanderMcQueen, price: 3800, category: "Shoes" },
+
+  { name: "Comfort Sandals – Black Edition", image: Birkenstock, price: 1500, category: "Sandals" },
+
+  { name: "Premium Espadrille – Classic Edition", image: CoachEspadrille, price: 3000, category: "Shoes" },
 ];
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE) || 0;

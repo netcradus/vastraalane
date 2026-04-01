@@ -37,36 +37,48 @@ import TrueReligion2 from "../assets/True Religion Imported Sky Super Premium De
 
 
 const jeans = [
-  { id: 1, name: "Adidas Beige Classic Embroidery Logo Premium Trackpant", image: AdidasBeige, currentPrice: 3200, oldPrice: 12500, discount: "74% off" },
-  { id: 2, name: "Adidas Black Classic Embroidery Logo Premium Trackpant", image: AdidasBlack1, currentPrice: 3000, oldPrice: 11000, discount: "72% off" },
-  { id: 3, name: "Adidas Black Embroidery Logo Premium Trackpant", image: AdidasBlack2, currentPrice: 2200, oldPrice: 10500, discount: "72% off" },
-  { id: 4, name: "Adidas Dark Grey Embroidery Logo Premium Trackpant", image: AdidasDarkGrey, currentPrice: 1000, oldPrice: 1200, discount: "74% off" },
-  { id: 5, name: "Adidas Light Grey Embroidery Logo Premium Trackpant", image: AdidasLightGrey, currentPrice: 2800, oldPrice: 9500, discount: "71% off" },
-  { id: 6, name: "Adidas Olive Embroidery Logo Premium Trackpant", image: AdidasOlive, currentPrice: 3300, oldPrice: 1200, discount: "73% off" },
-  { id: 7, name: "Adidas Premium Logo Designer Track Beige (312)", image: AdidasPremium1, currentPrice: 2600, oldPrice: 3000, discount: "72% off" },
-  { id: 8, name: "Adidas Premium Logo Designer Track Beige (3122)", image: AdidasPremium2, currentPrice: 1400, oldPrice: 1500, discount: "72% off" },
-  { id: 9, name: "Armani Exchange Black Logo Patch Imported Trackpant", image: ArmaniBlack, currentPrice: 3200, oldPrice: 15000, discount: "72% off" },
-  { id: 10, name: "Armani Exchange Grey Logo Patch Imported Trackpant", image: ArmaniGrey, currentPrice: 4000, oldPrice: 14500, discount: "72% off" },
-  { id: 11, name: "Nike Black Embroidery Logo Premium Trackpant", image: NikeBlack, currentPrice: 3700, oldPrice: 13000, discount: "72% off" },
-  { id: 13, name: "Zara Black Stripes Premium Classic Linen Pant", image: ZaraBlack, currentPrice: 2500, oldPrice: 9000, discount: "72% off" },
-  { id: 14, name: "Zara Cream Stripes Premium Classic Linen Pant", image: ZaraCream, currentPrice: 2600, oldPrice: 9200, discount: "72% off" },
-  { id: 15, name: "Zara Grey Stripes Premium Classic Linen Pant", image: ZaraGrey, currentPrice: 2700, oldPrice: 9400, discount: "72% off" },
-  { id: 16, name: "Amir i Greenish 1 Embroidery Work Logo Imported Denim", image: AmirGreenish, oldPrice: 2200, currentPrice: 1180 },
-  { id: 17, name: "Amir i Sky Blue 2 Embroidery Logo Imported Denim", image: AmirSkyBlue3, oldPrice: 2110, currentPrice: 1170 },
-  { id: 18, name: "Amir i Sky Blue 2 Embroidery Logo Imported Denim", image: AmirSkyBlue, oldPrice: 1210, currentPrice: 1009 },
-  { id: 19, name: "aTOMY VS Jeans Dark Blue", image: AtomDarkBlue, oldPrice: 950, currentPrice: 1160 },
-  { id: 20, name: "Loewe Blue Embroidery Logo Imported Denim", image: LoeweDenim3, oldPrice: 1230, currentPrice: 2185 },
-  { id: 21, name: "Loewe Blue Embroidery Logo Imported Denim", image: LoeweDenim2, oldPrice: 1230, currentPrice: 4180 },
-  { id: 22, name: "Loewe Blue Embroidery Logo Imported Denim", image: LoeweDenim1, oldPrice: 3230, currentPrice: 6178 },
-  { id: 23, name: "True Religion Imported Blue Super Premium Denim With Brand Box Packing And Carry Bag F2881-BU", image: TrueReligion1, oldPrice: 1500, currentPrice: 1999, category: "Denim" },
-  { id: 24, name: "D&G PREMIUM BLUE DENIM JEANS REGULAR FIT LENGHT 39", image: DGJeans1, oldPrice: 2999, currentPrice: 3999, category: "Denim" },
-  { id: 25, name: "EMPORIO ARMAN-I PREMIUM BLUE DENIM JEANS REGULAR FIT LENGHT 39", image: EmporioJeans1, oldPrice: 1299, currentPrice: 1499, category: "Denim" },
-  { id: 26, name: "Tommy_Hilfiger Imported Black Super Premium Denim F2656-BL", image: TommyHilfiger1, oldPrice: 1389, currentPrice: 1699, category: "Denim" },
-  { id: 27, name: "GUCC-I PREMIUM BLUE DENIM JEANS STRAIGHT FIT LENGHT 41", image: GucciJeans1, oldPrice: 2999, currentPrice: 9999, category: "Denim" },
-  { id: 28, name: "Dolce&Gabbana Blue Raw Wash Pocket Logo Imported Hyperflex Denim", image: DolceGabbana1, oldPrice: 999, currentPrice: 1099, category: "Denim" },
-  { id: 29, name: "True Religion Imported Sky Super Premium Denim With Brand Box Packing And Carry Bag F2692-SK", image: TrueReligion2, oldPrice: 799, currentPrice: 999, category: "Denim" }
-];
+  { id: 1, name: "Premium Trackpant – Beige Embroidery Edition", image: AdidasBeige, currentPrice: 3200, oldPrice: 12500, discount: "74% off" },
+  { id: 2, name: "Premium Trackpant – Black Classic Edition", image: AdidasBlack1, currentPrice: 3000, oldPrice: 11000, discount: "72% off" },
+  { id: 3, name: "Premium Trackpant – Black Embroidery Edition", image: AdidasBlack2, currentPrice: 2200, oldPrice: 10500, discount: "72% off" },
+  { id: 4, name: "Premium Trackpant – Dark Grey Edition", image: AdidasDarkGrey, currentPrice: 1000, oldPrice: 1200, discount: "74% off" },
+  { id: 5, name: "Premium Trackpant – Light Grey Edition", image: AdidasLightGrey, currentPrice: 2800, oldPrice: 9500, discount: "71% off" },
+  { id: 6, name: "Premium Trackpant – Olive Edition", image: AdidasOlive, currentPrice: 3300, oldPrice: 1200, discount: "73% off" },
+  { id: 7, name: "Premium Trackpant – Beige Designer 312", image: AdidasPremium1, currentPrice: 2600, oldPrice: 3000, discount: "72% off" },
+  { id: 8, name: "Premium Trackpant – Beige Designer 3122", image: AdidasPremium2, currentPrice: 1400, oldPrice: 1500, discount: "72% off" },
 
+  { id: 9, name: "Premium Trackpant – Black Patch Edition", image: ArmaniBlack, currentPrice: 3200, oldPrice: 15000, discount: "72% off" },
+  { id: 10, name: "Premium Trackpant – Grey Patch Edition", image: ArmaniGrey, currentPrice: 4000, oldPrice: 14500, discount: "72% off" },
+
+  { id: 11, name: "Premium Trackpant – Black Premium Edition", image: NikeBlack, currentPrice: 3700, oldPrice: 13000, discount: "72% off" },
+
+  { id: 13, name: "Premium Pant – Black Stripe Linen", image: ZaraBlack, currentPrice: 2500, oldPrice: 9000, discount: "72% off" },
+  { id: 14, name: "Premium Pant – Cream Stripe Linen", image: ZaraCream, currentPrice: 2600, oldPrice: 9200, discount: "72% off" },
+  { id: 15, name: "Premium Pant – Grey Stripe Linen", image: ZaraGrey, currentPrice: 2700, oldPrice: 9400, discount: "72% off" },
+
+  { id: 16, name: "Premium Denim – Green Embroidery Edition", image: AmirGreenish, oldPrice: 2200, currentPrice: 1180 },
+  { id: 17, name: "Premium Denim – Sky Blue Embroidery 2", image: AmirSkyBlue3, oldPrice: 2110, currentPrice: 1170 },
+  { id: 18, name: "Premium Denim – Sky Blue Classic", image: AmirSkyBlue, oldPrice: 1210, currentPrice: 1009 },
+
+  { id: 19, name: "Premium Jeans – Dark Blue Edition", image: AtomDarkBlue, oldPrice: 950, currentPrice: 1160 },
+
+  { id: 20, name: "Luxury Denim – Blue Embroidery Edition", image: LoeweDenim3, oldPrice: 1230, currentPrice: 2185 },
+  { id: 21, name: "Luxury Denim – Blue Classic Edition", image: LoeweDenim2, oldPrice: 1230, currentPrice: 4180 },
+  { id: 22, name: "Luxury Denim – Blue Premium Edition", image: LoeweDenim1, oldPrice: 3230, currentPrice: 6178 },
+
+  { id: 23, name: "Premium Denim – Blue Classic F2881", image: TrueReligion1, oldPrice: 1500, currentPrice: 1999, category: "Denim" },
+
+  { id: 24, name: "Premium Denim – Blue Regular Fit 39", image: DGJeans1, oldPrice: 2999, currentPrice: 3999, category: "Denim" },
+
+  { id: 25, name: "Premium Denim – Blue Classic Fit 39", image: EmporioJeans1, oldPrice: 1299, currentPrice: 1499, category: "Denim" },
+
+  { id: 26, name: "Premium Denim – Black Classic F2656", image: TommyHilfiger1, oldPrice: 1389, currentPrice: 1699, category: "Denim" },
+
+  { id: 27, name: "Luxury Denim – Blue Straight Fit 41", image: GucciJeans1, oldPrice: 2999, currentPrice: 9999, category: "Denim" },
+
+  { id: 28, name: "Premium Denim – Blue Raw Wash Edition", image: DolceGabbana1, oldPrice: 999, currentPrice: 1099, category: "Denim" },
+
+  { id: 29, name: "Premium Denim – Sky Blue F2692", image: TrueReligion2, oldPrice: 799, currentPrice: 999, category: "Denim" }
+];
 // ... your imports and jeans data remain the same ...
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);

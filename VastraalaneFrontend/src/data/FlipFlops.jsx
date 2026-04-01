@@ -12,12 +12,13 @@ import FlipFlop5 from "../assets/fat tires slide sale.png";
 import FlipFlop6 from "../assets/GUCCI_GG.jpg";
 
 const flipflops = [
-  { id: 1, name: "Adidas Yeezy Slides Bone", price: 1500, image: FlipFlop1 },
-  { id: 2, name: "Adidas Yeezy Slides Flax", price: 1600, image: FlipFlop2 },
-  { id: 3, name: "Nike Air Max Flip Flop Grey Green", price: 2000, image: FlipFlop3 },
-  { id: 4, name: "Dior Riviera Dway Platform Slides", price: 2799.0, image: FlipFlop4 },
-  { id: 5, name: "Fat Tires Slide", price: 1200, image: FlipFlop5 },
-  { id: 6, name: "Gucci GG Slides", price: 1500, image: FlipFlop6 },
+  { id: 1, name: "Premium Bone Comfort Slides", price: 1500, image: FlipFlop1 },
+  { id: 2, name: "Premium Flax Casual Slides", price: 1600, image: FlipFlop2 },
+  { id: 3, name: "Grey Green Sport Slides", price: 2000, image: FlipFlop3 },
+  { id: 4, name: "Luxury Platform Resort Slides", price: 2799, image: FlipFlop4 },
+  { id: 5, name: "Classic Everyday Comfort Slides", price: 1200, image: FlipFlop5 },
+  { id: 6, name: "Premium Signature Slides", price: 1500, image: FlipFlop6 },
+  
 ];
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE || 0);

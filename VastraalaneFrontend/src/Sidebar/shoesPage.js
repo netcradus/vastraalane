@@ -71,67 +71,86 @@ import Onitsuka_Tiger_Mexico_66_Slip_On_Green_For_Her from "../assets/Onitsuka T
 
 
 const menshoes = [
-  { id: 1, name: "Adapt_Automax_Full_Black_Shoes", price: 3200.00, oldPrice: 5000, discount: "6% off", image: Adapt_Automax_Full_Black_Shoes },
-  { id: 2, name: "Adida_ss_Yeezy_Boost_350_V2_Carbon_Beluga_SEMI_UA_With_All_Accesories", price: 2199.00, oldPrice: 3000, discount: "8% off", image: Adida_ss_Yeezy_Boost_350_V2_Carbon_Beluga_SEMI_UA_With_All_Accesories },
-  { id: 3, name: "ADIDAS", price: 25000.00, oldPrice: 3000.00, discount: "7% off", image: ADIDAS },
-  { id: 4, name: "Adidass_Fear_Of_God_Athletic_1_Indiana", price: 2000, oldPrice: 3000, discount: "10% off", image: Adidass_Fear_Of_God_Athletic_1_Indiana },
-  { id: 5, name: "Adidass_Yeezy_350_V2_Bone_White_SEMI_UA_With_All_Accesories_Copy_2", price: 3000.00, oldPrice: 4000, discount: "9% off", image: Adidass_Yeezy_350_V2_Bone_White_SEMI_UA_With_All_Accesories_Copy_2 },
-  { id: 6, name: "Adidass_Yeezy_Boost_350_V2_Beluga_SEMI_UA_With_All_Accesories", price: 1000, oldPrice: 3000, discount: "8% off", image: Adidass_Yeezy_Boost_350_V2_Beluga_SEMI_UA_With_All_Accesories },
-  { id: 7, name: "Adidass_Yeezy_Boost_350_V2_Oreo_SEMI_UA_With_All_Accesories_Copy_2", price: 2100, oldPrice: 3500, discount: "8.5% off", image: Adidass_Yeezy_Boost_350_V2_Oreo_SEMI_UA_With_All_Accesories_Copy_2 },
-  { id: 8, name: "Airforce_1_milky_white_pure_leather_Copy", price: 2000, oldPrice: 2500, discount: "4% off", image: Airforce_1_milky_white_pure_leather_Copy },
-  { id: 9, name: "ALEXANDER_MCQUEEN_PREMIUM_WHITE_SNEAKER", price: 1991.00, oldPrice: 2000, discount: "7% off", image: ALEXANDER_MCQUEEN_PREMIUM_WHITE_SNEAKER },
-  { id: 10, name: "Balencia_gaa_Cargo_Sneakers", price: 4000, oldPrice: 5000, discount: "6% off", image: Balencia_gaa_Cargo_Sneakers },
-  { id: 11, name: "Balenciaga_track_trainer_with_full_accessories_triple_black_sale_Copy_2", price: 3000, oldPrice: 8000, discount: "6% off", image: Balenciaga_track_trainer_with_full_accessories_triple_black_sale_Copy_2 },
-  { id: 12, name: "Golden_Goose_GGDB_White_Leather_BallStar_Sneakers_With_OG_Box", price: 2000, oldPrice: 4000, discount: "8% off", image: Golden_Goose_GGDB_White_Leather_BallStar_Sneakers_With_OG_Box },
-  { id: 13, name: "Gucci_GG_Monogram_Canvas_Leather_Espadrilles_Blue_With_OG_Box_Carry_Bag_888_100_Blue_Copy", price: 2991.00, oldPrice: 3000, discount: "6% off", image: Gucci_GG_Monogram_Canvas_Leather_Espadrilles_Blue_With_OG_Box_Carry_Bag_888_100_Blue_Copy },
-  { id: 14, name: "Gucci_princetown_Copy_2", price: 1791.00, oldPrice: 2000.00, discount: "7% off", image: Gucci_princetown_Copy_2 },
-  { id: 15, name: "Hoka_cielo_x1_2_0_race_frost_lava_Copy_2", price: 1400, oldPrice: 15000, discount: "6.5% off", image: Hoka_cielo_x1_2_0_race_frost_lava_Copy_2 },
-  { id: 16, name: "Hoka_Stinson_ATR_7_Grey_Copy_2", price: 4500, oldPrice: 5500, discount: "6% off", image: Hoka_Stinson_ATR_7_Grey_Copy_2 },
-  { id: 17, name: "Lacostee_audyssor_trail_24_Copy_2", price: 2500.00, oldPrice: 3500, discount: "4% off", image: Lacostee_audyssor_trail_24_Copy_2 },
-  { id: 18, name: "Lacostee_audyssor_trail_White_Copy", price: 2500.00, oldPrice: 3000, discount: "3.5% off", image: Lacostee_audyssor_trail_White_Copy },
-  { id: 19, name: "Lacostee_audyssor_trail_White_Copy2", price: 2500, oldPrice: 3000, discount: "3.5% off", image: Lacostee_audyssor_trail_White_Copy2 },
-  { id: 20, name: "Lacostee_L003_2K24_White_Green_Copy_2", price: 3500, oldPrice: 4500, discount: "7% off", image: Lacostee_L003_2K24_White_Green_Copy_2 },
-  { id: 21, name: "Lacosteee_audyssor_trail_24_Copy", price: 2000, oldPrice: 2500, discount: "4% off", image: Lacosteee_audyssor_trail_24_Copy },
-  { id: 22, name: "Loewe_x_on_cloudtilt_2_0_triple_white", price: 1000, oldPrice: 2000, discount: "10% off", image: Loewe_x_on_cloudtilt_2_0_triple_white },
-  { id: 23, name: "Louis_Vuitton_Glitter_Shoes", price: 1500, oldPrice: 2000, discount: "6% off", image: Louis_Vuitton_Glitter_Shoes },
-  { id: 24, name: "MENSHOES78", price: 4000, oldPrice: 5000, discount: "6.5% off", image: MENSHOES78 },
-  { id: 25, name: "New_Balance_1906_Glow_In_Dark_Copy", price: 2000, oldPrice: 3000, discount: "4% off", image: New_Balance_1906_Glow_In_Dark_Copy },
-  { id: 26, name: "New_Balance_fresh_foam_x_trail_more_v3_black_red", price: 3000, oldPrice: 4000, discount: "7% off", image: New_Balance_fresh_foam_x_trail_more_v3_black_red },
-  { id: 27, name: "Nigel_sylvester_x_air_jordan_4_retro_og_sp_brick_by_brick", price: 2500, oldPrice: 2700, discount: "7% off", image: Nigel_sylvester_x_air_jordan_4_retro_og_sp_brick_by_brick },
-  { id: 28, name: "Nike_Airforce_1_07_ashen_slatee", price: 2700, oldPrice: 3000, discount: "7% off", image: Nike_Airforce_1_07_ashen_slatee },
-  { id: 29, name: "Nike_Airmax_90_terrascape_fuel_orange_Copy", price: 3500, oldPrice: 4500, discount: "7% off", image: Nike_Airmax_90_terrascape_fuel_orange_Copy },
-  { id: 30, name: "Nike_airmax_dn_all_day_sale", price: 2000, oldPrice: 3000, discount: "7% off", image: Nike_airmax_dn_all_day_sale },
-  { id: 31, name: "Nike_Air_Jordan_1_Low_Paris", price: 2000, oldPrice: 4000, discount: "8% off", image: Nike_Air_Jordan_1_Low_Paris_Copy },
-  { id: 32, name: "Nike_Air_Jordan_Retro_4_Snorlex_SEMI_UA", price: 2500, oldPrice: 4500, discount: "8% off", image: Nike_Air_Jordan_Retro_4_Snorlex_SEMI_UA },
-  { id: 33, name: "Nike_Copy", price: 5000, oldPrice: 6000, discount: "6% off", image: Nike_Copy },
-  { id: 34, name: "Nike_AirForce_1_Short_WHITE_shoes_Copy", price: 2000, oldPrice: 2500, discount: "4% off", image: Nike_AirForce_1_Short_WHITE_shoes_Copy },
-  { id: 35, name: "Nike_Airforce_AMG_Legendary", price: 1800, oldPrice: 2000, discount: "10% off", image: Nike_Airforce_AMG_Legendary },
-  { id: 36, name: "Nike", price: 1400, oldPrice: 1500, discount: "6% off", image: Nike },
-  { id: 37, name: "Nikee_Air_Jordan_1_Low_SE_COCONUT_MILK_BLACK", price: 2200, oldPrice: 2400, discount: "8% off", image: Nikee_Air_Jordan_1_Low_SE_COCONUT_MILK_BLACK },
-  { id: 38, name: "Nikee_Air_Jordan_Retro_4_SB_NAVY_Copy", price: 2250, oldPrice: 2450, discount: "8% off", image: Nikee_Air_Jordan_Retro_4_SB_NAVY_Copy },
-  { id: 39, name: "Nikee_Airforce_1_Low_Light_Armoury_Blue", price: 1500, oldPrice: 1600, discount: "6% off", image: Nikee_Airforce_1_Low_Light_Armoury_Blue },
-  { id: 40, name: "Nikee_Airforce_1_WHITE_BLACK", price: 1400, oldPrice: 1500, discount: "6% off", image: Nikee_Airforce_1_WHITE_BLACK },
-  { id: 41, name: "Nikee_Running_Alphafly_2_Ekiden_Pack_Multi", price: 2500, oldPrice: 2700, discount: "7% off", image: Nikee_Running_Alphafly_2_Ekiden_Pack_Multi },
-  { id: 42, name: "Nikee_Sb_Dunk_low_Monsoon_Blue_Premium", price: 2000, oldPrice: 2200, discount: "9% off", image: Nikee_Sb_Dunk_low_Monsoon_Blue_Premium },
-  { id: 43, name: "Nike_SB_Dunk_Panda_Womens_Copy", price: 2100, oldPrice: 2300, discount: "8% off", image: Nike_SB_Dunk_Panda_Womens_Copy },
-  { id: 44, name: "Nikeee_Air_Jordan_4_RM_Light_Bone", price: 2300, oldPrice: 2500, discount: "8% off", image: Nikeee_Air_Jordan_4_RM_Light_Bone },
-  { id: 45, name: "Nike_Air_Jordan_Retro_1_High_SEMI_UA", price: 2200, oldPrice: 2400, discount: "8% off", image: Nike_Air_Jordan_Retro_1_High_SEMI_UA },
-  { id: 46, name: "On_Cloud_Stratus_V3_Black_White", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Stratus_V3_Black_White },
-  { id: 47, name: "On_Cloud_Tilt_2_0_Black_Ivory_Copy", price: 1750, oldPrice: 1900, discount: "7% off", image: On_Cloud_Tilt_2_0_Black_Ivory_Copy },
-  { id: 48, name: "On_Cloud_Tilt_Running_Iron_Dew", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Tilt_Running_Iron_Dew },
-  { id: 49, name: "On_Cloud_Tilt_ruunning_Iron_Dew", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Tilt_ruunning_Iron_Dew },
-  { id: 50, name: "Onitsuka_Mexico_66_Brich_green_217", price: 1199.00, oldPrice: 1250, discount: "4% off", image: Onitsuka_Mexico_66_Brich_green_217 },
-  { id: 51, name: "Onitsuka_Tiger_Mexico_66_151", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_151 },
-  { id: 52, name: "Onitsuka_Tiger_Mexico_66_Biege_Grass_Green_221", price: 1250, oldPrice: 1300, discount: "3.5% off", image: Onitsuka_Tiger_Mexico_66_Biege_Grass_Green_221 },
-  { id: 53, name: "Onitsuka_Tiger_Mexico_66_Black_Classic_Red_240_Copy", price: 1350, oldPrice: 1450, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Black_Classic_Red_240_Copy },
-  { id: 54, name: "Onitsuka_Tiger_Mexico_66_Cactus_Green_220", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Cactus_Green_220 },
-  { id: 55, name: "Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Shoe_Sneaker_White_Green_Copy", price: 1300, oldPrice: 1400, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Shoe_Sneaker_White_Green_Copy },
-  { id: 56, name: "Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Sneaker_White_blue_red", price: 1300, oldPrice: 1400, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Sneaker_White_blue_red },
-  { id: 57, name: "Onitsuka_Tiger_Mexico_66_SD_Cream_Black_Orange_For_Her_276", price: 1400, oldPrice: 1500, discount: "6.5% off", image: Onitsuka_Tiger_Mexico_66_SD_Cream_Black_Orange_For_Her_276 },
-  { id: 58, name: "Onitsuka_Tiger_Mexico_66_SD_Pink_252", price: 1400, oldPrice: 1500, discount: "6.5% off", image: Onitsuka_Tiger_Mexico_66_SD_Pink_252 },
-  { id: 59, name: "Onitsuka_Tiger_Mexico_66_Slip_On_Black_105", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Slip_On_Black_105 },
-  { id: 60, name: "Onitsuka_Tiger_Mexico_66_Slip_On_Green_For_Her", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Slip_On_Green_For_Her }
+  { id: 1, name: "Premium Sneakers – Full Black Automax", price: 3200, oldPrice: 5000, discount: "6% off", image: Adapt_Automax_Full_Black_Shoes },
+  { id: 2, name: "Luxury Sneakers – Carbon Grey Boost", price: 2199, oldPrice: 3000, discount: "8% off", image: Adida_ss_Yeezy_Boost_350_V2_Carbon_Beluga_SEMI_UA_With_All_Accesories },
+  { id: 3, name: "Premium Sneakers – Classic Edition", price: 2500, oldPrice: 3000, discount: "7% off", image: ADIDAS },
+  { id: 4, name: "Premium Sneakers – Athletic Indiana", price: 2000, oldPrice: 3000, discount: "10% off", image: Adidass_Fear_Of_God_Athletic_1_Indiana },
+  { id: 5, name: "Luxury Sneakers – Bone White Edition", price: 3000, oldPrice: 4000, discount: "9% off", image: Adidass_Yeezy_350_V2_Bone_White_SEMI_UA_With_All_Accesories_Copy_2 },
+  { id: 6, name: "Luxury Sneakers – Beluga Edition", price: 1000, oldPrice: 3000, discount: "8% off", image: Adidass_Yeezy_Boost_350_V2_Beluga_SEMI_UA_With_All_Accesories },
+  { id: 7, name: "Luxury Sneakers – Oreo Edition", price: 2100, oldPrice: 3500, discount: "8.5% off", image: Adidass_Yeezy_Boost_350_V2_Oreo_SEMI_UA_With_All_Accesories_Copy_2 },
 
+  { id: 8, name: "Premium Sneakers – Milky White Leather", price: 2000, oldPrice: 2500, discount: "4% off", image: Airforce_1_milky_white_pure_leather_Copy },
+  { id: 9, name: "Luxury Sneakers – White Classic Leather", price: 1991, oldPrice: 2000, discount: "7% off", image: ALEXANDER_MCQUEEN_PREMIUM_WHITE_SNEAKER },
+  { id: 10, name: "Luxury Sneakers – Cargo Black Edition", price: 4000, oldPrice: 5000, discount: "6% off", image: Balencia_gaa_Cargo_Sneakers },
+  { id: 11, name: "Luxury Sneakers – Triple Black Trainer", price: 3000, oldPrice: 8000, discount: "6% off", image: Balenciaga_track_trainer_with_full_accessories_triple_black_sale_Copy_2 },
+
+  { id: 12, name: "Premium Sneakers – White Leather Ballstar", price: 2000, oldPrice: 4000, discount: "8% off", image: Golden_Goose_GGDB_White_Leather_BallStar_Sneakers_With_OG_Box },
+  { id: 13, name: "Premium Espadrilles – Blue Canvas", price: 2991, oldPrice: 3000, discount: "6% off", image: Gucci_GG_Monogram_Canvas_Leather_Espadrilles_Blue_With_OG_Box_Carry_Bag_888_100_Blue_Copy },
+  { id: 14, name: "Premium Loafers – Classic Slip-On", price: 1791, oldPrice: 2000, discount: "7% off", image: Gucci_princetown_Copy_2 },
+
+  { id: 15, name: "Performance Shoes – Frost Lava Edition", price: 1400, oldPrice: 15000, discount: "6.5% off", image: Hoka_cielo_x1_2_0_race_frost_lava_Copy_2 },
+  { id: 16, name: "Performance Shoes – Grey Trail Edition", price: 4500, oldPrice: 5500, discount: "6% off", image: Hoka_Stinson_ATR_7_Grey_Copy_2 },
+
+  { id: 17, name: "Premium Sneakers – Trail Edition 24", price: 2500, oldPrice: 3500, discount: "4% off", image: Lacostee_audyssor_trail_24_Copy_2 },
+  { id: 18, name: "Premium Sneakers – White Trail Edition", price: 2500, oldPrice: 3000, discount: "3.5% off", image: Lacostee_audyssor_trail_White_Copy },
+  { id: 19, name: "Premium Sneakers – White Trail Edition 2", price: 2500, oldPrice: 3000, discount: "3.5% off", image: Lacostee_audyssor_trail_White_Copy2 },
+  { id: 20, name: "Premium Sneakers – White Green Edition", price: 3500, oldPrice: 4500, discount: "7% off", image: Lacostee_L003_2K24_White_Green_Copy_2 },
+  { id: 21, name: "Premium Sneakers – Trail Classic", price: 2000, oldPrice: 2500, discount: "4% off", image: Lacosteee_audyssor_trail_24_Copy },
+
+  { id: 22, name: "Performance Shoes – Triple White", price: 1000, oldPrice: 2000, discount: "10% off", image: Loewe_x_on_cloudtilt_2_0_triple_white },
+  { id: 23, name: "Premium Shoes – Glitter Edition", price: 1500, oldPrice: 2000, discount: "6% off", image: Louis_Vuitton_Glitter_Shoes },
+  { id: 24, name: "Premium Shoes – Classic 78", price: 4000, oldPrice: 5000, discount: "6.5% off", image: MENSHOES78 },
+
+  { id: 25, name: "Premium Sneakers – Glow Edition", price: 2000, oldPrice: 3000, discount: "4% off", image: New_Balance_1906_Glow_In_Dark_Copy },
+  { id: 26, name: "Performance Shoes – Trail Black Red", price: 3000, oldPrice: 4000, discount: "7% off", image: New_Balance_fresh_foam_x_trail_more_v3_black_red },
+
+  { id: 27, name: "Premium Sneakers – Retro Brick Edition", price: 2500, oldPrice: 2700, discount: "7% off", image: Nigel_sylvester_x_air_jordan_4_retro_og_sp_brick_by_brick },
+
+  { id: 28, name: "Premium Sneakers – Slate Grey", price: 2700, oldPrice: 3000, discount: "7% off", image: Nike_Airforce_1_07_ashen_slatee },
+  { id: 29, name: "Premium Sneakers – Fuel Orange", price: 3500, oldPrice: 4500, discount: "7% off", image: Nike_Airmax_90_terrascape_fuel_orange_Copy },
+  { id: 30, name: "Premium Sneakers – All Day Comfort", price: 2000, oldPrice: 3000, discount: "7% off", image: Nike_airmax_dn_all_day_sale },
+
+  { id: 31, name: "Premium Sneakers – Paris Low", price: 2000, oldPrice: 4000, discount: "8% off", image: Nike_Air_Jordan_1_Low_Paris_Copy },
+  { id: 32, name: "Premium Sneakers – Retro 4 Classic", price: 2500, oldPrice: 4500, discount: "8% off", image: Nike_Air_Jordan_Retro_4_Snorlex_SEMI_UA },
+  { id: 33, name: "Premium Sneakers – Classic Sport", price: 5000, oldPrice: 6000, discount: "6% off", image: Nike_Copy },
+
+  { id: 34, name: "Premium Sneakers – White Low Classic", price: 2000, oldPrice: 2500, discount: "4% off", image: Nike_AirForce_1_Short_WHITE_shoes_Copy },
+  { id: 35, name: "Premium Sneakers – AMG Style", price: 1800, oldPrice: 2000, discount: "10% off", image: Nike_Airforce_AMG_Legendary },
+  { id: 36, name: "Premium Sneakers – Basic Edition", price: 1400, oldPrice: 1500, discount: "6% off", image: Nike },
+
+  { id: 37, name: "Premium Sneakers – Coconut Black", price: 2200, oldPrice: 2400, discount: "8% off", image: Nikee_Air_Jordan_1_Low_SE_COCONUT_MILK_BLACK },
+  { id: 38, name: "Premium Sneakers – Navy Retro 4", price: 2250, oldPrice: 2450, discount: "8% off", image: Nikee_Air_Jordan_Retro_4_SB_NAVY_Copy },
+
+  { id: 39, name: "Premium Sneakers – Armoury Blue", price: 1500, oldPrice: 1600, discount: "6% off", image: Nikee_Airforce_1_Low_Light_Armoury_Blue },
+  { id: 40, name: "Premium Sneakers – White Black Classic", price: 1400, oldPrice: 1500, discount: "6% off", image: Nikee_Airforce_1_WHITE_BLACK },
+
+  { id: 41, name: "Performance Shoes – Ekiden Pack Multi", price: 2500, oldPrice: 2700, discount: "7% off", image: Nikee_Running_Alphafly_2_Ekiden_Pack_Multi },
+  { id: 42, name: "Premium Sneakers – Monsoon Blue", price: 2000, oldPrice: 2200, discount: "9% off", image: Nikee_Sb_Dunk_low_Monsoon_Blue_Premium },
+  { id: 43, name: "Premium Sneakers – Panda Style", price: 2100, oldPrice: 2300, discount: "8% off", image: Nike_SB_Dunk_Panda_Womens_Copy },
+
+  { id: 44, name: "Premium Sneakers – Light Bone Edition", price: 2300, oldPrice: 2500, discount: "8% off", image: Nikeee_Air_Jordan_4_RM_Light_Bone },
+  { id: 45, name: "Premium Sneakers – High Classic", price: 2200, oldPrice: 2400, discount: "8% off", image: Nike_Air_Jordan_Retro_1_High_SEMI_UA },
+
+  { id: 46, name: "Performance Shoes – Black White Stratus", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Stratus_V3_Black_White },
+  { id: 47, name: "Performance Shoes – Black Ivory Tilt", price: 1750, oldPrice: 1900, discount: "7% off", image: On_Cloud_Tilt_2_0_Black_Ivory_Copy },
+  { id: 48, name: "Performance Shoes – Iron Dew Edition", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Tilt_Running_Iron_Dew },
+  { id: 49, name: "Performance Shoes – Iron Dew Classic", price: 1800, oldPrice: 2000, discount: "10% off", image: On_Cloud_Tilt_ruunning_Iron_Dew },
+
+  { id: 50, name: "Premium Sneakers – Birch Green 217", price: 1199, oldPrice: 1250, discount: "4% off", image: Onitsuka_Mexico_66_Brich_green_217 },
+  { id: 51, name: "Premium Sneakers – Classic 151", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_151 },
+  { id: 52, name: "Premium Sneakers – Beige Green 221", price: 1250, oldPrice: 1300, discount: "3.5% off", image: Onitsuka_Tiger_Mexico_66_Biege_Grass_Green_221 },
+
+  { id: 53, name: "Premium Sneakers – Black Red 240", price: 1350, oldPrice: 1450, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Black_Classic_Red_240_Copy },
+  { id: 54, name: "Premium Sneakers – Cactus Green 220", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Cactus_Green_220 },
+
+  { id: 55, name: "Premium Sneakers – White Green Half Cut", price: 1300, oldPrice: 1400, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Shoe_Sneaker_White_Green_Copy },
+  { id: 56, name: "Premium Sneakers – White Blue Red Half Cut", price: 1300, oldPrice: 1400, discount: "7% off", image: Onitsuka_Tiger_Mexico_66_Sabot_Half_Cut_Sneaker_White_blue_red },
+
+  { id: 57, name: "Premium Sneakers – Cream Orange Edition", price: 1400, oldPrice: 1500, discount: "6.5% off", image: Onitsuka_Tiger_Mexico_66_SD_Cream_Black_Orange_For_Her_276 },
+  { id: 58, name: "Premium Sneakers – Pink Edition", price: 1400, oldPrice: 1500, discount: "6.5% off", image: Onitsuka_Tiger_Mexico_66_SD_Pink_252 },
+
+  { id: 59, name: "Premium Sneakers – Slip On Black", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Slip_On_Black_105 },
+  { id: 60, name: "Premium Sneakers – Slip On Green", price: 1200, oldPrice: 1250, discount: "4% off", image: Onitsuka_Tiger_Mexico_66_Slip_On_Green_For_Her }
 ];
 const ShoesPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);

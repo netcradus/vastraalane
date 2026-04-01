@@ -37,36 +37,57 @@ import Suocchi from "../assets/Suocchi 4413 gold yellow.jpg";
 import Versace from "../assets/Versace 127 Gold Blue.png";
 
 const sunglasses = [
-  { id: 1, name: "Dolce & Gabbana 5011", img: DolceGabbana, price: "₹1499", oldPrice: "₹7,000", discount: "50% off" },
-  { id: 2, name: "Gucci 10318", img: Gucci, price: "₹1299", oldPrice: "₹8,500", discount: "49% off" },
-  { id: 3, name: "Marc Jacobs 515", img: MarcJacobs515, price: "₹1899", oldPrice: "₹7,800", discount: "50% off" },
-  { id: 4, name: "Tom Ford 23533", img: TomFord, price: "₹1199", oldPrice: "₹10,000", discount: "48% off" },
-  { id: 5, name: "Balmain 28015 Black", img: BalmainBlack, price: "₹1299", oldPrice: "₹9,000", discount: "49% off" },
-  { id: 6, name: "Balmain 28015 Brown", img: BalmainBrown, price: "₹1599", oldPrice: "₹9,200", discount: "50% off" },
-  { id: 7, name: "Balmain 28015 Tiger Brown", img: BalmainTigerBrown, price: "₹1299", oldPrice: "₹9,300", discount: "48% off" },
-  { id: 8, name: "Balmain 28015 Tiger Green", img: BalmainTigerGreen, price: "₹1399", oldPrice: "₹9,300", discount: "48% off" },
-  { id: 9, name: "Boss Ice 0618", img: BossIce, price: "₹1299", oldPrice: "₹6,600", discount: "50% off" },
-  { id: 10, name: "Burberry 8769 Black Silver Mercury", img: Burberry, price: "₹1499", oldPrice: "₹11,000", discount: "50% off" },
-  { id: 11, name: "Calvin Klein Y06 Grey Black", img: CalvinKlein, price: "₹1799", oldPrice: "₹7,500", discount: "49% off" },
-  { id: 12, name: "Cartier Gold Black 3072", img: Cartier1, price: "₹1999", oldPrice: "₹14,000", discount: "50% off" },
-  { id: 13, name: "Cartier Gold Black 3072", img: Cartier2, price: "₹1299", oldPrice: "₹14,000", discount: "50% off" },
-  { id: 14, name: "David Beckham 2208 Water Brown Green", img: DavidBrownGreen, price: "₹1299", oldPrice: "₹8,400", discount: "50% off" },
-  { id: 15, name: "David Beckham Black 220", img: DavidBlack1, price: "₹1,199", oldPrice: "₹8,400", discount: "50% off" },
-  { id: 16, name: "David Beckham Black 220", img: DavidBlack2, price: "₹1,199", oldPrice: "₹8,400", discount: "50% off" },
-  { id: 17, name: "Dior WMNS 8875 Black Blue DC", img: Dior, price: "₹1299", oldPrice: "₹11,800", discount: "50% off" },
-  { id: 18, name: "Jacques Marie Mage 3959 Black Plano", img: Jacques, price: "₹1299", oldPrice: "₹12,500", discount: "50% off" },
-  { id: 19, name: "Loewe 8419 Grey", img: Loewe1, price: "₹1499", oldPrice: "₹19,000", discount: "50% off" },
-  { id: 20, name: "Loewe 8419 Grey", img: Loewe2, price: "₹1,499", oldPrice: "₹9,000", discount: "50% off" },
-  { id: 21, name: "Louis Vuitton Silver Blue 2608", img: LouisVuitton, price: "₹1,499", oldPrice: "₹15,000", discount: "50% off" },
-  { id: 22, name: "Marc Jacobs 510 Gold Black", img: MarcJacobsGoldBlack, price: "₹1,999", oldPrice: "₹8,000", discount: "50% off" },
-  { id: 23, name: "Marc Jacobs Black", img: MarcJacobsBlack, price: "₹1,999", oldPrice: "₹8,000", discount: "50% off" },
-  { id: 24, name: "Marc Jacobs Gold-Multi Luxury Shades 9025", img: MarcJacobsLuxury, price: "₹1,499", oldPrice: "₹9,000", discount: "50% off" },
-  { id: 25, name: "Mont Blanc Y07 Black", img: MontBlanc, price: "₹1,699", oldPrice: "₹1,400", discount: "50% off" },
-  { id: 26, name: "Oakley 0221 Gold Yellow", img: Oakley, price: "₹1399", oldPrice: "₹1,600", discount: "50% off" },
-  { id: 27, name: "Prada 21 Grey Blue", img: Prada, price: "₹1099", oldPrice: "₹1,500", discount: "50% off" },
-  { id: 28, name: "Rayban 04 Lite Grey Black", img: Rayban, price: "₹1,499", oldPrice: "₹7,000", discount: "50% off" },
-  { id: 29, name: "Suocchi 4413 Gold Yellow", img: Suocchi, price: "₹1,999", oldPrice: "₹6,000", discount: "50% off" },
-  { id: 30, name: "Versace 127 Gold Blue", img: Versace, price: "₹2199", oldPrice: "₹12,400", discount: "50% off" },
+  { id: 1, name: "Luxury Sunglasses – Model 5011", img: DolceGabbana, price: "₹2499", oldPrice: "₹7000", discount: "50% off" },
+
+  { id: 2, name: "Premium Sunglasses – Model 10318", img: Gucci, price: "₹1299", oldPrice: "₹8500", discount: "49% off" },
+
+  { id: 3, name: "Premium Sunglasses – Model 515", img: MarcJacobs515, price: "₹1899", oldPrice: "₹7800", discount: "50% off" },
+
+  { id: 4, name: "Luxury Sunglasses – Model 23533", img: TomFord, price: "₹1199", oldPrice: "₹10000", discount: "48% off" },
+
+  { id: 5, name: "Premium Sunglasses – Black Edition 28015", img: BalmainBlack, price: "₹1599", oldPrice: "₹9000", discount: "49% off" },
+  { id: 6, name: "Premium Sunglasses – Brown Edition 28015", img: BalmainBrown, price: "₹1599", oldPrice: "₹9200", discount: "50% off" },
+  { id: 7, name: "Premium Sunglasses – Tiger Brown 28015", img: BalmainTigerBrown, price: "₹1799", oldPrice: "₹9300", discount: "48% off" },
+  { id: 8, name: "Premium Sunglasses – Tiger Green 28015", img: BalmainTigerGreen, price: "₹1799", oldPrice: "₹9300", discount: "48% off" },
+
+  { id: 9, name: "Premium Sunglasses – Ice Edition 0618", img: BossIce, price: "₹1299", oldPrice: "₹6600", discount: "50% off" },
+
+  { id: 10, name: "Luxury Sunglasses – Black Silver Mercury 8769", img: Burberry, price: "₹1499", oldPrice: "₹11000", discount: "50% off" },
+
+  { id: 11, name: "Premium Sunglasses – Grey Black Y06", img: CalvinKlein, price: "₹1799", oldPrice: "₹7500", discount: "49% off" },
+
+  { id: 12, name: "Luxury Sunglasses – Gold Black 3072", img: Cartier1, price: "₹1999", oldPrice: "₹14000", discount: "50% off" },
+  { id: 13, name: "Luxury Sunglasses – Gold Black 3072 (Alt)", img: Cartier2, price: "₹1999", oldPrice: "₹14000", discount: "50% off" },
+
+  { id: 14, name: "Premium Sunglasses – Brown Green 2208", img: DavidBrownGreen, price: "₹1199", oldPrice: "₹8400", discount: "50% off" },
+  { id: 15, name: "Premium Sunglasses – Black 220", img: DavidBlack1, price: "₹1199", oldPrice: "₹8400", discount: "50% off" },
+  { id: 16, name: "Premium Sunglasses – Black 220 (Alt)", img: DavidBlack2, price: "₹1199", oldPrice: "₹8400", discount: "50% off" },
+
+  { id: 17, name: "Luxury Sunglasses – Black Blue 8875", img: Dior, price: "₹1199", oldPrice: "₹11800", discount: "50% off" },
+
+  { id: 18, name: "Luxury Sunglasses – Black Plano 3959", img: Jacques, price: "₹1299", oldPrice: "₹12500", discount: "50% off" },
+
+  { id: 19, name: "Premium Sunglasses – Grey 8419", img: Loewe1, price: "₹1499", oldPrice: "₹9000", discount: "50% off" },
+  { id: 20, name: "Premium Sunglasses – Grey 8419 (Alt)", img: Loewe2, price: "₹1499", oldPrice: "₹9000", discount: "50% off" },
+
+  { id: 21, name: "Luxury Sunglasses – Silver Blue 2608", img: LouisVuitton, price: "₹1499", oldPrice: "₹15000", discount: "50% off" },
+
+  { id: 22, name: "Premium Sunglasses – Gold Black 510", img: MarcJacobsGoldBlack, price: "₹1999", oldPrice: "₹8000", discount: "50% off" },
+  { id: 23, name: "Premium Sunglasses – Black Classic", img: MarcJacobsBlack, price: "₹1999", oldPrice: "₹8000", discount: "50% off" },
+
+  { id: 24, name: "Luxury Sunglasses – Gold Multi 9025", img: MarcJacobsLuxury, price: "₹1499", oldPrice: "₹9000", discount: "50% off" },
+
+  { id: 25, name: "Premium Sunglasses – Black Y07", img: MontBlanc, price: "₹1099", oldPrice: "₹1400", discount: "50% off" },
+
+  { id: 26, name: "Premium Sunglasses – Gold Yellow 0221", img: Oakley, price: "₹1299", oldPrice: "₹6600", discount: "50% off" },
+
+  { id: 27, name: "Luxury Sunglasses – Grey Blue 21", img: Prada, price: "₹1799", oldPrice: "₹11500", discount: "50% off" },
+
+  { id: 28, name: "Premium Sunglasses – Lite Grey Black 04", img: Rayban, price: "₹1499", oldPrice: "₹7000", discount: "50% off" },
+
+  { id: 29, name: "Premium Sunglasses – Gold Yellow 4413", img: Suocchi, price: "₹1999", oldPrice: "₹6000", discount: "50% off" },
+
+  { id: 30, name: "Luxury Sunglasses – Gold Blue 127", img: Versace, price: "₹1199", oldPrice: "₹12400", discount: "50% off" },
 ];
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);

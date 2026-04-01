@@ -47,6 +47,11 @@ function Footer() {
     
       <p className="copyright">
         © 2025 All rights reserved | Vastraaalane
+        
+      </p>
+
+      <p className="managed-by">
+        managed by CyberHaxs
       </p>
     </footer>
   );

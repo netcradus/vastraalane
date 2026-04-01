@@ -27,13 +27,62 @@ const categories = [
 
 // 🔽 Products
 const products = [
-  { id: 1, name: "Tommy_Hilfiger_T-shirt", category: "Shirts & Tshirt", oldPrice: 8000, currentPrice: 1999, image: TshirtImg },
-  { id: 2, name: "AZZARO WANTED TONIC EDT", category: "Perfumes", oldPrice: 4217, currentPrice: 1500, image: PerfumeImg },
-  { id: 3, name: "High Heel and Sandals", category: "Shoes", oldPrice: 1830, currentPrice: 1117, image: SandalImg },
-  { id: 4, name: "nigel sylvester x air jordan 4 retro", category: "Shoes", oldPrice: 3999, currentPrice: 2179, image: ShoesImg },
-  { id: 5, name: "COAC_H sling bag with folding box 201", category: "Loafers", oldPrice: 4000, currentPrice: 1340, image: crocImg },
-  { id: 6, name: "COAC_H sling bag with folding box 201", category: "HandBags and Bag", oldPrice: 7830, currentPrice: 1217, image: HandbagImg },
-  { id: 7, name: "David_becham_70066.png", category: "Sunglasses", oldPrice: 1200.00, currentPrice: 1017, image: Sunglasses },
+  {
+    id: 1,
+    name: "Premium T-Shirt – Classic Edition",
+    category: "Shirts & Tshirt",
+    oldPrice: 8000,
+    currentPrice: 1999,
+    image: TshirtImg
+  },
+  {
+    id: 2,
+    name: "Signature Perfume – Tonic Edition",
+    category: "Perfumes",
+    oldPrice: 4217,
+    currentPrice: 1500,
+    image: PerfumeImg
+  },
+  {
+    id: 3,
+    name: "Luxury Heels & Sandals",
+    category: "Shoes",
+    oldPrice: 1830,
+    currentPrice: 1117,
+    image: SandalImg
+  },
+  {
+    id: 4,
+    name: "Premium Sneakers – Retro Edition",
+    category: "Shoes",
+    oldPrice: 3999,
+    currentPrice: 2179,
+    image: ShoesImg
+  },
+  {
+    id: 5,
+    name: "Premium Sling Bag – Model 201",
+    category: "HandBags and Bag",
+    oldPrice: 4000,
+    currentPrice: 1340,
+    image: crocImg
+  },
+  {
+    id: 6,
+    name: "Premium Sling Bag – Classic Edition",
+    category: "HandBags and Bag",
+    oldPrice: 7830,
+    currentPrice: 1217,
+    image: HandbagImg
+  },
+  {
+    id: 7,
+    name: "Premium Sunglasses – Classic Edition",
+    category: "Sunglasses",
+    oldPrice: 1200,
+    currentPrice: 1017,
+    image: Sunglasses
+  }
 ];
 const CategoryPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);

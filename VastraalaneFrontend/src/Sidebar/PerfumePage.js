@@ -48,46 +48,58 @@ import YslParis from "../assets/YSL_MON PARIS-EDP.png";
 
 // ✅ Perfume products array with old price & discount
 const perfumes = [
-  { id: 1, name: "_ACQUA_DI_GIO_GIORGIO_ARMAN_white", price: "₹2498.00", oldPrice: "₹5,000", discount: "10% off", image: AcquaDiGio },
-  { id: 2, name: "_Calvin_Klein_Gift_Set_4", price: "₹2599.0", oldPrice: "₹4,500", discount: "11% off", image: CalvinKlein },
-  { id: 3, name: "_Dolce_Gabbana_Blue_Pour_Homme_Gift_Set_of_3", price: "₹2499.0", oldPrice: "₹5,500", discount: "9% off", image: DolceBlue },
-  { id: 4, name: "_Dolce_Gabbana_The__Only_One_Gift_Set_of_3", price: "₹2500.00", oldPrice: "₹5,200", discount: "8% off", image: DolceTheOnlyOne },
-  { id: 5, name: "_My_Burberry_England_Gift_Set_of_4", price: "₹4200", oldPrice: "₹5,800", discount: "10% off", image: MyBurberry },
-  { id: 6, name: "_Tom_Ford_EDP_Gift_Set_of_4", price: "₹2599.00", oldPrice: "₹9,000", discount: "11% off", image: TomFord },
-  { id: 7, name: "_Valentino_Uomo_Born_in_Roma_EDT_Gift_Set_of_3", price: "₹2499.00", oldPrice: "₹6,000", discount: "8% off", image: Valentino },
-  { id: 8, name: "212 VIP BLACKk", price: "₹1500", oldPrice: "₹4,000", discount: "13% off", image: VipBlack },
-  { id: 9, name: "212_SEXY_MEN_EAU_DE_TOILETTE_1", price: "₹2499.00", oldPrice: "₹4,200", discount: "12% off", image: VipSexy },
-  { id: 10, name: "ACQUA_DI_GIO_GIOR perfume ", price: "₹2499.00", oldPrice: "₹4,800", discount: "10% off", image: AcquaPerfume },
-  { id: 11, name: "ARMAN_I because its YOU ", price: "₹1000", oldPrice: "₹4,500", discount: "9% off", image: ArmanBecause },
-  { id: 12, name: "ARMAN-I IN LOVE WITH ", price: "₹2599.00", oldPrice: "₹4,600", discount: "9% off", image: ArmanLove },
-  { id: 13, name: "AZZARO FOREVER WANTED ELIXIR ", price: "₹2689.00", oldPrice: "₹5,000", discount: "8% off", image: AzzaroElixir },
-  { id: 14, name: "AZZARO WANTED EDP SILVER ", price: "₹2900", oldPrice: "₹4,400", discount: "9% off", image: AzzaroSilver },
-  { id: 15, name: "AZZARO WANTED TONIC EDT ", price: "₹2500", oldPrice: "₹4,300", discount: "9% off", image: AzzaroTonic },
-  { id: 16, name: "AZZARO_WANTED BY PERFUME ", price: "₹2499.00", oldPrice: "₹5,200", discount: "10% off", image: AzzaroWanted },
-  { id: 17, name: "Bvlgari Omnia Gift set of 3", price: "₹2800", oldPrice: "₹6,500", discount: "8% off", image: Bvlgari },
-  { id: 18, name: "CALVIN PERFUME", price: "₹3,000", oldPrice: "₹3,400", discount: "12% off", image: CalvinPerfume },
-  { id: 19, name: "CALVIN_KLAIN_EDTT ", price: "₹1200", oldPrice: "₹3,600", discount: "11% off", image: CalvinEdt },
-  { id: 20, name: "Chloe Eau De Parfum Gift Set Of 4", price: "₹2500", oldPrice: "₹7,000", discount: "7% off", image: Chloe },
-  { id: 21, name: "COROLINA HERRERA GOOD GIRL ITS SO GOOD TO BE BAD ", price: "₹1700", oldPrice: "₹6,000", discount: "5% off", image: GoodGirl },
-  { id: 22, name: "Darcy perfumes de marly paris ", price: "₹5,300", oldPrice: "₹1800", discount: "8% off", image: Darcy },
-  { id: 23, name: "DENVER78", price: "₹800", oldPrice: "₹1,000", discount: "20% off", image: Denver },
-  { id: 24, name: "DIOR_ADDICT_EAU_FRAICHE ", price: "₹3,500", oldPrice: "₹8,000", discount: "6% off", image: DiorAddict },
-  { id: 25, name: "ENGAGE78 ", price: "₹500", oldPrice: "₹700", discount: "28% off", image: Engage },
-  { id: 26, name: "GIO_GIORGIO_ARMAN", price: "₹2900", oldPrice: "₹5,200", discount: "6% off", image: GioArman },
-  { id: 27, name: "Giorgio si", price: "₹2499.0", oldPrice: "₹5,500", discount: "7% off", image: GiorgioSi },
-  { id: 28, name: "Givenchy Irresistible Gift Set of 3 ", price: "₹2450.00", oldPrice: "₹6,800", discount: "6% off", image: Givenchy },
-  { id: 29, name: "INVICTUS INTENSE ", price: "₹2000", oldPrice: "₹2500", discount: "8% off", image: Invictus },
-  { id: 30, name: "Maison Margiela Paris Replica Gift Set of 4", price: "₹3000", oldPrice: "₹7,500", discount: "7% off", image: MaisonMargiela },
-  { id: 31, name: "MY_BURBERRY_EAU_DE_PURFUME ", price: "₹2600", oldPrice: "₹6000", discount: "7% off", image: MyBurberryEDP },
-  { id: 32, name: "NARCISO RODRIGIGUEZ FOR HER EDT", price: "₹2500", oldPrice: "₹5,800", discount: "7% off", image: Narciso },
-  { id: 33, name: "Paco Rabanne 1 Million Gift Set of 3", price: "₹3900", oldPrice: "₹7,000", discount: "7% off", image: Paco },
-  { id: 34, name: "TWILLY dHermes", price: "₹6,000", oldPrice: "₹3000", discount: "7% off", image: Twilly },
-  { id: 35, name: "Versace eros gift set of 4", price: "₹2590", oldPrice: "₹7,200", discount: "6% off", image: VersaceEros },
-  { id: 36, name: "Victoria Secret EDP Gift Set of 4", price: "₹2500", oldPrice: "₹6,200", discount: "6% off", image: VictoriaSecret },
-  { id: 37, name: "YSL BLACL OPIUM OVER RED", price: "₹2,300", oldPrice: "₹7,800", discount: "6% off", image: YslRed },
-  { id: 38, name: "YSL LIBRE EDP Intense", price: "₹2,200", oldPrice: "₹7,700", discount: "6% off", image: YslLibre },
-  { id: 39, name: "YSL_BLACK_OPIUM_EAU_DE_PARFUME", price: "₹1,000", oldPrice: "₹7,500", discount: "6% off", image: YslOpium },
-  { id: 40, name: "YSL_MON PARIS-EDP", price: "₹2,400", oldPrice: "₹7,900", discount: "6% off", image: YslParis },
+  { id: 1, name: "Luxury Perfume – Aqua White Edition", price: "₹2498", oldPrice: "₹5000", discount: "10% off", image: AcquaDiGio },
+  { id: 2, name: "Premium Gift Set – Classic Collection", price: "₹2599", oldPrice: "₹4500", discount: "11% off", image: CalvinKlein },
+  { id: 3, name: "Luxury Gift Set – Blue Homme Edition", price: "₹2499", oldPrice: "₹5500", discount: "9% off", image: DolceBlue },
+  { id: 4, name: "Luxury Gift Set – Elegant Edition", price: "₹2500", oldPrice: "₹5200", discount: "8% off", image: DolceTheOnlyOne },
+  { id: 5, name: "Premium Gift Set – Classic England", price: "₹4200", oldPrice: "₹5800", discount: "10% off", image: MyBurberry },
+  { id: 6, name: "Luxury Gift Set – Signature Collection", price: "₹2599", oldPrice: "₹9000", discount: "11% off", image: TomFord },
+  { id: 7, name: "Premium Gift Set – Roma Edition", price: "₹2499", oldPrice: "₹6000", discount: "8% off", image: Valentino },
+
+  { id: 8, name: "Signature Perfume – VIP Black Edition", price: "₹1500", oldPrice: "₹4000", discount: "13% off", image: VipBlack },
+  { id: 9, name: "Signature Perfume – Sexy Night Edition", price: "₹2499", oldPrice: "₹4200", discount: "12% off", image: VipSexy },
+
+  { id: 10, name: "Luxury Perfume – Aqua Classic", price: "₹2499", oldPrice: "₹4800", discount: "10% off", image: AcquaPerfume },
+  { id: 11, name: "Premium Perfume – Because You Edition", price: "₹1000", oldPrice: "₹4500", discount: "9% off", image: ArmanBecause },
+  { id: 12, name: "Premium Perfume – Love Essence", price: "₹2599", oldPrice: "₹4600", discount: "9% off", image: ArmanLove },
+
+  { id: 13, name: "Luxury Perfume – Elixir Edition", price: "₹2689", oldPrice: "₹5000", discount: "8% off", image: AzzaroElixir },
+  { id: 14, name: "Luxury Perfume – Silver Edition", price: "₹2900", oldPrice: "₹4400", discount: "9% off", image: AzzaroSilver },
+  { id: 15, name: "Luxury Perfume – Tonic Edition", price: "₹2500", oldPrice: "₹4300", discount: "9% off", image: AzzaroTonic },
+  { id: 16, name: "Luxury Perfume – Wanted Edition", price: "₹2499", oldPrice: "₹5200", discount: "10% off", image: AzzaroWanted },
+
+  { id: 17, name: "Premium Gift Set – Omnia Collection", price: "₹2800", oldPrice: "₹6500", discount: "8% off", image: Bvlgari },
+  { id: 18, name: "Premium Perfume – Classic Edition", price: "₹3000", oldPrice: "₹3400", discount: "12% off", image: CalvinPerfume },
+  { id: 19, name: "Premium Perfume – EDT Edition", price: "₹1200", oldPrice: "₹3600", discount: "11% off", image: CalvinEdt },
+
+  { id: 20, name: "Luxury Gift Set – Floral Collection", price: "₹2500", oldPrice: "₹7000", discount: "7% off", image: Chloe },
+  { id: 21, name: "Luxury Perfume – Good Girl Edition", price: "₹1700", oldPrice: "₹6000", discount: "5% off", image: GoodGirl },
+  { id: 22, name: "Luxury Perfume – Darcy Signature", price: "₹5300", oldPrice: "₹1800", discount: "8% off", image: Darcy },
+
+  { id: 23, name: "Daily Perfume – Classic 78", price: "₹800", oldPrice: "₹1000", discount: "20% off", image: Denver },
+  { id: 24, name: "Luxury Perfume – Fresh Edition", price: "₹3500", oldPrice: "₹8000", discount: "6% off", image: DiorAddict },
+  { id: 25, name: "Daily Perfume – Engage Edition", price: "₹500", oldPrice: "₹700", discount: "28% off", image: Engage },
+
+  { id: 26, name: "Luxury Perfume – Gio Classic", price: "₹2900", oldPrice: "₹5200", discount: "6% off", image: GioArman },
+  { id: 27, name: "Luxury Perfume – SI Edition", price: "₹2499", oldPrice: "₹5500", discount: "7% off", image: GiorgioSi },
+
+  { id: 28, name: "Luxury Gift Set – Irresistible Collection", price: "₹2450", oldPrice: "₹6800", discount: "6% off", image: Givenchy },
+  { id: 29, name: "Luxury Perfume – Intense Edition", price: "₹2000", oldPrice: "₹2500", discount: "8% off", image: Invictus },
+
+  { id: 30, name: "Luxury Gift Set – Replica Collection", price: "₹3000", oldPrice: "₹7500", discount: "7% off", image: MaisonMargiela },
+  { id: 31, name: "Premium Perfume – Classic Eau De Parfum", price: "₹2600", oldPrice: "₹6000", discount: "7% off", image: MyBurberryEDP },
+
+  { id: 32, name: "Luxury Perfume – For Her Edition", price: "₹2500", oldPrice: "₹5800", discount: "7% off", image: Narciso },
+  { id: 33, name: "Luxury Gift Set – Million Collection", price: "₹3900", oldPrice: "₹7000", discount: "7% off", image: Paco },
+
+  { id: 34, name: "Luxury Perfume – Twilly Edition", price: "₹6000", oldPrice: "₹3000", discount: "7% off", image: Twilly },
+  { id: 35, name: "Luxury Gift Set – Eros Collection", price: "₹2590", oldPrice: "₹7200", discount: "6% off", image: VersaceEros },
+  { id: 36, name: "Premium Gift Set – Secret Collection", price: "₹2500", oldPrice: "₹6200", discount: "6% off", image: VictoriaSecret },
+
+  { id: 37, name: "Luxury Perfume – Red Edition", price: "₹2300", oldPrice: "₹7800", discount: "6% off", image: YslRed },
+  { id: 38, name: "Luxury Perfume – Libre Intense", price: "₹2200", oldPrice: "₹7700", discount: "6% off", image: YslLibre },
+  { id: 39, name: "Luxury Perfume – Black Opium Style", price: "₹1000", oldPrice: "₹7500", discount: "6% off", image: YslOpium },
+  { id: 40, name: "Luxury Perfume – Paris Edition", price: "₹2400", oldPrice: "₹7900", discount: "6% off", image: YslParis },
 ];
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);

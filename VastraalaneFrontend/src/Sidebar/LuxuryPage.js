@@ -31,29 +31,51 @@ import Versace1 from "../assets/Versace Aion Chronograph.png";
 
 // ✅ Product Data Array
 const products = [
-  { id: 1, name: "Arman_i_ Exchange watch Exclusive", image: ArmaniExchange, price: 2999, oldPrice: 24999, category: "Exclusive" },
-  { id: 2, name: "AUDEMAR.S PIGUET Premium", image: Audemars1, price: 2899, oldPrice: 6999, category: "Premium" },
-  { id: 3, name: "AUDEMARS_PIGUET AUTOMATIC WATCH ROYAL OAK 2308 Luxury", image: Audemars2, price: 1999, oldPrice: 31999, category: "Luxury" },
-  { id: 4, name: "AUDEMARS_PIGUET ROYAL OAK (2303) Premium", image: Audemars3, price: 3699, oldPrice: 32999, category: "Premium" },
-  { id: 5, name: "Emporio Arman_i AR1143 Exclusive", image: Emporio1, price: 4599, oldPrice: 22999, category: "Exclusive" },
-  { id: 6, name: "Emporio Arman_i Classic Silver-Black Premium", image: Emporio2, price: 1599, oldPrice: 26999, category: "Premium" },
-  { id: 7, name: "Emporio Arman_i For her Exclusive", image: Emporio3, price: 2899, oldPrice: 25999, category: "Exclusive" },
-  { id: 8, name: "Hublo t big bang classic Luxury", image: Hublot1, price: 1983.00, oldPrice: 3999, category: "Luxury" },
-  { id: 9, name: "HUBLO_T BIGBANG UNICO Premium", image: Hublot2, price: 1999, oldPrice: 2999, category: "Premium" },
-  { id: 10, name: "Omeg a Seamaster Aqua Terra Luxury", image: Omega1, price: 2999, oldPrice: 3799, category: "Luxury" },
-  { id: 11, name: "OMEG A SPEEDMASTER MOONWATCH Luxury", image: Omega2, price: 1899, oldPrice: 3999, category: "Luxury" },
-  { id: 12, name: "OMEG A SPEEDMASTER PILOT AUTO Premium", image: Omega3, price: 1929, oldPrice: 4999, category: "Premium" },
-  { id: 13, name: "Panerai Radiomir California Exclusive", image: Panerai, price: 1199, oldPrice: 5999, category: "Exclusive" },
-  { id: 14, name: "patek_philippe_nautilus_2342 Luxury", image: Patek1, price: 1499, oldPrice: 6999, category: "Luxury" },
-  { id: 15, name: "Rad_o diastar open heart Premium", image: Rado, price: 1399, oldPrice: 29999, category: "Premium" },
-  { id: 16, name: "Role_x Oyster perpetual Luxury", image: Rolex1, price: 1299, oldPrice: 7999, category: "Luxury" },
-  { id: 17, name: "ROLE_X_YACHTMASRER Exclusive", image: Rolex8, price: 2999, oldPrice: 3999, category: "Exclusive" },
-  { id: 18, name: "SEIKO 5 quartz WATCH Bluee Luxury", image: Seiko1, price: 5599, oldPrice: 22999, category: "Luxury" },
-  { id: 19, name: "SEIKO 5 quartz WATCH Green Premium", image: Seiko2, price: 2599, oldPrice: 22999, category: "Premium" },
-  { id: 20, name: "TISSO T COUPLE WATCH Exclusive", image: Tissot1, price: 3999, oldPrice: 34999, category: "Exclusive" },
-  { id: 21, name: "Tisso t PRX Premium", image: Tissot2, price: 3299, oldPrice: 35999, category: "Premium" },
-  { id: 22, name: "Tommy_Hilfiger Decker Exclusive", image: Tommy1, price: 2599, oldPrice: 19999, category: "Exclusive" },
-  { id: 23, name: "Versace Aion Chronograph Luxury", image: Versace1, price: 999, oldPrice: 2999, category: "Luxury" },
+  { id: 1, name: "Exclusive Watch – Classic Edition", image: ArmaniExchange, price: 2999, oldPrice: 24999, category: "Exclusive" },
+
+  { id: 2, name: "Premium Watch – Royal Edition", image: Audemars1, price: 2899, oldPrice: 6999, category: "Premium" },
+
+  { id: 3, name: "Luxury Watch – Automatic Royal 2308", image: Audemars2, price: 1999, oldPrice: 31999, category: "Luxury" },
+
+  { id: 4, name: "Premium Watch – Steel Royal 2303", image: Audemars3, price: 3699, oldPrice: 32999, category: "Premium" },
+
+  { id: 5, name: "Exclusive Watch – Classic Dial 1143", image: Emporio1, price: 4599, oldPrice: 22999, category: "Exclusive" },
+
+  { id: 6, name: "Premium Watch – Silver Black Edition", image: Emporio2, price: 1599, oldPrice: 26999, category: "Premium" },
+
+  { id: 7, name: "Exclusive Watch – Elegant Series", image: Emporio3, price: 2899, oldPrice: 25999, category: "Exclusive" },
+
+  { id: 8, name: "Luxury Watch – Big Dial Classic", image: Hublot1, price: 1983, oldPrice: 3999, category: "Luxury" },
+
+  { id: 9, name: "Premium Watch – Chronograph Unico", image: Hublot2, price: 1999, oldPrice: 2999, category: "Premium" },
+
+  { id: 10, name: "Luxury Watch – Aqua Blue Automatic", image: Omega1, price: 2999, oldPrice: 3799, category: "Luxury" },
+
+  { id: 11, name: "Luxury Watch – Moon Chronograph", image: Omega2, price: 1899, oldPrice: 3999, category: "Luxury" },
+
+  { id: 12, name: "Premium Watch – Pilot Automatic", image: Omega3, price: 1929, oldPrice: 4999, category: "Premium" },
+
+  { id: 13, name: "Exclusive Watch – Radiant Classic", image: Panerai, price: 1199, oldPrice: 5999, category: "Exclusive" },
+
+  { id: 14, name: "Luxury Watch – Nautilus Style 2342", image: Patek1, price: 1499, oldPrice: 6999, category: "Luxury" },
+
+  { id: 15, name: "Premium Watch – Open Heart Edition", image: Rado, price: 1399, oldPrice: 29999, category: "Premium" },
+
+  { id: 16, name: "Luxury Watch – Oyster Classic", image: Rolex1, price: 1299, oldPrice: 7999, category: "Luxury" },
+
+  { id: 17, name: "Exclusive Watch – Yacht Series", image: Rolex8, price: 2999, oldPrice: 3999, category: "Exclusive" },
+
+  { id: 18, name: "Luxury Watch – Quartz Blue Edition", image: Seiko1, price: 5599, oldPrice: 22999, category: "Luxury" },
+
+  { id: 19, name: "Premium Watch – Quartz Green Edition", image: Seiko2, price: 2599, oldPrice: 22999, category: "Premium" },
+
+  { id: 20, name: "Exclusive Watch – Couple Edition", image: Tissot1, price: 3999, oldPrice: 34999, category: "Exclusive" },
+
+  { id: 21, name: "Premium Watch – Modern PRX Style", image: Tissot2, price: 3299, oldPrice: 35999, category: "Premium" },
+
+  { id: 22, name: "Exclusive Watch – Decker Edition", image: Tommy1, price: 2599, oldPrice: 19999, category: "Exclusive" },
+
+  { id: 23, name: "Luxury Watch – Chronograph Elite", image: Versace1, price: 999, oldPrice: 2999, category: "Luxury" },
 ];
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);

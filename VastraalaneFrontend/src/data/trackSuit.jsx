@@ -26,26 +26,42 @@ import ZaraBlack from "../assets/Zar a Black Premium Knitted Classic Cord Set.pn
 
 // ✅ Tracksuit Array
 const tracksuits = [
-  { id: 1, name: "Adidas Red Logo Print Premium Imported Tracksuit", price: 1500, oldPrice: 16000, discount: "6% off", image: AdidasRedLogo },
-  { id: 2, name: "Air Jordan Black Premium Oversized Cord Set", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanBlack },
-  { id: 3, name: "Air Jordan Cream Premium Oversized Cord Set", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanCream },
-  { id: 4, name: "Air Jordan Navy Blue Premium Oversized Cord Set", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanNavy },
-  { id: 5, name: "Armani Exchange White Embroidered Patch Logo Eagle Edition Imported Fabric Tracksuit", price: 2200, oldPrice: 24000, discount: "8% off", image: ArmaniExchangeWhite },
-  { id: 7, name: "Balmain Paris Black Premium Imported Japanese Fabric Monogram Printed Tracksuit", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainBlack },
-  { id: 8, name: "Balmain Paris Navy Premium Imported Japanese Fabric Monogram Printed Tracksuit", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainNavy },
-  { id: 9, name: "Balmain Paris White Premium Imported Japanese Fabric Monogram Printed Tracksuit", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainWhite },
-  { id: 10, name: "Boss Dark Grey Embroidered Logo Design with Jacquard Fabric Premium Tracksuit", price: 1800, oldPrice: 20000, discount: "10% off", image: BossDarkGrey },
-  { id: 11, name: "Burberry White Embroidered Logo Imported Fabric Tracksuit", price: 2200, oldPrice: 24000, discount: "8% off", image: BurberryWhite },
-  { id: 12, name: "Diesel Beige Back Print Premium Oversized Cord Set", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselBeige },
-  { id: 13, name: "Diesel Cream Back Print Premium Oversized Cord Set", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselCream },
-  { id: 14, name: "Diesel Green Back Print Premium Oversized Cord Set", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselGreen },
-  { id: 16, name: "HoodRich Grey Embroidery Logo Imported Tracksuit", price: 1600, oldPrice: 1700, discount: "6% off", image: HoodRichGrey },
-  { id: 17, name: "Louis Vuitton Black Beige Monogram Imported Premium Tracksuit", price: 2000, oldPrice: 42000, discount: "5% off", image: LouisVuittonBlackBeige },
-  { id: 18, name: "Louis Vuitton Black White Monogram Imported Premium Tracksuit", price: 2000, oldPrice: 42000, discount: "5% off", image: LouisVuittonBlackWhite },
-  { id: 19, name: "Louis Vuitton White Monogram Imported Premium Tracksuit", price: 2799.0, oldPrice: 42000, discount: "5% off", image: LouisVuittonWhite },
-  { id: 20, name: "Zara Black Premium Knitted Classic Cord Set", price: 1400, oldPrice: 15000, discount: "6% off", image: ZaraBlack },
-];
+  { id: 1, name: "Premium Tracksuit – Red Logo Print Edition", price: 1500, oldPrice: 16000, discount: "6% off", image: AdidasRedLogo },
 
+  { id: 2, name: "Luxury Cord Set – Black Oversized Edition", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanBlack },
+
+  { id: 3, name: "Luxury Cord Set – Cream Oversized Edition", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanCream },
+
+  { id: 4, name: "Luxury Cord Set – Navy Blue Oversized Edition", price: 1800, oldPrice: 20000, discount: "10% off", image: AirJordanNavy },
+
+  { id: 5, name: "Premium Tracksuit – White Embroidered Edition", price: 2200, oldPrice: 24000, discount: "8% off", image: ArmaniExchangeWhite },
+
+  { id: 7, name: "Luxury Tracksuit – Black Monogram Edition", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainBlack },
+
+  { id: 8, name: "Luxury Tracksuit – Navy Monogram Edition", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainNavy },
+
+  { id: 9, name: "Luxury Tracksuit – White Monogram Edition", price: 2500, oldPrice: 27000, discount: "7% off", image: BalmainWhite },
+
+  { id: 10, name: "Premium Tracksuit – Dark Grey Embroidered Edition", price: 1800, oldPrice: 20000, discount: "10% off", image: BossDarkGrey },
+
+  { id: 11, name: "Premium Tracksuit – White Embroidery Edition", price: 2200, oldPrice: 24000, discount: "8% off", image: BurberryWhite },
+
+  { id: 12, name: "Luxury Cord Set – Beige Back Print Edition", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselBeige },
+
+  { id: 13, name: "Luxury Cord Set – Cream Back Print Edition", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselCream },
+
+  { id: 14, name: "Luxury Cord Set – Green Back Print Edition", price: 1700, oldPrice: 18000, discount: "6% off", image: DieselGreen },
+
+  { id: 16, name: "Premium Tracksuit – Grey Embroidery Edition", price: 1600, oldPrice: 1700, discount: "6% off", image: HoodRichGrey },
+
+  { id: 17, name: "Luxury Tracksuit – Black Beige Designer Edition", price: 2000, oldPrice: 42000, discount: "5% off", image: LouisVuittonBlackBeige },
+
+  { id: 18, name: "Luxury Tracksuit – Black White Designer Edition", price: 2000, oldPrice: 42000, discount: "5% off", image: LouisVuittonBlackWhite },
+
+  { id: 19, name: "Luxury Tracksuit – White Designer Edition", price: 2799, oldPrice: 42000, discount: "5% off", image: LouisVuittonWhite },
+
+  { id: 20, name: "Premium Cord Set – Black Knitted Edition", price: 1400, oldPrice: 15000, discount: "6% off", image: ZaraBlack },
+];
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);
 const tracksuitsList = tracksuits.map((t) => ({ ...t, price: t.price + priceIncrement }));
 

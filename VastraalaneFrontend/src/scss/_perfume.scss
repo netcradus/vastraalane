@@ -313,9 +313,9 @@
         }
 
         /* Show only first 4 items (2 rows) */
-        &:nth-child(n + 5) {
-          display: none;
-        }
+        // &:nth-child(n + 5) {
+        //   display: none;
+        // }
       }
     }
 
@@ -334,10 +334,10 @@
           font-size: 12px;
         }
 
-        /* Show only first 4 items */
-        &:nth-child(n + 5) {
-          display: none;
-        }
+        // /* Show only first 4 items */
+        // &:nth-child(n + 5) {
+        //   display: none;
+        // }
       }
     }
   }

@@ -33,32 +33,343 @@ import HermesPink from "../assets/Hermes Paris Oran Flats For Her With OG Box & 
 
 // ✅ Product array
 const sandalsProducts = [
-  { id: 1, name: "Alexander Mcqueen Alex Leather Beige White", image: AlexanderBeige, oldPrice: "₹18,999", price: "₹1999", details: ["Premium leather material","Includes OG box & carry bag","Flat heel design","Durable sole","Authentic Alexander McQueen product"] },
-  { id: 2, name: "Alexander Mcqueen Alex Leather Black 1", image: AlexanderBlack1, oldPrice: "₹2200", price: "₹1999", details: ["Elegant black leather","Includes OG box & carry bag","Flat heel","Comfortable fit","Limited edition"] },
-  { id: 3, name: "Alexander Mcqueen Alex Leather Black 2", image: AlexanderBlack2, oldPrice: "₹4000", price: "₹1999", details: ["High-quality black leather","Includes OG box","Flat heel design","Soft inner lining","Limited edition"] },
-  { id: 4, name: "Christian Dior JAdior Slingback Black", image: DiorBlack, oldPrice: "₹3499", price: "₹1999",  details: ["Iconic Dior embroidery","Includes OG box & dust bag","Flat slingback design","Premium comfort","Authentic Dior product"] },
-  { id: 5, name: "Christian Dior JAdior Slingback Grey", image: DiorGrey, oldPrice: "₹3999", price: "₹1899",  details: ["Elegant grey embroidery","Includes OG box & dust bag","Flat slingback","Soft leather","High quality"] },
-  { id: 6, name: "Christian Dior JAdior Slingback Pink", image: DiorPink, oldPrice: "₹4999", price: "₹1795",  details: ["Feminine pink tone","Includes OG box & dust bag","Flat slingback","Comfortable fit","Premium Dior quality"] },
-  { id: 7, name: "Christian Louboutin Pencil Heel Black 1", image: Louboutin1, oldPrice: "₹7895", price: "₹1700", details: ["Glossy leather finish","Includes OG box & dust bag","High heel","Elegant design","Authentic Louboutin"] },
-  { id: 8, name: "Christian Louboutin Pencil Heel Black 2", image: Louboutin2, oldPrice: "₹1200", price: "₹999.00",  details: ["Stylish black leather","Includes OG box & dust bag","High heel","Comfortable fit","Classic Louboutin design"] },
-  { id: 9, name: "Coach Collins Espadrille Denim", image: CoachDenim, oldPrice: "₹21400", price: "₹1999",  details: ["Denim canvas upper","OG box included","Comfortable espadrille","Durable sole","Classic Coach signature"] },
-  { id: 10, name: "Coach Samie Mule Beige", image: CoachBeige, oldPrice: "₹14,009", price: "₹1199",  details: ["Soft beige leather","Includes OG box & carry bag","Mule style","Comfortable footbed","Authentic Coach product"] },
-  { id: 11, name: "Coach Samie Mule Black", image: CoachBlack, oldPrice: "₹1600.9", price: "₹1999",  details: ["Elegant black leather","Includes OG box & carry bag","Mule design","Comfortable fit","Authentic Coach product"] },
-  { id: 12, name: "Dolce & Gabbana DG Polished Calfskin Slingback Black", image: DGBlack, oldPrice: "₹2600.0", price: "₹2189.00",  details: ["Premium calfskin leather","Includes OG box","Flat slingback","Durable sole","Authentic D&G"] },
-  { id: 13, name: "Dolce & Gabbana DG Logo", image: DGLogo, oldPrice: "₹2199", price: "₹1699",  details: ["Signature D&G logo","Premium leather","Includes OG box & carry bag","Flat design","High-quality craftsmanship"] },
-  { id: 14, name: "Gucci GG Monogram Canvas Leather Espadrilles Blue", image: GucciBlue, oldPrice: "₹2570", price: "₹1599.00",  details: ["Monogram canvas","Includes OG box & carry bag","Flat espadrille","Soft leather lining","Authentic Gucci"] },
-  { id: 15, name: "Gucci Princetown", image: GucciPrincetown, oldPrice: "₹18,999", price: "₹1199",  details: ["Classic loafer style","Leather upper","Includes OG box & dust bag","Comfortable fit","Premium Gucci craftsmanship"] },
-  { id: 16, name: "Gucci Round Interlocking G Rosso Red", image: GucciRed, oldPrice: "₹18,99", price: "₹1239",  details: ["Signature interlocking G","Bright red leather","Includes OG box & carry bag","Comfortable slides","Authentic Gucci"] },
-  { id: 17, name: "Hermes Oran Flats Black", image: HermesBlack, oldPrice: "₹29999", price: "₹1800",  details: ["Premium croc leather","Includes OG box & carry bag","Slide-on design","Comfortable fit","Authentic Hermes"] },
-  { id: 18, name: "Hermes Oran Flats Maroon", image: HermesMaroon, oldPrice: "₹29999", price: "₹2500",  details: ["Premium leather","Includes OG box & carry bag","Slide-on flats","Comfortable fit","High-quality Hermes"] },
-  { id: 19, name: "Hermes Oran Flats White 1", image: HermesWhite1, oldPrice: "₹8999", price: "₹2089",  details: ["Crisp white leather","Includes OG box & carry bag","Slide-on design","Durable sole","Authentic Hermes"] },
-  { id: 20, name: "Hermes Oran Flats White 2", image: HermesWhite2, oldPrice: "₹1999", price: "₹1899",  details: ["Soft white leather","OG box & carry bag included","Slide-on flats","Comfortable fit","Premium Hermes product"] },
-  { id: 21, name: "Hermes Oran Flats Brown", image: HermesBrown, oldPrice: "₹2999", price: "₹1999",  details: ["Rich brown leather","Includes OG box & carry bag","Slide-on design","Durable sole","Authentic Hermes"] },
-  { id: 22, name: "Hermes Oran Flats Fuchsia Pink", image: HermesFuchsia, oldPrice: "₹1999", price: "₹1,999",  details: ["Vibrant fuchsia leather","Includes OG box & carry bag","Slide-on flats","Comfortable fit","Premium Hermes"] },
-  { id: 23, name: "Hermes Oran Flats Green", image: HermesGreen, oldPrice: "₹2999", price: "₹1799", details: ["Elegant green leather","OG box & carry bag included","Slide-on flats","Comfortable fit","High-quality Hermes"] },
-  { id: 24, name: "Hermes Oran Flats Light Pink", image: HermesPink, oldPrice: "₹2,999", price: "₹1599",  details: ["Soft pink leather","Includes OG box & carry bag","Slide-on design","Comfortable fit","Authentic Hermes"] }
+  {
+    id: 1,
+    name: "Premium Sandals – Beige White Leather",
+    image: AlexanderBeige,
+    oldPrice: "₹18999",
+    price: "₹1999",
+    details: [
+      "Premium leather material",
+      "Includes box & carry bag",
+      "Flat heel design",
+      "Durable sole",
+      "High-quality finish"
+    ]
+  },
+  {
+    id: 2,
+    name: "Premium Sandals – Black Leather 1",
+    image: AlexanderBlack1,
+    oldPrice: "₹2200",
+    price: "₹1999",
+    details: [
+      "Elegant black leather",
+      "Includes box & carry bag",
+      "Flat heel",
+      "Comfortable fit",
+      "Limited edition"
+    ]
+  },
+  {
+    id: 3,
+    name: "Premium Sandals – Black Leather 2",
+    image: AlexanderBlack2,
+    oldPrice: "₹4000",
+    price: "₹1999",
+    details: [
+      "High-quality black leather",
+      "Includes box",
+      "Flat heel design",
+      "Soft inner lining",
+      "Limited edition"
+    ]
+  },
+  {
+    id: 4,
+    name: "Luxury Slingback – Black Edition",
+    image: DiorBlack,
+    oldPrice: "₹3499",
+    price: "₹1999",
+    details: [
+      "Premium embroidery",
+      "Includes box & dust bag",
+      "Flat slingback design",
+      "Premium comfort",
+      "Elegant finish"
+    ]
+  },
+  {
+    id: 5,
+    name: "Luxury Slingback – Grey Edition",
+    image: DiorGrey,
+    oldPrice: "₹3999",
+    price: "₹1899",
+    details: [
+      "Elegant grey finish",
+      "Includes box & dust bag",
+      "Flat slingback",
+      "Soft leather",
+      "High quality"
+    ]
+  },
+  {
+    id: 6,
+    name: "Luxury Slingback – Pink Edition",
+    image: DiorPink,
+    oldPrice: "₹4999",
+    price: "₹1795",
+    details: [
+      "Feminine pink tone",
+      "Includes box & dust bag",
+      "Flat slingback",
+      "Comfortable fit",
+      "Premium quality"
+    ]
+  },
+  {
+    id: 7,
+    name: "Luxury Heels – Black Pencil 1",
+    image: Louboutin1,
+    oldPrice: "₹7895",
+    price: "₹1700",
+    details: [
+      "Glossy leather finish",
+      "Includes box & dust bag",
+      "High heel",
+      "Elegant design",
+      "Premium build"
+    ]
+  },
+  {
+    id: 8,
+    name: "Luxury Heels – Black Pencil 2",
+    image: Louboutin2,
+    oldPrice: "₹1200",
+    price: "₹999",
+    details: [
+      "Stylish black leather",
+      "Includes box & dust bag",
+      "High heel",
+      "Comfortable fit",
+      "Classic design"
+    ]
+  },
+  {
+    id: 9,
+    name: "Premium Espadrille – Denim Edition",
+    image: CoachDenim,
+    oldPrice: "₹21400",
+    price: "₹1999",
+    details: [
+      "Denim canvas upper",
+      "Box included",
+      "Comfortable espadrille",
+      "Durable sole",
+      "Classic finish"
+    ]
+  },
+  {
+    id: 10,
+    name: "Premium Mule – Beige Edition",
+    image: CoachBeige,
+    oldPrice: "₹14009",
+    price: "₹1199",
+    details: [
+      "Soft beige leather",
+      "Includes box & carry bag",
+      "Mule style",
+      "Comfortable footbed",
+      "Premium quality"
+    ]
+  },
+  {
+    id: 11,
+    name: "Premium Mule – Black Edition",
+    image: CoachBlack,
+    oldPrice: "₹1600",
+    price: "₹1999",
+    details: [
+      "Elegant black leather",
+      "Includes box & carry bag",
+      "Mule design",
+      "Comfortable fit",
+      "Premium finish"
+    ]
+  },
+  {
+    id: 12,
+    name: "Luxury Slingback – Calfskin Black",
+    image: DGBlack,
+    oldPrice: "₹2600",
+    price: "₹2189",
+    details: [
+      "Premium calfskin leather",
+      "Includes box",
+      "Flat slingback",
+      "Durable sole",
+      "High craftsmanship"
+    ]
+  },
+  {
+    id: 13,
+    name: "Premium Sandals – Logo Edition",
+    image: DGLogo,
+    oldPrice: "₹2199",
+    price: "₹1699",
+    details: [
+      "Signature design",
+      "Premium leather",
+      "Includes box & carry bag",
+      "Flat design",
+      "High-quality craftsmanship"
+    ]
+  },
+  {
+    id: 14,
+    name: "Premium Espadrille – Blue Canvas",
+    image: GucciBlue,
+    oldPrice: "₹2570",
+    price: "₹1599",
+    details: [
+      "Canvas upper",
+      "Includes box & carry bag",
+      "Flat espadrille",
+      "Soft lining",
+      "Premium finish"
+    ]
+  },
+  {
+    id: 15,
+    name: "Luxury Loafer – Classic Style",
+    image: GucciPrincetown,
+    oldPrice: "₹18999",
+    price: "₹1199",
+    details: [
+      "Classic loafer style",
+      "Leather upper",
+      "Includes box & dust bag",
+      "Comfortable fit",
+      "Premium craftsmanship"
+    ]
+  },
+  {
+    id: 16,
+    name: "Premium Slides – Red Edition",
+    image: GucciRed,
+    oldPrice: "₹1899",
+    price: "₹1239",
+    details: [
+      "Signature design",
+      "Bright red finish",
+      "Includes box & carry bag",
+      "Comfortable slides",
+      "Premium quality"
+    ]
+  },
+  {
+    id: 17,
+    name: "Luxury Flats – Black Edition",
+    image: HermesBlack,
+    oldPrice: "₹29999",
+    price: "₹1800",
+    details: [
+      "Premium leather",
+      "Includes box & carry bag",
+      "Slide-on design",
+      "Comfortable fit",
+      "High-quality finish"
+    ]
+  },
+  {
+    id: 18,
+    name: "Luxury Flats – Maroon Edition",
+    image: HermesMaroon,
+    oldPrice: "₹29999",
+    price: "₹2500",
+    details: [
+      "Premium leather",
+      "Includes box & carry bag",
+      "Slide-on flats",
+      "Comfortable fit",
+      "High quality"
+    ]
+  },
+  {
+    id: 19,
+    name: "Luxury Flats – White Edition 1",
+    image: HermesWhite1,
+    oldPrice: "₹8999",
+    price: "₹2089",
+    details: [
+      "Crisp white leather",
+      "Includes box & carry bag",
+      "Slide-on design",
+      "Durable sole",
+      "Premium finish"
+    ]
+  },
+  {
+    id: 20,
+    name: "Luxury Flats – White Edition 2",
+    image: HermesWhite2,
+    oldPrice: "₹1999",
+    price: "₹1899",
+    details: [
+      "Soft white leather",
+      "Box & carry bag included",
+      "Slide-on flats",
+      "Comfortable fit",
+      "Premium quality"
+    ]
+  },
+  {
+    id: 21,
+    name: "Luxury Flats – Brown Edition",
+    image: HermesBrown,
+    oldPrice: "₹2999",
+    price: "₹1999",
+    details: [
+      "Rich brown leather",
+      "Includes box & carry bag",
+      "Slide-on design",
+      "Durable sole",
+      "Premium finish"
+    ]
+  },
+  {
+    id: 22,
+    name: "Luxury Flats – Fuchsia Pink",
+    image: HermesFuchsia,
+    oldPrice: "₹1999",
+    price: "₹1999",
+    details: [
+      "Vibrant pink finish",
+      "Includes box & carry bag",
+      "Slide-on flats",
+      "Comfortable fit",
+      "Premium quality"
+    ]
+  },
+  {
+    id: 23,
+    name: "Luxury Flats – Green Edition",
+    image: HermesGreen,
+    oldPrice: "₹2999",
+    price: "₹1799",
+    details: [
+      "Elegant green leather",
+      "Box & carry bag included",
+      "Slide-on flats",
+      "Comfortable fit",
+      "High quality"
+    ]
+  },
+  {
+    id: 24,
+    name: "Luxury Flats – Light Pink Edition",
+    image: HermesPink,
+    oldPrice: "₹2999",
+    price: "₹1599",
+    details: [
+      "Soft pink leather",
+      "Includes box & carry bag",
+      "Slide-on design",
+      "Comfortable fit",
+      "Premium finish"
+    ]
+  }
 ];
-
 
 const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE);
 const sandalsProductsList = sandalsProducts.map(sandalsProduct => {
