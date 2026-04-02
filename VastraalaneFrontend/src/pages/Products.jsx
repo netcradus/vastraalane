@@ -1,110 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../scss/_products.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import CustomModal from "../Sidebar/CustomModal"; 
+import CustomModal from "../Sidebar/CustomModal";
+import axios from "axios";
+import config from "../config";
 
-// ✅ Import images
-import MichaelTote45 from "../assets/Michael_kors eliza small tote with carry bag 45.png";
-import MichaelTote456 from "../assets/Michael_kors eliza small tote with carry bag 546.png";
-import COAC_H201 from "../assets/COAC_H sling bag with folding box 201.png";
-import COAC_H200 from "../assets/COAC_H sling bag with folding box 200.png";
-import COAC_H198 from "../assets/COAC_H sling bag with folding box 198.png";
-import BossIce0618 from "../assets/Boss ice 0618.png";
-import Prada21GreyBlue from "../assets/prada_21_grey_blue.png";
-import GucciWhiteTshirt from "../assets/Gucc i White Premium Round Neck Printed T-shirt F2666-WH1.png";
-import BalmainTrackSuit from "../assets/Balmai n Paris Black Imported Premium Track Suit With Brand Carry Bag F2574-BL.png";
-import GucciBlackTshirt from "../assets/Gucc i Black Premium Round Neck Printed T-shirt F2666-BL2.png";
-import GucciBeigeTshirt from "../assets/Gucc i Beige Premium Round Neck Printed T-shirt F2666-BE2.png";
-import LouisVuitton from "../assets/Louis_vuitton_silver_blue_2608.png";
-import DiorWMNS from "../assets/Dior_WMNS_8875_Black_Blue_DC.png";
-import BalenciagaPink from "../assets/Balenciaga.58185 pink shaded.png";
-import BurberryBrown from "../assets/Burberr_y Tb Smooth Leather Tote Bag With Dust Bag (Brown).png";
-import BurberryBlack from "../assets/Burberr_y Tb Smooth Leather Tote Bag With Dust Bag (Black).png";
-import TagHeuer from "../assets/Tag_Heuer Watche.png";
-import BirkenstockSkyBlue from "../assets/Birkenstock Arizona Sky Blue Suede - Copy (2).png";
-import ZaraGreyPant from "../assets/Zar a Grey Stripes Premium Classic Linen Pant.png";
-import TommyJeansDarkBlue from "../assets/TOMY-VS-JEANS-DARK-BLUE.png";
-import TommyShirt2 from "../assets/shirt2.jpg";
-import CalvinShirt from "../assets/shirt1.jpg";
-import RalphPoloPink from "../assets/Ralph_Lauren Polo Pink Oxford Lycra Embroidery Logo Premium Shirt F2757-PI - Copy.png";
-import AdidasTrackBeige from "../assets/Adida s Premium Logo Designer Track Beige (312).png";
-import AdidasTrackBeige2 from "../assets/Adida s Premium Logo Designer Track Beige (3122).png";
-import RolexCouple from "../assets/Rolex_Couple_Oyster_Perpetual_Day-Date_Twotone_Rose_Gold-Black.png";
-import DavidBeckham from "../assets/_David_becham_70066.png";
-import LoroPiana from "../assets/Loro piana loafers2.png";
-import MyBurberry from "../assets/_My_Burberry_England_Gift_Set_of_4.png";
-import TommyHilfiger from "../assets/Tommy_Hilfiger Teal Polo.jpg";
-import Crocs from "../assets/Croc s literide Black White - Copy.png";
-import AlexanderMcQueen from "../assets/ALEXANDER MCQUEEN PREMIUM WHITE SNEAKER.png";
-import Birkenstock from "../assets/BIRKENSTOCK ARIZONA EVA BLACK - Copy (2).png";
-import CoachEspadrille from "../assets/Coach_Collins_Espadrille_In_Signature_Denim_With_OG_Box_&_Carry_Bag_888-21_Denim - Copy.jpg";
-
-// ✅ Product List
-const productList = [
-  { name: "Luxury Tote Bag – Classic 45", image: MichaelTote45, price: 4500, category: "Bags" },
-  { name: "Premium Tote Bag – Classic 456", image: MichaelTote456, price: 2600, category: "Bags" },
-
-  { name: "Premium Sling Bag – Model 201", image: COAC_H201, price: 2789, category: "Bags" },
-  { name: "Premium Sling Bag – Model 200", image: COAC_H200, price: 2560, category: "Bags" },
-  { name: "Premium Sling Bag – Model 198", image: COAC_H198, price: 2200, category: "Bags" },
-
-  { name: "Classic Accessory – Ice Edition 0618", image: BossIce0618, price: 1500, category: "Accessories" },
-
-  { name: "Luxury Bag – Grey Blue Edition", image: Prada21GreyBlue, price: 2000, category: "Bags" },
-
-  { name: "Premium T-Shirt – White Edition", image: GucciWhiteTshirt, price: 1800, category: "Clothing" },
-  { name: "Luxury Tracksuit – Classic Edition", image: BalmainTrackSuit, price: 2000, category: "Clothing" },
-  { name: "Premium T-Shirt – Black Edition", image: GucciBlackTshirt, price: 1900, category: "Clothing" },
-  { name: "Premium T-Shirt – Beige Edition", image: GucciBeigeTshirt, price: 1700, category: "Clothing" },
-
-  { name: "Luxury Bag – Silver Blue Edition", image: LouisVuitton, price: 1200, category: "Bags" },
-
-  { name: "Premium Sneakers – Model 8875", image: DiorWMNS, price: 5000, category: "Shoes" },
-
-  { name: "Luxury Apparel – Pink Edition 58185", image: BalenciagaPink, price: 2000, category: "Clothing" },
-
-  { name: "Premium Tote Bag – Brown Edition", image: BurberryBrown, price: 2300, category: "Bags" },
-  { name: "Premium Tote Bag – Black Edition", image: BurberryBlack, price: 1500, category: "Bags" },
-
-  { name: "Premium Watch – Classic Edition", image: TagHeuer, price: 1500, category: "Accessories" },
-
-  { name: "Comfort Sandals – Sky Blue Edition", image: BirkenstockSkyBlue, price: 1600, category: "Sandals" },
-
-  { name: "Casual Wear – Grey Green Flip Style", image: ZaraGreyPant, price: 2200, category: "Clothing" },
-
-  { name: "Premium Jeans – Dark Blue Edition", image: TommyJeansDarkBlue, price: 2500, category: "Clothing" },
-  { name: "Premium Shirt – Classic Fit", image: TommyShirt2, price: 1800, category: "Clothing" },
-  { name: "Premium Shirt – Minimal Edition", image: CalvinShirt, price: 2000, category: "Clothing" },
-  { name: "Premium Polo – Pink Edition", image: RalphPoloPink, price: 2400, category: "Clothing" },
-
-  { name: "Premium Trackpant – Beige Edition 312", image: AdidasTrackBeige, price: 3500, category: "Clothing" },
-  { name: "Premium Trackpant – Beige Edition 3122", image: AdidasTrackBeige2, price: 3600, category: "Clothing" },
-
-  { name: "Premium Watch – Couple Edition", image: RolexCouple, price: 2000, category: "Accessories" },
-
-  { name: "Signature Perfume – Classic Edition 70066", image: DavidBeckham, price: 1800, category: "Fragrance" },
-
-  { name: "Luxury Loafers – Classic Edition", image: LoroPiana, price: 8000, category: "Shoes" },
-
-  { name: "Premium Gift Set – Fragrance Collection", image: MyBurberry, price: 3000, category: "Fragrance" },
-
-  { name: "Premium Polo – Teal Edition", image: TommyHilfiger, price: 2500, category: "Clothing" },
-
-  { name: "Comfort Footwear – Black White Edition", image: Crocs, price: 1200, category: "Shoes" },
-
-  { name: "Premium Sneakers – White Classic", image: AlexanderMcQueen, price: 3800, category: "Shoes" },
-
-  { name: "Comfort Sandals – Black Edition", image: Birkenstock, price: 1500, category: "Sandals" },
-
-  { name: "Premium Espadrille – Classic Edition", image: CoachEspadrille, price: 3000, category: "Shoes" },
-];
-
-const priceIncrement = Number(process.env.REACT_APP_PRODUCT_PRICE) || 0;
-const updatedProductList = productList.map(product => ({
-  ...product,
-  price: product.price + priceIncrement
-}));
+const DEFAULT_LIMIT = 24;
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -115,6 +17,11 @@ const Products = () => {
   const [quantity, setQuantity] = useState(1);
   const [popup, setPopup] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   const { addToCart, wishlist, setWishlist } = useCart();
   const navigate = useNavigate();
@@ -149,21 +56,51 @@ const Products = () => {
   const incrementQty = () => setQuantity((prev) => prev + 1);
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  const filteredProducts = updatedProductList
-    .filter(
-      (p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()) &&
-        p.price >= minPrice &&
-        p.price <= maxPrice
-    )
-    .sort((a, b) => {
-      if (sortOrder === "low-high") return a.price - b.price;
-      if (sortOrder === "high-low") return b.price - a.price;
-      return 0;
-    });
+  const apiBase = config.API_URL;
+  const limit = DEFAULT_LIMIT;
+
+  const queryParams = useMemo(
+    () => ({
+      page,
+      limit,
+      search,
+      minPrice,
+      maxPrice,
+      sort: sortOrder,
+    }),
+    [page, limit, search, minPrice, maxPrice, sortOrder]
+  );
+
+  useEffect(() => {
+    if (!apiBase) return;
+    let cancelled = false;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      setLoadError("");
+      try {
+        const res = await axios.get(`${apiBase}/api/products`, { params: queryParams });
+        if (cancelled) return;
+        setProducts(res.data?.products || []);
+        setTotalPages(res.data?.totalPages || 1);
+      } catch (err) {
+        if (cancelled) return;
+        setLoadError("Failed to load products from server");
+        setProducts([]);
+        setTotalPages(1);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchProducts();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBase, queryParams]);
 
   const relatedProducts = selectedProduct
-    ? updatedProductList.filter(
+    ? products.filter(
         (p) =>
           p.category === selectedProduct.category &&
           p.name !== selectedProduct.name
@@ -180,7 +117,7 @@ const Products = () => {
           {/* Left: Image + Actions */}
           <div className="product-detail-left">
             <img
-              src={selectedProduct.image}
+              src={selectedProduct.image || (selectedProduct.images && selectedProduct.images[0])}
               alt={selectedProduct.name}
               className="product-image-large"
             />
@@ -248,7 +185,7 @@ const Products = () => {
                   onClick={() => setSelectedProduct(product)}
                 >
                   <img
-                    src={product.image}
+                    src={product.image || (product.images && product.images[0])}
                     alt={product.name}
                     className="related-image"
                   />
@@ -282,7 +219,10 @@ const Products = () => {
           type="text"
           placeholder="Search products..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
         <div className="price-box">
           <label>PRICE</label>
@@ -293,21 +233,30 @@ const Products = () => {
               min={0}
               max={20000}
               value={minPrice}
-              onChange={(e) => setMinPrice(Number(e.target.value))}
+              onChange={(e) => {
+                setMinPrice(Number(e.target.value));
+                setPage(1);
+              }}
             />
             <input
               type="range"
               min={0}
               max={20000}
               value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              onChange={(e) => {
+                setMaxPrice(Number(e.target.value));
+                setPage(1);
+              }}
             />
             <span>₹{maxPrice.toFixed(2)}</span>
           </div>
         </div>
         <select
           value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
+          onChange={(e) => {
+            setSortOrder(e.target.value);
+            setPage(1);
+          }}
         >
           <option value="featured">Featured</option>
           <option value="low-high">Price: Low to High</option>
@@ -315,22 +264,52 @@ const Products = () => {
         </select>
       </div>
 
+      {!apiBase && (
+        <div style={{ padding: 12, color: "#b00020" }}>
+          Missing `REACT_APP_API_URL` (frontend env). Set it to your backend URL.
+        </div>
+      )}
+
+      {loadError && <div style={{ padding: 12, color: "#b00020" }}>{loadError}</div>}
+
       <div className="product-grid">
-        {filteredProducts.map((product, index) => (
-          <div
-            key={index}
-            className="product-card"
-            onClick={() => setSelectedProduct(product)}
-          >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="product-image"
-            />
-            <h3>{product.name}</h3>
-            <p>₹{product.price}</p>
-          </div>
-        ))}
+        {loading && <div style={{ padding: 12 }}>Loading…</div>}
+        {!loading &&
+          products.map((product) => (
+            <div
+              key={product._id}
+              className="product-card"
+              onClick={() => setSelectedProduct(product)}
+            >
+              <img
+                src={product.image || (product.images && product.images[0])}
+                alt={product.name}
+                className="product-image"
+              />
+              <h3>{product.name}</h3>
+              <p>₹{product.price}</p>
+            </div>
+          ))}
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: 12, padding: "16px 0" }}>
+        <button
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page <= 1 || loading}
+          style={{ padding: "8px 12px" }}
+        >
+          Prev
+        </button>
+        <div style={{ alignSelf: "center" }}>
+          Page {page} / {totalPages}
+        </div>
+        <button
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page >= totalPages || loading}
+          style={{ padding: "8px 12px" }}
+        >
+          Next
+        </button>
       </div>
 
       {/* Confirmation Modal */}

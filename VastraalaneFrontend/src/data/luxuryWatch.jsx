@@ -36,15 +36,15 @@ import Tissot2 from "../assets/Tisso t PRX Premium Watch Back open 2289.png";
 
 import Tommy1 from "../assets/Tommy_Hilfiger Decker - J1458.png";
 import Versace1 from "../assets/Versace Aion Chronograph.png";
-import RADO_AUTO1 from "../assets/RADO_AUTO_ROSE-TT-GREEN.jpeg";
-import RADO_AUTO2 from "../assets/RADO_AUTO_SILVER-BLACK.jpeg";
-import REDO_AUTO3 from "../assets/REDO_AUTO_GOLD_2.jpeg"
-import REDO_AUTO4 from "../assets/REDO_AUTO_GOLD.jpeg";
-import RADO_AUTO5 from "../assets/RADO_AUTO_BROWN.jpeg";
-import RADO_AUTO6 from "../assets/RADO_TRUE_SQUARE_BLUE.jpg";
-import RADO_AUTO7 from "../assets/RADO_TRUE_SQUARE_BLUEGREY.jpg";
-import RADO_AUTO8 from "../assets/RADO_TRUE_SQUARE_REDSILVER.jpg";
-import RADO_AUTO10 from "../assets/RADO_TRUE_SQUARE_GREENGREY.jpg";
+// import RADO_AUTO1 from "../assets/RADO_AUTO_ROSE-TT-GREEN.jpeg";
+// import RADO_AUTO2 from "../assets/RADO_AUTO_SILVER-BLACK.jpeg";
+// import REDO_AUTO3 from "../assets/REDO_AUTO_GOLD_2.jpeg"
+// import REDO_AUTO4 from "../assets/REDO_AUTO_GOLD.jpeg";
+// import RADO_AUTO5 from "../assets/RADO_AUTO_BROWN.jpeg";
+// import RADO_AUTO6 from "../assets/RADO_TRUE_SQUARE_BLUE.jpg";
+// import RADO_AUTO7 from "../assets/RADO_TRUE_SQUARE_BLUEGREY.jpg";
+// import RADO_AUTO8 from "../assets/RADO_TRUE_SQUARE_REDSILVER.jpg";
+// import RADO_AUTO10 from "../assets/RADO_TRUE_SQUARE_GREENGREY.jpg";
 
 
 
@@ -97,22 +97,22 @@ const products = [
 
   { id: 23, name: "Luxury Watch – Chronograph Elite", image: Versace1, price: 999, oldPrice: 2999, category: "Luxury" },
 
-  { id: 24, name: "Premium Watch – GOLD-TT-GREEN", image: RADO_AUTO1, price: 3300, oldPrice: 7500, category: "Premium" },
+  // { id: 24, name: "Premium Watch – GOLD-TT-GREEN", image: RADO_AUTO1, price: 3300, oldPrice: 7500, category: "Premium" },
 
-  { id: 25, name: "Premium Watch – SILVER-BLACK", image: RADO_AUTO2, price: 3300, oldPrice: 7500, category: "Premium" },
+  // { id: 25, name: "Premium Watch – SILVER-BLACK", image: RADO_AUTO2, price: 3300, oldPrice: 7500, category: "Premium" },
 
-  { id: 26, name: "Premium Watch –GOLD", image: REDO_AUTO3, price: 3300, oldPrice: 7500, category: "Premium" },
+  // { id: 26, name: "Premium Watch –GOLD", image: REDO_AUTO3, price: 3300, oldPrice: 7500, category: "Premium" },
 
-  { id: 27, name: "Premium Watch – ROSE-TT-GREEN", image: REDO_AUTO4, price: 3300, oldPrice: 7500, category: "Premium" },
-  { id: 28, name: "Premium Watch – BROWN", image: RADO_AUTO5, price: 1699, oldPrice: 10000, category: "Premium" },
+  // { id: 27, name: "Premium Watch – ROSE-TT-GREEN", image: REDO_AUTO4, price: 3300, oldPrice: 7500, category: "Premium" },
+  // { id: 28, name: "Premium Watch – BROWN", image: RADO_AUTO5, price: 1699, oldPrice: 10000, category: "Premium" },
 
-  { id: 29, name: "Premium Watch – BLUE", image: RADO_AUTO6, price: 1699, oldPrice: 10000, category: "Premium" },
+  // { id: 29, name: "Premium Watch – BLUE", image: RADO_AUTO6, price: 1699, oldPrice: 10000, category: "Premium" },
 
-  { id: 30, name: "Premium Watch – SILVER-BLUE", image: RADO_AUTO7, price: 1699, oldPrice: 10000, category: "Premium" },
+  // { id: 30, name: "Premium Watch – SILVER-BLUE", image: RADO_AUTO7, price: 1699, oldPrice: 10000, category: "Premium" },
 
-  { id: 31, name: "Premium Watch – SILVER-RED", image: RADO_AUTO8, price: 1699, oldPrice: 10000, category: "Premium" },
+  // { id: 31, name: "Premium Watch – SILVER-RED", image: RADO_AUTO8, price: 1699, oldPrice: 10000, category: "Premium" },
 
-  { id: 33, name: "Premium Watch – BLACK-GREEN", image: RADO_AUTO10, price: 1699, oldPrice: 7500, category: "Premium" },
+  // { id: 33, name: "Premium Watch – BLACK-GREEN", image: RADO_AUTO10, price: 1699, oldPrice: 7500, category: "Premium" },
 
   
   
