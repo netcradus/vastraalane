@@ -183,6 +183,9 @@ app.use("/api/cart", cartRoutes);
 const orderRoutes = require("./routes/razorPay");
 app.use("/api/order", orderRoutes);
 
+const productRoutes = require("./routes/productRoutes");
+app.use("/api/products", productRoutes);
+
 
 // const razorpayRoutes = require("./routes/razorPay");
 // app.use("/api/razorpay", razorpayRoutes);
