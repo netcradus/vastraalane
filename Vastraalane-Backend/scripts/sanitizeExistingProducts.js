@@ -19,6 +19,16 @@ const GENERIC_BY_CATEGORY = {
 };
 
 const BRAND_PATTERNS = [
+  /loui+\s*s?\s*vuit+t*o*n*n*|louiss?\s*vuittonn?|louis\s*vuitto\s*n|louis\s*vuiton|louis\s*vuittion|louis\s*vuitton|lv\b/gi,
+  /gucc+\s*[\W_]*i|gucci/gi,
+  /ralp+\s*h?\s*lauren|ralph\s*lauren/gi,
+  /adida+a+s+|adida\s*a+\s*s+|adidas/gi,
+  /nik+k*e+e*|nik\s*e|nike/gi,
+  /burber+r*y|burberry/gi,
+  /arman+i|armani/gi,
+  /fossi+l|fossil/gi,
+  /prad+a|prada/gi,
+  /vuitto\s*n|vuittton|vuttion|vuittonn|vuitton|vuitto n/gi,
   /role\s*[_x.\-\s]*x|rolex/gi,
   /omega|omeg\s*a/gi,
   /patek\s*philippe|patek/gi,
@@ -34,10 +44,8 @@ const BRAND_PATTERNS = [
   /tommy\s*hilfiger|tommy|hilfiger/gi,
   /versace/gi,
   /cavalli|roberto\s*cavalli/gi,
-  /gucc\s*[\W_]*i|gucci/gi,
   /burberr\s*y|burberry/gi,
   /coach|coac\s*h/gi,
-  /louis\s*vuitton|louiss?\s*vittonn?|lv/gi,
   /michael\s*kors|micheal\s*kors|mk\b/gi,
   /fendi/gi,
   /chloe/gi,
@@ -94,6 +102,15 @@ const BRAND_PATTERNS = [
   /crocs/gi,
   /oyster/gi,
   /ophidia/gi,
+  /yzy/gi,
+  /neverfull/gi,
+  /capucines/gi,
+  /pochette/gi,
+  /apogee/gi,
+  /discovery/gi,
+  /california\s*dream/gi,
+  /charlie/gi,
+  /monogram/gi,
 ];
 
 const PRODUCT_TYPE_NORMALIZATION = [
@@ -119,6 +136,25 @@ const PRODUCT_TYPE_NORMALIZATION = [
   { pattern: /\bjutti\b/gi, replacement: "Sandals" },
 ];
 
+const BANNED_TOKENS = new Set([
+  "adidaaass", "adidaass", "adidas", "adida", "yeezy", "yzy",
+  "nike", "nikkee", "nikke", "nik", "jordan",
+  "louis", "loui", "louiss", "louiis", "vuitton", "vuiton", "vuitto", "vuittton", "vuttion", "vuittion",
+  "gucci", "gucc", "ralph", "lauren", "rolex", "rolexx", "rolexx", "rolexxx", "rolexxxx", "rolexxxxxx",
+  "role", "oyster", "prada", "armani", "emporio", "burberry", "burberr", "coach", "fossil", "cartier",
+  "oakley", "rayban", "ray", "ban", "versace", "balenciaga", "mcqueen", "loewe", "fendi", "dior",
+  "dolce", "gabbana", "tommy", "hilfiger", "lacoste", "loro", "piana", "michael", "kors", "mk",
+  "azzaro", "valentino", "bvlgari", "givenchy", "paco", "rabanne", "ysl", "victoria", "secret",
+  "diptyque", "apogee", "neverfull", "capucines", "pochette", "ophidia", "charlie", "monogram"
+]);
+
+const NOISE_TOKENS = new Set([
+  "box", "packing", "dustbag", "dust", "cover", "dustcover", "carrybag", "carry", "bill", "slingbelt",
+  "sling", "doublebox", "combo", "plain", "accessories", "accessory", "fixed", "sale", "premiumquality",
+  "quality", "made", "italy", "italian", "brand", "logo", "logos", "emborssed", "embossed", "printed",
+  "imported", "original", "og", "ua", "all", "kit"
+]);
+
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -138,10 +174,59 @@ function collapseWords(name) {
   return result.join(" ");
 }
 
-function sanitizeBrandName(productName, category) {
-  if (!productName) return productName;
+function normalizeToken(token) {
+  return token.toLowerCase().replace(/[^a-z]/g, "");
+}
 
-  let name = String(productName);
+function stripBannedFragments(name) {
+  const parts = name.split(/\s+/).filter(Boolean);
+  const kept = [];
+
+  for (const part of parts) {
+    const normalized = normalizeToken(part);
+    if (!normalized) continue;
+    if (BANNED_TOKENS.has(normalized)) continue;
+    if (NOISE_TOKENS.has(normalized)) continue;
+    kept.push(part);
+  }
+
+  return kept.join(" ");
+}
+
+function extractDescriptor(productName) {
+  const text = String(productName || "").toLowerCase();
+  const descriptors = [];
+  const options = [
+    "black", "white", "blue", "navy", "green", "grey", "gray", "brown", "beige",
+    "pink", "red", "gold", "silver", "cream", "olive", "yellow", "purple",
+    "maroon", "orange", "tan", "coffee", "mono", "bicolor", "floral", "classic",
+    "signature", "sport", "retro", "vintage", "modern", "elegant", "daily"
+  ];
+
+  for (const option of options) {
+    if (text.includes(option)) {
+      descriptors.push(option.charAt(0).toUpperCase() + option.slice(1));
+    }
+    if (descriptors.length === 2) break;
+  }
+
+  return descriptors.join(" ");
+}
+
+function buildGenericName(category, productName, index) {
+  const genericBase = GENERIC_BY_CATEGORY[category] || GENERIC_BY_CATEGORY.Other;
+  const descriptor = extractDescriptor(productName);
+  const suffix = index + 1;
+  return descriptor
+    ? `${genericBase} ${descriptor} Edition ${suffix}`
+    : `${genericBase} Edition ${suffix}`;
+}
+
+function sanitizeBrandName(product, index) {
+  if (!product?.name) return product?.name;
+
+  const category = product.category;
+  let name = String(product.name);
   const genericBase = GENERIC_BY_CATEGORY[category] || GENERIC_BY_CATEGORY.Other;
 
   for (const pattern of BRAND_PATTERNS) {
@@ -152,6 +237,8 @@ function sanitizeBrandName(productName, category) {
     name = name.replace(pattern, replacement);
   }
 
+  name = name.replace(/\b(box|packing|dustbag|dust bag|dustcover|dust cover|carrybag|carry bag|bill|slingbelt|sling belt|doublebox|double box|combo box|plain box|all accessories|accessories|fixed|sale)\b/gi, " ");
+
   name = name.replace(/\b(with|and|for|of|by|edition|limited|imported|premium|luxury|exclusive|signature|classic|cool|exotic)\b/gi, (match) => {
     const allowed = ["premium", "luxury", "exclusive", "signature", "classic", "cool", "exotic"];
     return allowed.includes(match.toLowerCase()) ? match : " ";
@@ -161,19 +248,22 @@ function sanitizeBrandName(productName, category) {
   name = name.replace(new RegExp(`(?:${baseEscaped}\\s+)+`, "gi"), `${genericBase} `);
   name = name.replace(/\b(gg|cb|lv|mk|og)\b/gi, " ");
   name = name.replace(/[_.\-\/]+/g, " ");
+  name = name.replace(/\b[a-z]\b/gi, " ");
+  name = stripBannedFragments(name);
   name = name.replace(/\s+/g, " ").trim();
   name = collapseWords(name);
 
   if (!name || name.length < 4) {
-    return genericBase;
+    return buildGenericName(category, product.name, index);
   }
+
+  const genericName = buildGenericName(category, name, index);
 
   if (!new RegExp(baseEscaped, "i").test(name)) {
-    name = `${genericBase} ${name}`.trim();
+    return genericName;
   }
 
-  name = name.replace(/\s+/g, " ").trim();
-  return collapseWords(name);
+  return genericName;
 }
 
 async function sanitizeAllProducts() {
@@ -196,9 +286,10 @@ async function sanitizeAllProducts() {
     const batch = allProducts.slice(start, start + BATCH_SIZE);
     const ops = [];
 
-    for (const product of batch) {
+    for (let offset = 0; offset < batch.length; offset += 1) {
+      const product = batch[offset];
       const originalName = product.name;
-      const sanitizedName = sanitizeBrandName(originalName, product.category);
+      const sanitizedName = sanitizeBrandName(product, start + offset);
 
       if (originalName !== sanitizedName) {
         ops.push({
