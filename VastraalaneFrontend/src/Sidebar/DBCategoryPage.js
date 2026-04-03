@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import CustomModal from "./CustomModal";
 import config from "../config";
+import { fetchAllProducts } from "../utils/productApi";
 import "../scss/_products.scss";
 
 function formatPrice(value) {
@@ -42,8 +43,20 @@ const DBCategoryPage = ({ category, title }) => {
       try {
         const res = await axios.get(`${apiBase}/api/products`, { params: queryParams });
         if (cancelled) return;
-        setProducts(res.data?.products || []);
-        setTotalItems(res.data?.totalItems || 0);
+        const returnedProducts = res.data?.products || [];
+        const returnedCount = returnedProducts.length;
+        const totalFromApi = Number(res.data?.totalItems || 0);
+        const totalPages = Number(res.data?.totalPages || 1);
+
+        if (totalPages > 1 || (totalFromApi > returnedCount && returnedCount <= 100)) {
+          const allData = await fetchAllProducts(apiBase, queryParams);
+          if (cancelled) return;
+          setProducts(allData.products);
+          setTotalItems(allData.totalItems);
+        } else {
+          setProducts(returnedProducts);
+          setTotalItems(totalFromApi || returnedCount);
+        }
       } catch (error) {
         if (cancelled) return;
         setLoadError("Failed to load products for this category.");
