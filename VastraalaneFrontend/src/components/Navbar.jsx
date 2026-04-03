@@ -21,7 +21,7 @@ const Navbar = () => {
       <ul className={menuOpen ? "nav-links open" : "nav-links"}>
         <li><a href="/">Home</a></li>
         <li><a href="/products">Products</a></li>
-        <li><a href="/shirts">Category</a></li>
+        <li><a href="/category">Category</a></li>
 
         {/* ✅ Drawer ke andar icons */}
         <div className="drawer-icons">

@@ -9,7 +9,12 @@ function toInt(v, fallback) {
 exports.getProducts = async (req, res) => {
   try {
     const page = Math.max(1, toInt(req.query.page, 1));
-    const limit = Math.min(100, Math.max(1, toInt(req.query.limit, 24)));
+    const wantsAll =
+      String(req.query.all || "").toLowerCase() === "true" ||
+      String(req.query.limit || "").toLowerCase() === "all";
+    const limit = wantsAll
+      ? null
+      : Math.min(100, Math.max(1, toInt(req.query.limit, 24)));
 
     const search = (req.query.search || "").toString().trim();
     const category = (req.query.category || "").toString().trim();
@@ -30,23 +35,23 @@ exports.getProducts = async (req, res) => {
     if (sort === "low-high") sortSpec = { price: 1, createdAt: -1 };
     if (sort === "high-low") sortSpec = { price: -1, createdAt: -1 };
 
-    const skip = (page - 1) * limit;
+    const skip = wantsAll ? 0 : (page - 1) * limit;
 
-    const [totalItems, products] = await Promise.all([
-      Product.countDocuments(filter),
-      Product.find(filter)
-        .sort(sortSpec)
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-    ]);
+    const totalItems = await Product.countDocuments(filter);
 
-    const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+    let query = Product.find(filter).sort(sortSpec).skip(skip);
+    if (!wantsAll && limit !== null) {
+      query = query.limit(limit);
+    }
+
+    const products = await query.lean();
+
+    const totalPages = wantsAll ? 1 : Math.max(1, Math.ceil(totalItems / limit));
 
     res.json({
       products,
       page,
-      limit,
+      limit: wantsAll ? totalItems : limit,
       totalItems,
       totalPages,
     });
@@ -56,3 +61,17 @@ exports.getProducts = async (req, res) => {
   }
 };
 
+exports.getCategoryCounts = async (_req, res) => {
+  try {
+    const counts = await Product.aggregate([
+      { $match: { category: { $exists: true, $ne: null, $ne: "" } } },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+    ]);
+
+    res.json({ categories: counts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch category counts" });
+  }
+};

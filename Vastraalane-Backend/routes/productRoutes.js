@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { getProducts } = require("../controllers/productController");
+const { getProducts, getCategoryCounts } = require("../controllers/productController");
 
 // Public products listing with pagination
 router.get("/", getProducts);
+router.get("/categories", getCategoryCounts);
 
 module.exports = router;
-

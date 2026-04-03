@@ -34,16 +34,7 @@ import MenShoes from "./data/menshoes";
 import TrackSuit from './data/trackSuit';
 
 // Sidebar pages
-import ShirtsPage from "./Sidebar/ShirtsPage";
-import LoafersPage from "./Sidebar/LoafersPage";
-import ShoesPage from "./Sidebar/shoesPage";
-import LuxuryPage from "./Sidebar/LuxuryPage";
-import JeansPage from "./Sidebar/JeansPage";
-import HandbagPage from "./Sidebar/HandbagPage";
-import PerfumePage from "./Sidebar/PerfumePage";
-import SunglassesPage from "./Sidebar/SunglassesPage";
-import CordsetPage from "./Sidebar/CordsetPage";
-import SandalsPage from "./Sidebar/SandalsPage";
+import DBCategoryPage from "./Sidebar/DBCategoryPage";
 
 // Cart Context and Page
 import CartPage from "./pages/CartPage";
@@ -93,16 +84,16 @@ function App() {
             
 
       <Route path="/" element={<Layout />}>
-         <Route path="/shirts" element={<ShirtsPage />} />
-            <Route path="/loafers-page" element={<LoafersPage />} />
-            <Route path="/shoes-page" element={<ShoesPage />} />
-            <Route path="/Luxury-page" element={<LuxuryPage />} />
-            <Route path="/jeans-page" element={<JeansPage />} />
-            <Route path="/handbag-page" element={<HandbagPage />} />
-            <Route path="/perfume-page" element={<PerfumePage />} />
-            <Route path="/sunglasse-page" element={<SunglassesPage />} />
-            <Route path="/cordset-page" element={<CordsetPage />} />
-            <Route path="/Sandals-page" element={<SandalsPage />} />
+         <Route path="/shirts" element={<DBCategoryPage category="Shirts & Tshirt" title="Shirts & T-Shirts Collection" />} />
+            <Route path="/loafers-page" element={<DBCategoryPage category="Loafers" title="Loafers Collection" />} />
+            <Route path="/shoes-page" element={<DBCategoryPage category="Shoes" title="Shoes Collection" />} />
+            <Route path="/Luxury-page" element={<DBCategoryPage category="Luxury Watch" title="Luxury Watch Collection" />} />
+            <Route path="/jeans-page" element={<DBCategoryPage category="Jeans & Trouser & Trackpant" title="Jeans, Trouser & Trackpant Collection" />} />
+            <Route path="/handbag-page" element={<DBCategoryPage category="HandBags and Bag" title="Handbags & Bags Collection" />} />
+            <Route path="/perfume-page" element={<DBCategoryPage category="Perfumes" title="Perfume Collection" />} />
+            <Route path="/sunglasse-page" element={<DBCategoryPage category="Sunglasses" title="Sunglasses Collection" />} />
+            <Route path="/cordset-page" element={<DBCategoryPage category="Cordset & Tracksuit" title="Cordset & Tracksuit Collection" />} />
+            <Route path="/Sandals-page" element={<DBCategoryPage category="Girls Sandals and jutti" title="Girls Sandals & Jutti Collection" />} />
             <Route path="/account" element={<AccountPage/>} />
         </Route>
               <Route path="/about" element={<About />} />
@@ -124,4 +115,3 @@ function App() {
 }
 
 export default App;
-

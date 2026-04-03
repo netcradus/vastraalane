@@ -6,8 +6,6 @@ import CustomModal from "../Sidebar/CustomModal";
 import axios from "axios";
 import config from "../config";
 
-const DEFAULT_LIMIT = 24;
-
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [search, setSearch] = useState("");
@@ -18,10 +16,9 @@ const Products = () => {
   const [popup, setPopup] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [totalItems, setTotalItems] = useState(0);
 
   const { addToCart, wishlist, setWishlist } = useCart();
   const navigate = useNavigate();
@@ -57,18 +54,15 @@ const Products = () => {
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const apiBase = config.API_URL;
-  const limit = DEFAULT_LIMIT;
-
   const queryParams = useMemo(
     () => ({
-      page,
-      limit,
+      all: true,
       search,
       minPrice,
       maxPrice,
       sort: sortOrder,
     }),
-    [page, limit, search, minPrice, maxPrice, sortOrder]
+    [search, minPrice, maxPrice, sortOrder]
   );
 
   useEffect(() => {
@@ -82,12 +76,12 @@ const Products = () => {
         const res = await axios.get(`${apiBase}/api/products`, { params: queryParams });
         if (cancelled) return;
         setProducts(res.data?.products || []);
-        setTotalPages(res.data?.totalPages || 1);
+        setTotalItems(res.data?.totalItems || 0);
       } catch (err) {
         if (cancelled) return;
         setLoadError("Failed to load products from server");
         setProducts([]);
-        setTotalPages(1);
+        setTotalItems(0);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -221,7 +215,6 @@ const Products = () => {
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
-            setPage(1);
           }}
         />
         <div className="price-box">
@@ -235,7 +228,6 @@ const Products = () => {
               value={minPrice}
               onChange={(e) => {
                 setMinPrice(Number(e.target.value));
-                setPage(1);
               }}
             />
             <input
@@ -245,7 +237,6 @@ const Products = () => {
               value={maxPrice}
               onChange={(e) => {
                 setMaxPrice(Number(e.target.value));
-                setPage(1);
               }}
             />
             <span>₹{maxPrice.toFixed(2)}</span>
@@ -255,7 +246,6 @@ const Products = () => {
           value={sortOrder}
           onChange={(e) => {
             setSortOrder(e.target.value);
-            setPage(1);
           }}
         >
           <option value="featured">Featured</option>
@@ -271,6 +261,9 @@ const Products = () => {
       )}
 
       {loadError && <div style={{ padding: 12, color: "#b00020" }}>{loadError}</div>}
+      {!loading && !loadError && (
+        <div style={{ padding: "0 0 12px" }}>Showing {totalItems} products</div>
+      )}
 
       <div className="product-grid">
         {loading && <div style={{ padding: 12 }}>Loading…</div>}
@@ -290,26 +283,6 @@ const Products = () => {
               <p>₹{product.price}</p>
             </div>
           ))}
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "center", gap: 12, padding: "16px 0" }}>
-        <button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page <= 1 || loading}
-          style={{ padding: "8px 12px" }}
-        >
-          Prev
-        </button>
-        <div style={{ alignSelf: "center" }}>
-          Page {page} / {totalPages}
-        </div>
-        <button
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page >= totalPages || loading}
-          style={{ padding: "8px 12px" }}
-        >
-          Next
-        </button>
       </div>
 
       {/* Confirmation Modal */}

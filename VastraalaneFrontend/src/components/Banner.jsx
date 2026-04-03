@@ -8,15 +8,16 @@ const Banner = ({ onShopNow }) => {
       {/* <video autoPlay loop muted className="banner-video">
         <source src={shoesVideo} type="video/mp4" />
       </video> */}
-      <video 
-  autoPlay 
-  loop 
-  muted 
-  playsInline   // <-- important for mobile
-  className="banner-video"
->
-  <source src={shoesVideo} type="video/mp4" />
-</video>
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        className="banner-video"
+      >
+        <source src={shoesVideo} type="video/mp4" />
+      </video>
       <div className="banner-content">
         <h1>Step Into Style</h1>
         <button className="shop-now" onClick={onShopNow}>
