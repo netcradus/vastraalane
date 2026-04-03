@@ -1,4 +1,11 @@
-require("dotenv").config();
+try {
+  require("dotenv").config();
+} catch (error) {
+  if (error.code !== "MODULE_NOT_FOUND") {
+    throw error;
+  }
+  console.warn("dotenv not installed; using platform environment variables");
+}
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
