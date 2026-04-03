@@ -1,0 +1,5 @@
+{
+  "installCommand": "npm install --prefix VastraalaneFrontend",
+  "buildCommand": "npm run build --prefix VastraalaneFrontend",
+  "outputDirectory": "VastraalaneFrontend/build"
+}
