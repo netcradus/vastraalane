@@ -3,6 +3,7 @@ import "../scss/_loafers.scss";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal";
+import ProductGallery from "../components/ProductGallery";
 
 // ✅ Imports (images)
 import Loafers1 from "../assets/Loro piana loaferrs.png";
@@ -123,11 +124,7 @@ const Loafers = () => {
         // 🔹 Detail view
         <div className="product-detail">
           <div className="detail-main">
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.name}
-              className="detail-image"
-            />
+            <ProductGallery product={selectedProduct} />
 
             <div className="detail-info">
               <h2>{selectedProduct.name}</h2>

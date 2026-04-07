@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "../scss/_ShirtsPage.scss";
 import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ Import confirmation modal
+import ProductGallery from "../components/ProductGallery";
 
 // 🔽 Images import
 import VersaceBlue from "../assets/Versace Couture Petrol Blue Back Print Imported Polo T-Shirtt.png";
@@ -150,7 +151,7 @@ const ShirtsPage = () => {
           <div className="product-details-page">
             {/* 🔹 Main Product Section */}
             <div className="main-product">
-              <img src={selectedProduct.image} alt={selectedProduct.name} />
+              <ProductGallery product={selectedProduct} />
               <h2>{selectedProduct.name}</h2>
               <p className="old-price">{selectedProduct.oldPrice}</p>
               <p className="current-price">{selectedProduct.price}</p>

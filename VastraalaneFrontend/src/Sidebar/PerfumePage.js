@@ -3,6 +3,7 @@ import "../scss/_PerfumePage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ same modal as tracksuits
+import ProductGallery from "../components/ProductGallery";
 
 // 🔽 Import all perfume images
 import AcquaDiGio from "../assets/_ACQUA_DI_GIO_GIORGIO_ARMAN_white.png";
@@ -178,7 +179,7 @@ const PerfumePage = () => {
         <div className="perfume-details">
           <div className="details-container">
             <div className="details-image">
-              <img src={selectedProduct.image} alt={selectedProduct.name} />
+              <ProductGallery product={selectedProduct} />
             </div>
             <div className="details-info">
               <h2>{selectedProduct.name}</h2>

@@ -3,6 +3,7 @@ import "../scss/_luxuryWatch.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ Import your reusable modal
+import ProductGallery from "../components/ProductGallery";
 
 // Images import
 import ArmaniExchange from "../assets/Arman_i_ Exchange watch.jpg";
@@ -180,11 +181,7 @@ const LuxuryWatch = () => {
           {/* ✅ Product Details Section */}
           <div className="product-detail">
             <div className="detail-left">
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                className="detail-image"
-              />
+              <ProductGallery product={selectedProduct} />
             </div>
 
             <div className="detail-right">

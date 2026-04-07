@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "../scss/_productDetail.scss";
 import { useCart } from "../context/CartContext";

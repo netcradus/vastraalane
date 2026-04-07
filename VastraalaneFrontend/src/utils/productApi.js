@@ -1,13 +1,40 @@
 import axios from "axios";
 
-const PAGE_SIZE = 100;
+export const MAX_PAGE_SIZE = 100;
 
-export async function fetchAllProducts(apiBase, extraParams = {}) {
-  const firstRes = await axios.get(`${apiBase}/api/products`, {
-    params: { page: 1, limit: PAGE_SIZE, ...extraParams },
+export async function fetchProductsPage(apiBase, params = {}) {
+  const response = await axios.get(`${apiBase}/api/products`, {
+    params,
   });
 
-  const firstData = firstRes.data || {};
+  return response.data || {};
+}
+
+export async function fetchCategoryProductsPage(apiBase, categoryId, params = {}) {
+  const response = await axios.get(`${apiBase}/api/products/category/${categoryId}`, {
+    params,
+  });
+
+  return response.data || {};
+}
+
+export async function fetchCategories(apiBase) {
+  const response = await axios.get(`${apiBase}/api/products/categories`);
+  return response.data || {};
+}
+
+export async function fetchCategory(apiBase, categoryId) {
+  const response = await axios.get(`${apiBase}/api/products/categories/${categoryId}`);
+  return response.data || {};
+}
+
+export async function fetchAllProducts(apiBase, extraParams = {}) {
+  const firstData = await fetchProductsPage(apiBase, {
+    page: 1,
+    limit: MAX_PAGE_SIZE,
+    ...extraParams,
+  });
+
   const firstProducts = firstData.products || [];
   const totalPages = Number(firstData.totalPages || 1);
 
@@ -21,32 +48,20 @@ export async function fetchAllProducts(apiBase, extraParams = {}) {
   const requests = [];
   for (let page = 2; page <= totalPages; page += 1) {
     requests.push(
-      axios.get(`${apiBase}/api/products`, {
-        params: { page, limit: PAGE_SIZE, ...extraParams },
+      fetchProductsPage(apiBase, {
+        page,
+        limit: MAX_PAGE_SIZE,
+        ...extraParams,
       })
     );
   }
 
   const responses = await Promise.all(requests);
-  const restProducts = responses.flatMap((response) => response.data?.products || []);
+  const restProducts = responses.flatMap((response) => response.products || []);
   const products = [...firstProducts, ...restProducts];
 
   return {
     products,
     totalItems: Number(firstData.totalItems || products.length),
   };
-}
-
-export function buildCategoryCounts(products) {
-  const counts = new Map();
-
-  for (const product of products) {
-    const category = product.category;
-    if (!category) continue;
-    counts.set(category, (counts.get(category) || 0) + 1);
-  }
-
-  return Array.from(counts.entries())
-    .map(([category, count]) => ({ _id: category, count }))
-    .sort((a, b) => b.count - a.count || a._id.localeCompare(b._id));
 }

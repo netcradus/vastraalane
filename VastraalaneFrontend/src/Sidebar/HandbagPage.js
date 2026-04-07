@@ -3,6 +3,7 @@ import "../scss/_HandbagPage.scss";
 import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal";  // ✅ Import CustomModal
 import { useNavigate } from "react-router-dom"; // ✅ For navigation
+import ProductGallery from "../components/ProductGallery";
 
 // ✅ Import all handbag images
 import BurberryBlack from "../assets/Burberr_y Tb Smooth Leather Tote Bag With Dust Bag (Black).png";
@@ -144,7 +145,7 @@ const HandbagPage = () => {
   return (
     <div className="handbag-page">
       <div className="handbag-details">
-        <img src={selectedProduct.image} alt={selectedProduct.name} />
+        <ProductGallery product={selectedProduct} />
         <h2>{selectedProduct.name}</h2>
         <p className="old-price">{selectedProduct.oldPrice}</p>
         <p className="current-price">{selectedProduct.price}</p>

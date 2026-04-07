@@ -6,7 +6,12 @@
     "build": "node -e \"console.log('Backend build step not required')\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "seed": "node scripts/scrapeAndSeed.js"
+    "seed": "node scripts/scrapeAndSeed.js",
+    "seed:optimized": "node scripts/scrapeAndSeedOptimized.js",
+    "clean:brands": "node scripts/cleanBrandNames.js",
+    "reset:products": "node scripts/resetProducts.js",
+    "migrate:images": "node scripts/migrateProductImages.js",
+    "check:products": "node checkProducts.js"
   },
   "keywords": [],
   "author": "",

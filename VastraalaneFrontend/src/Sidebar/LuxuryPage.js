@@ -3,6 +3,7 @@ import "../scss/_LuxuryPage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; 
+import ProductGallery from "../components/ProductGallery";
 
 // Images import
 import ArmaniExchange from "../assets/Arman_i_ Exchange watch.jpg";
@@ -140,7 +141,7 @@ const LuxuryPage = () => {
       <div className="details-container">
         {/* Left - Image */}
         <div className="details-image">
-          <img src={selectedProduct.image} alt={selectedProduct.name} />
+          <ProductGallery product={selectedProduct} />
         </div>
 
         {/* Right - Info */}

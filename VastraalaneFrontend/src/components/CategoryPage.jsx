@@ -12,16 +12,16 @@ const CategoryPage = () => {
 
   const categoryRoutes = useMemo(
     () => ({
-      "Shirts & Tshirt": "/shirts",
-      Loafers: "/loafers-page",
-      Shoes: "/shoes-page",
-      "Luxury Watch": "/Luxury-page",
-      "Jeans & Trouser & Trackpant": "/jeans-page",
-      "HandBags and Bag": "/handbag-page",
-      Perfumes: "/perfume-page",
-      Sunglasses: "/sunglasse-page",
-      "Cordset & Tracksuit": "/cordset-page",
-      "Girls Sandals and jutti": "/Sandals-page",
+      shirts: "/shirts",
+      loafers: "/loafers-page",
+      shoes: "/shoes-page",
+      luxury: "/luxury-page",
+      jeans: "/jeans-page",
+      handbags: "/handbag-page",
+      perfumes: "/perfume-page",
+      sunglasses: "/sunglasse-page",
+      cordset: "/cordset-page",
+      sandals: "/sandals-page",
     }),
     []
   );
@@ -36,7 +36,7 @@ const CategoryPage = () => {
       try {
         const res = await axios.get(`${apiBase}/api/products/categories`);
         if (cancelled) return;
-        setCategories((res.data?.categories || []).filter((item) => categoryRoutes[item._id]));
+        setCategories((res.data?.categories || []).filter((item) => categoryRoutes[item.slug || item._id]));
       } catch (error) {
         if (cancelled) return;
         setLoadError("Failed to load categories.");
@@ -58,12 +58,12 @@ const CategoryPage = () => {
         <h3>Category</h3>
         <ul>
           {categories.map((item) => (
-            <li key={item._id}>
+            <li key={item.slug || item._id}>
               <Link
-                to={categoryRoutes[item._id]}
+                to={categoryRoutes[item.slug || item._id]}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                {item._id} ({item.count})
+                {item.name} ({item.productCount})
               </Link>
             </li>
           ))}
@@ -83,14 +83,14 @@ const CategoryPage = () => {
           <div className="products-grid">
             {categories.map((item) => (
               <Link
-                key={item._id}
-                to={categoryRoutes[item._id]}
+                key={item.slug || item._id}
+                to={categoryRoutes[item.slug || item._id]}
                 className="product-card"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <div className="product-info">
-                  <h4>{item._id}</h4>
-                  <p className="current-price">{item.count} products</p>
+                  <h4>{item.name}</h4>
+                  <p className="current-price">{item.productCount} products</p>
                 </div>
               </Link>
             ))}

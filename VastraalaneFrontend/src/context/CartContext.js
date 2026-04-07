@@ -31,8 +31,10 @@ export const CartProvider = ({ children }) => {
     const cartItem = {
       name: product.name,
       price: product.price,
-      quantity: 1,
+      quantity: Number(product.quantity || 1),
       productId: product._id,
+      size: product.size || null,
+      image: product.image || (Array.isArray(product.images) ? product.images[0] : null) || null,
     };
 
     const res = await axios.post(`${config.API_URL}/api/cart`, cartItem);

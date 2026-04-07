@@ -3,6 +3,7 @@ import "../scss/_SunglassesPage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal";
+import ProductGallery from "../components/ProductGallery";
 // ✅ Import all sunglasses images
 import DolceGabbana from "../assets/_Dolce_and_gabbana_5011.png";
 import Gucci from "../assets/_Gucci_10318_.png";
@@ -161,7 +162,7 @@ const SunglassesPage = () => {
 
           <div className="details-container">
             <div className="details-image">
-              <img src={selectedProduct.img} alt={selectedProduct.name} />
+              <ProductGallery product={selectedProduct} />
             </div>
             <div className="details-info">
               <h2>{selectedProduct.name}</h2>

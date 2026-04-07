@@ -3,6 +3,7 @@ import "../scss/_perfume.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ Import modal
+import ProductGallery from "../components/ProductGallery";
 import AcquaDiGio from "../assets/_ACQUA_DI_GIO_GIORGIO_ARMAN_white.png";
 import CalvinKlein from "../assets/_Calvin_Klein_Gift_Set_4.png";
 import DolceBlue from "../assets/_Dolce_Gabbana_Blue_Pour_Homme_Gift_Set_of_3.png";
@@ -164,11 +165,7 @@ const Perfumes = () => {
         </div>
       ) : (
         <div className="product-detail">
-          <img
-            src={selectedProduct.image}
-            alt={selectedProduct.name}
-            className="detail-image"
-          />
+          <ProductGallery product={selectedProduct} />
 
           <div className="detail-info">
             <div className="info-left">

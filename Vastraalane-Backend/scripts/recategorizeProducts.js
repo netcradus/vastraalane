@@ -20,7 +20,7 @@ const STORE_CATEGORIES = {
 };
 
 function textFor(product) {
-  return [product.name, product.productUrl, product.slug, product.category]
+  return [product.name, product.productUrl, product.slug]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -36,19 +36,7 @@ function detectCategory(product) {
   }
 
   if (
-    /(perfume|parfum|fragrance|edt|edp|deodorant|body spray|gift set|cologne|pour homme|pour femme|tester)/i.test(text)
-  ) {
-    return STORE_CATEGORIES.perfumes;
-  }
-
-  if (
-    /(watch|oyster|daytona|rolex|g-shock|casio|tissot|fossil|armani exchange|emporio armani|tag heuer|hublot|curren|naviforce)/i.test(text)
-  ) {
-    return STORE_CATEGORIES.watch;
-  }
-
-  if (
-    /(bag|handbag|tote|wallet|backpack|crossbody|sling bag|shoulder bag|duffle|duffel|pouch|satchel|hobo|clutch|luggage|travel bag)/i.test(text)
+    /(bag|handbag|tote|wallet|backpack|crossbody|cross body|cross-body|sling bag|shoulder bag|duffle|duffel|pouch|satchel|hobo|clutch|luggage|travel bag|top handle|mini ?bag|belt bag|bagpack)/i.test(text)
   ) {
     return STORE_CATEGORIES.bags;
   }
@@ -60,33 +48,51 @@ function detectCategory(product) {
   }
 
   if (
-    /(shirt|t-shirt|tshirt|tee|polo|hoodie|sweatshirt|jersey|oversized tee)/i.test(text)
-  ) {
-    return STORE_CATEGORIES.shirts;
-  }
-
-  if (
-    /(jean|trouser|trackpant|track pant|cargo pant|jogger|pant\b|denim)/i.test(text)
-  ) {
-    return STORE_CATEGORIES.jeans;
-  }
-
-  if (
     /(track suit|tracksuit|cordset|cord set|co-ord|co ord|coord set|two piece set|matching set)/i.test(text)
   ) {
     return STORE_CATEGORIES.tracksuit;
   }
 
   if (
-    /(sandal|jutti|heel|heels|slipper|sliders|slider|flip flop|flipflop|crocs|chappal|kolhapuri)/i.test(text)
+    /(sandal|jutti|heel|heels|slipper|sliders|slider|slide|flip flop|flipflop|crocs|chappal|kolhapuri|mule|mules)/i.test(text)
   ) {
     return STORE_CATEGORIES.sandals;
   }
 
   if (
-    /(shoe|shoes|sneaker|sneakers|trainer|running|air force|airforce|yeezy|jordan|dunk|gazelle|samba|new balance|balenciaga|mcqueen|on cloud|puma|adidas|nike|louis vuitton trainer|lv trainer|birkenstock)/i.test(text)
+    /(shoe|shoes|sneaker|sneakers|trainer|running|air force|airforce|yeezy|jordan|dunk|gazelle|samba|new balance|balenciaga|mcqueen|on cloud|onitsuka|slip-on|slip on|puma|adidas|nike|louis vuitton trainer|lv trainer|birkenstock|superfly|cloudtilt|cloudvista|hoka|hoka[a-z]*|bondi|clifton|mafate|transport|hopara|stinson|challenger|rocket x|rocketx|mach x|machx|ora primo|cielo|kawana|rincon|speedgoat)/i.test(text)
   ) {
     return STORE_CATEGORIES.shoes;
+  }
+
+  if (
+    /(watch|chronograph|automatic|stainless steel|oyster|daytona|rolex|g-shock|casio|tissot|fossil|armani exchange|emporio armani|tag heuer|hublot|curren|naviforce|guess|audemars|piguet|cartier|cartie|maserati|richard mille|rm-|ap\b|speedmaster|moonwatch)/i.test(text)
+  ) {
+    return STORE_CATEGORIES.watch;
+  }
+
+  if (
+    /(shirt|t-shirt|tshirt|tee|polo|hoodie|sweatshirt|jersey|oversized tee|shacket)/i.test(text)
+  ) {
+    return STORE_CATEGORIES.shirts;
+  }
+
+  if (
+    /(gaultier|le male|le beau|classique|paradise garden)/i.test(text)
+  ) {
+    return STORE_CATEGORIES.perfumes;
+  }
+
+  if (
+    /(perfume|parfum|fragrance|edt|edp|deodorant|body spray|gift set|cologne|pour homme|pour femme|tester)/i.test(text)
+  ) {
+    return STORE_CATEGORIES.perfumes;
+  }
+
+  if (
+    /(trackpant|track pant|cargo pant|jogger|trouser|pants?\b)/i.test(text)
+  ) {
+    return STORE_CATEGORIES.jeans;
   }
 
   return STORE_CATEGORIES.other;

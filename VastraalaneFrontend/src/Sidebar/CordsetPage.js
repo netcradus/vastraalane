@@ -3,6 +3,7 @@ import "../scss/_cordsetPage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ Import modal
+import ProductGallery from "../components/ProductGallery";
 
 // ✅ Tracksuit Images
 import AdidasRedLogo from "../assets/Adida s Red Logo Print Premium Imported Tracksuit.png";
@@ -145,7 +146,7 @@ const Tracksuits = () => {
       <div className="detail-content">
         {/* Left Image */}
         <div className="detail-left">
-          <img src={selectedProduct.image} alt={selectedProduct.name} />
+          <ProductGallery product={selectedProduct} />
         </div>
 
         {/* Right Info */}

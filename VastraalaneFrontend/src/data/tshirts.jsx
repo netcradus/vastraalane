@@ -4,6 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; 
+import ProductGallery from "../components/ProductGallery";
 
 // 🔽 Images import
 import VersaceBlue from "../assets/Versace Couture Petrol Blue Back Print Imported Polo T-Shirtt.png";
@@ -170,11 +171,7 @@ const Tshirts = () => {
         <>
           {/* Product Detail */}
           <div className="product-detail">
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.name}
-              className="detail-image"
-            />
+            <ProductGallery product={selectedProduct} />
             <div className="detail-info">
               <h2>{selectedProduct.name}</h2>
               <p className="price">

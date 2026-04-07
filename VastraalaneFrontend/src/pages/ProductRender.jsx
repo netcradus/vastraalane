@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../scss/_productRender.scss";
+import ProductGallery from "../components/ProductGallery";
+import { getPrimaryProductImage } from "../utils/productImages";
 
 const ProductRender = () => {
   const location = useLocation();
@@ -29,7 +31,7 @@ const ProductRender = () => {
     <div className="product-detail">
       {/* Left: Image */}
       <div className="detail-left">
-        <img src={product.image} alt={product.name} />
+        <ProductGallery product={product} />
       </div>
 
       {/* Right: Name + Price + Quantity + Buttons */}
@@ -73,7 +75,7 @@ const ProductRender = () => {
                   })
                 }
               >
-                <img src={item.image} alt={item.name} />
+                <img src={getPrimaryProductImage(item)} alt={item.name} />
                 <h4>{item.name}</h4>
                 <p className="price">
                   {item.price}{" "}

@@ -4,6 +4,7 @@ import "../scss/_SandalsPage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ same modal as perfume/tracksuits
+import ProductGallery from "../components/ProductGallery";
 
 // ✅ Import product images (keep your imports here...)
 import AlexanderBeige from "../assets/Alexander_Mcqueen_Alex_Leather_For_Women_With_OG_Box_&_Carry_Bag_Beige_White_1892 copy.png";
@@ -432,7 +433,7 @@ const SandalsPage = () => {
         <div className="details-container">
           {/* Left: Image */}
           <div className="image-section">
-            <img src={selectedProduct.image} alt={selectedProduct.name} />
+            <ProductGallery product={selectedProduct} />
           </div>
 
           {/* Right: Info */}

@@ -193,6 +193,9 @@ app.use("/api/order", orderRoutes);
 const productRoutes = require("./routes/productRoutes");
 app.use("/api/products", productRoutes);
 
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/api/admin", adminRoutes);
+
 
 // const razorpayRoutes = require("./routes/razorPay");
 // app.use("/api/razorpay", razorpayRoutes);

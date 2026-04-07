@@ -4,18 +4,38 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
 
-const GENERIC_BY_CATEGORY = {
-  "Shirts & Tshirt": "Premium Shirt",
-  Loafers: "Luxury Loafer",
-  Shoes: "Premium Shoes",
-  "Luxury Watch": "Luxury Watch",
-  "Jeans & Trouser & Trackpant": "Premium Bottomwear",
-  "HandBags and Bag": "Premium Bag",
-  Perfumes: "Signature Perfume",
-  Sunglasses: "Premium Eyewear",
-  "Cordset & Tracksuit": "Premium Tracksuit",
-  "Girls Sandals and jutti": "Luxury Sandals",
-  Other: "Premium Product",
+const TYPE_BY_CATEGORY = {
+  "Shirts & Tshirt": "Shirt",
+  Shirts: "Shirt",
+  "T-Shirts": "Shirt",
+  Loafers: "Loafers",
+  Shoes: "Shoes",
+  "Men's Shoe": "Shoes",
+  "Women's Shoes": "Shoes",
+  "Premium Shoes": "Shoes",
+  "Luxury Watch": "Watch",
+  "Mens Watch": "Watch",
+  "Ladies Watch": "Watch",
+  "Jeans & Trouser & Trackpant": "Bottomwear",
+  Jeans: "Jeans",
+  "Track Pants": "Trackpants",
+  "HandBags and Bag": "Bag",
+  "Hand bags": "Bag",
+  Bags: "Bag",
+  Perfumes: "Perfume",
+  "Perfume For Men": "Perfume",
+  "Perfume For Women": "Perfume",
+  "Fragrance Gift Set": "Perfume",
+  Sunglasses: "Sunglasses",
+  "Sunglasses and Frames": "Sunglasses",
+  "Premium sunglass": "Sunglasses",
+  "Ladies Sunglasses": "Sunglasses",
+  Frames: "Sunglasses",
+  "Cordset & Tracksuit": "Tracksuit",
+  "Premium Track Suits": "Tracksuit",
+  "Girls Sandals and jutti": "Sandals",
+  "Sandals/Chappal": "Sandals",
+  Other: "Product",
 };
 
 const BRAND_PATTERNS = [
@@ -200,7 +220,8 @@ function extractDescriptor(productName) {
     "black", "white", "blue", "navy", "green", "grey", "gray", "brown", "beige",
     "pink", "red", "gold", "silver", "cream", "olive", "yellow", "purple",
     "maroon", "orange", "tan", "coffee", "mono", "bicolor", "floral", "classic",
-    "signature", "sport", "retro", "vintage", "modern", "elegant", "daily"
+    "signature", "sport", "retro", "vintage", "modern", "elegant", "daily",
+    "rose", "tiffany"
   ];
 
   for (const option of options) {
@@ -213,24 +234,38 @@ function extractDescriptor(productName) {
   return descriptors.join(" ");
 }
 
-function buildGenericName(category, productName, index) {
-  const genericBase = GENERIC_BY_CATEGORY[category] || GENERIC_BY_CATEGORY.Other;
-  const descriptor = extractDescriptor(productName);
-  const suffix = index + 1;
-  return descriptor
-    ? `${genericBase} ${descriptor} Edition ${suffix}`
-    : `${genericBase} Edition ${suffix}`;
+function inferProductType(product) {
+  const categoryType = TYPE_BY_CATEGORY[product?.category] || TYPE_BY_CATEGORY.Other;
+  const text = String(product?.name || "").toLowerCase();
+
+  if (categoryType !== "Product") return categoryType;
+  if (/(shoe|sneaker|airforce|air force|jordan|yeezy|trainer|loafer)/i.test(text)) return "Shoes";
+  if (/(bag|tote|crossbody|wallet|pouch|sling)/i.test(text)) return "Bag";
+  if (/(watch|rolex|armani|fossil|curren)/i.test(text)) return "Watch";
+  if (/(shirt|t-shirt|tee|polo)/i.test(text)) return "Shirt";
+  if (/(perfume|fragrance|parfum)/i.test(text)) return "Perfume";
+  if (/(sunglass|eyewear|frame)/i.test(text)) return "Sunglasses";
+  if (/(tracksuit|cordset|track suit)/i.test(text)) return "Tracksuit";
+  if (/(sandals|jutti|slipper|chappal|crocs)/i.test(text)) return "Sandals";
+  return "Product";
 }
 
-function sanitizeBrandName(product, index) {
+function buildCleanName(product) {
+  const brandLabel = String(product?.brandName || product?.brand_name || "Premium").trim() || "Premium";
+  const descriptor = extractDescriptor(product?.name);
+  const productType = inferProductType(product);
+
+  return [brandLabel, descriptor, productType].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+}
+
+function sanitizeBrandName(product) {
   if (!product?.name) return product?.name;
 
-  const category = product.category;
   let name = String(product.name);
-  const genericBase = GENERIC_BY_CATEGORY[category] || GENERIC_BY_CATEGORY.Other;
+  const cleanBaseName = buildCleanName(product);
 
   for (const pattern of BRAND_PATTERNS) {
-    name = name.replace(pattern, genericBase);
+    name = name.replace(pattern, cleanBaseName);
   }
 
   for (const { pattern, replacement } of PRODUCT_TYPE_NORMALIZATION) {
@@ -244,8 +279,8 @@ function sanitizeBrandName(product, index) {
     return allowed.includes(match.toLowerCase()) ? match : " ";
   });
 
-  const baseEscaped = escapeRegex(genericBase);
-  name = name.replace(new RegExp(`(?:${baseEscaped}\\s+)+`, "gi"), `${genericBase} `);
+  const baseEscaped = escapeRegex(cleanBaseName);
+  name = name.replace(new RegExp(`(?:${baseEscaped}\\s+)+`, "gi"), `${cleanBaseName} `);
   name = name.replace(/\b(gg|cb|lv|mk|og)\b/gi, " ");
   name = name.replace(/[_.\-\/]+/g, " ");
   name = name.replace(/\b[a-z]\b/gi, " ");
@@ -254,16 +289,14 @@ function sanitizeBrandName(product, index) {
   name = collapseWords(name);
 
   if (!name || name.length < 4) {
-    return buildGenericName(category, product.name, index);
+    return cleanBaseName;
   }
 
-  const genericName = buildGenericName(category, name, index);
-
-  if (!new RegExp(baseEscaped, "i").test(name)) {
-    return genericName;
+  if (!new RegExp(escapeRegex(cleanBaseName), "i").test(name)) {
+    return cleanBaseName;
   }
 
-  return genericName;
+  return cleanBaseName;
 }
 
 async function sanitizeAllProducts() {
@@ -275,7 +308,7 @@ async function sanitizeAllProducts() {
   await mongoose.connect(mongoUri);
   console.log("MongoDB connected");
 
-  const allProducts = await Product.find({}, { name: 1, category: 1 });
+  const allProducts = await Product.find({}, { name: 1, category: 1, brandName: 1, brand_name: 1 });
   console.log(`Found ${allProducts.length} products to process`);
 
   const BATCH_SIZE = 1000;
@@ -289,7 +322,7 @@ async function sanitizeAllProducts() {
     for (let offset = 0; offset < batch.length; offset += 1) {
       const product = batch[offset];
       const originalName = product.name;
-      const sanitizedName = sanitizeBrandName(product, start + offset);
+      const sanitizedName = sanitizeBrandName(product);
 
       if (originalName !== sanitizedName) {
         ops.push({

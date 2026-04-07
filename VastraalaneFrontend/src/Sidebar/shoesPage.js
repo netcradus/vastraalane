@@ -3,6 +3,7 @@ import "../scss/_ShoesPage.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal";
+import ProductGallery from "../components/ProductGallery";
 
 // Example shoe products (replace with your real data)
 
@@ -202,7 +203,7 @@ const ShoesPage = () => {
       {selectedProduct && (
         <div className="product-detail">
           <div className="detail-left">
-            <img src={selectedProduct.image} alt={selectedProduct.name} />
+            <ProductGallery product={selectedProduct} />
           </div>
 
           <div className="detail-right">

@@ -3,6 +3,7 @@ import "../scss/_trousers.scss";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal";  // ✅ Import Modal
+import ProductGallery from "../components/ProductGallery";
 
 // Images import
 import AdidasBeige from "../assets/Adida s Beige Classic Embroidery Logo Premium Trackpant - Copy.png";
@@ -113,7 +114,7 @@ const Trousers = () => {
 
       <div className="detail-content">
         <div className="detail-left">
-          <img src={selectedProduct.image} alt={selectedProduct.name} />
+          <ProductGallery product={selectedProduct} />
         </div>
 
         <div className="detail-right">

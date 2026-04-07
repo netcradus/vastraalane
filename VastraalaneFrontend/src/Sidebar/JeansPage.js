@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../scss/_JeansPage.scss";
 import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal";
+import ProductGallery from "../components/ProductGallery";
 
 // Images import
 import AdidasBeige from "../assets/Adida s Beige Classic Embroidery Logo Premium Trackpant - Copy.png";
@@ -149,7 +150,7 @@ const JeansPage = () => {
         <div className="jeans-details">
           <div className="details-container">
             <div className="details-image">
-              <img src={selectedProduct.image} alt={selectedProduct.name} />
+              <ProductGallery product={selectedProduct} />
             </div>
             <div className="details-info">
               <h2>{selectedProduct.name}</h2>

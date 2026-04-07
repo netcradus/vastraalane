@@ -5,7 +5,22 @@ import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal";
 import axios from "axios";
 import config from "../config";
-import { fetchAllProducts } from "../utils/productApi";
+import ProductGallery from "../components/ProductGallery";
+import { getPrimaryProductImage } from "../utils/productImages";
+
+function formatPrice(value) {
+  return `Rs ${Number(value || 0).toLocaleString("en-IN")}`;
+}
+
+function normalizeSizes(product) {
+  return Array.from(
+    new Set(
+      (Array.isArray(product?.sizes) ? product.sizes : [])
+        .map((size) => String(size || "").trim())
+        .filter(Boolean)
+    )
+  );
+}
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -16,8 +31,11 @@ const Products = () => {
   const [quantity, setQuantity] = useState(1);
   const [popup, setPopup] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [totalItems, setTotalItems] = useState(0);
 
@@ -30,7 +48,9 @@ const Products = () => {
   };
 
   const handleAddToCart = (product) => {
-    addToCart({ ...product, quantity });
+    const availableSizes = normalizeSizes(product);
+    const sizeToUse = availableSizes.length ? selectedSize || availableSizes[0] : null;
+    addToCart({ ...product, quantity, size: sizeToUse });
     showPopup("Product added to Cart!");
   };
 
@@ -39,16 +59,24 @@ const Products = () => {
     showPopup("Product added to Wishlist!");
   };
 
-  // ✅ Open confirmation modal
   const handleBuyNow = (product) => {
     setSelectedProduct(product);
     setShowConfirm(true);
   };
 
-  // ✅ Confirm navigation
   const confirmPurchase = () => {
+    const availableSizes = normalizeSizes(selectedProduct);
+    const sizeToUse = availableSizes.length ? selectedSize || availableSizes[0] : null;
     setShowConfirm(false);
-    navigate("/customer-details", { state: { product: selectedProduct } });
+    navigate("/customer-details", {
+      state: {
+        product: {
+          ...selectedProduct,
+          size: sizeToUse,
+          quantity,
+        },
+      },
+    });
   };
 
   const incrementQty = () => setQuantity((prev) => prev + 1);
@@ -57,46 +85,53 @@ const Products = () => {
   const apiBase = config.API_URL;
   const queryParams = useMemo(
     () => ({
-      all: true,
+      page,
+      limit: 48,
       search,
       minPrice,
       maxPrice,
       sort: sortOrder,
     }),
-    [search, minPrice, maxPrice, sortOrder]
+    [page, search, minPrice, maxPrice, sortOrder]
   );
+
+  // We intentionally reset the list only when filters change, not when the user loads more pages.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    setProducts([]);
+    setPage(1);
+  }, [search, minPrice, maxPrice, sortOrder]);
 
   useEffect(() => {
     if (!apiBase) return;
     let cancelled = false;
 
     const fetchProducts = async () => {
-      setLoading(true);
+      if (page === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
       setLoadError("");
       try {
         const res = await axios.get(`${apiBase}/api/products`, { params: queryParams });
         if (cancelled) return;
         const returnedProducts = res.data?.products || [];
-        const returnedCount = returnedProducts.length;
         const totalFromApi = Number(res.data?.totalItems || 0);
-        const totalPages = Number(res.data?.totalPages || 1);
-
-        if (totalPages > 1 || (totalFromApi > returnedCount && returnedCount <= 100)) {
-          const allData = await fetchAllProducts(apiBase, queryParams);
-          if (cancelled) return;
-          setProducts(allData.products);
-          setTotalItems(allData.totalItems);
-        } else {
-          setProducts(returnedProducts);
-          setTotalItems(totalFromApi || returnedCount);
-        }
+        setProducts((current) => {
+          if (page === 1) return returnedProducts;
+          const seen = new Set(current.map((product) => product._id));
+          return [...current, ...returnedProducts.filter((product) => !seen.has(product._id))];
+        });
+        setTotalItems(totalFromApi || returnedProducts.length);
       } catch (err) {
         if (cancelled) return;
         setLoadError("Failed to load products from server");
-        setProducts([]);
-        setTotalItems(0);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setLoadingMore(false);
+        }
       }
     };
 
@@ -104,33 +139,42 @@ const Products = () => {
     return () => {
       cancelled = true;
     };
-  }, [apiBase, queryParams]);
+  }, [apiBase, page, queryParams]);
 
   const relatedProducts = selectedProduct
     ? products.filter(
-        (p) =>
-          p.category === selectedProduct.category &&
-          p.name !== selectedProduct.name
+        (p) => p.category === selectedProduct.category && p.name !== selectedProduct.name
       )
     : [];
+  const availableSizes = normalizeSizes(selectedProduct);
 
-  // ✅ Product Detail Page
+  useEffect(() => {
+    if (!selectedProduct) {
+      setSelectedSize("");
+      setQuantity(1);
+      return;
+    }
+
+    const availableSizes = normalizeSizes(selectedProduct);
+    setSelectedSize(availableSizes[0] || "");
+    setQuantity(1);
+  }, [selectedProduct]);
+
+  useEffect(() => {
+    if (!selectedProduct) return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedProduct]);
+
   if (selectedProduct) {
     return (
       <div className="products-page">
         {popup && <div className="popup">{popup}</div>}
 
         <div className="product-detail-expanded">
-          {/* Left: Image + Actions */}
           <div className="product-detail-left">
-            <img
-              src={selectedProduct.image || (selectedProduct.images && selectedProduct.images[0])}
-              alt={selectedProduct.name}
-              className="product-image-large"
-            />
+            <ProductGallery product={selectedProduct} />
 
             <div className="product-actions-side">
-              {/* Quantity */}
               <div className="quantity-selector">
                 <label>Quantity:</label>
                 <div className="quantity-box">
@@ -140,71 +184,91 @@ const Products = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {availableSizes.length > 0 && (
+                <div className="size-selector">
+                  <label htmlFor="product-size">Size:</label>
+                  <select
+                    id="product-size"
+                    value={selectedSize}
+                    onChange={(event) => setSelectedSize(event.target.value)}
+                  >
+                    {availableSizes.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="product-actions">
-                <button
-                  className="btn-wishlist"
-                  onClick={() => handleAddToWishlist(selectedProduct)}
-                >
-                  ♡ Wishlist
+                <button className="btn-wishlist" onClick={() => handleAddToWishlist(selectedProduct)}>
+                  Wishlist
                 </button>
-                <button
-                  className="btn-add-cart"
-                  onClick={() => handleAddToCart(selectedProduct)}
-                >
+                <button className="btn-add-cart" onClick={() => handleAddToCart(selectedProduct)}>
                   Add to Cart
                 </button>
-                <button
-                  className="btn-buy-now"
-                  onClick={() => handleBuyNow(selectedProduct)}
-                >
+                <button className="btn-buy-now" onClick={() => handleBuyNow(selectedProduct)}>
                   Buy Now
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Right: Product Info */}
           <div className="product-detail-right">
+            <p
+              style={{
+                marginBottom: "0.5rem",
+                fontSize: "0.9rem",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "#6f5a2a",
+              }}
+            >
+              {selectedProduct.brandName || selectedProduct.brand_name || "Premium"}
+            </p>
             <h2>{selectedProduct.name}</h2>
-            <p className="product-price">₹{selectedProduct.price}</p>
+            <p className="product-price">{formatPrice(selectedProduct.price)}</p>
+            <div className="size-summary">
+              <strong>Available Sizes:</strong>{" "}
+              {availableSizes.length > 0 ? availableSizes.join(", ") : "Not available"}
+            </div>
             {selectedProduct.description && <p>{selectedProduct.description}</p>}
 
             <ul className="product-points">
-              <li>✔ 7 Days Easy Return</li>
-              <li>✔ Free Shipping on orders above ₹2000</li>
-              <li>✔ 100% Authentic Products</li>
-              <li>✔ Cash on Delivery Available</li>
-              <li>✔ Warranty Included (if applicable)</li>
+              <li>7 Days Easy Return</li>
+              <li>Free Shipping on orders above Rs 2000</li>
+              <li>100% Authentic Products</li>
+              <li>Cash on Delivery Available</li>
+              <li>Warranty Included if applicable</li>
             </ul>
           </div>
         </div>
 
-        {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="related-products">
             <h3>Related Products</h3>
             <div className="related-grid">
-              {relatedProducts.map((product, index) => (
+              {relatedProducts.map((product) => (
                 <div
-                  key={index}
+                  key={product._id}
                   className="related-card"
                   onClick={() => setSelectedProduct(product)}
                 >
                   <img
-                    src={product.image || (product.images && product.images[0])}
+                    src={getPrimaryProductImage(product)}
                     alt={product.name}
                     className="related-image"
                   />
                   <h4>{product.name}</h4>
-                  <p>₹{product.price}</p>
+                  <p>{formatPrice(product.price)}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Confirmation Modal */}
         <CustomModal
           isOpen={showConfirm}
           onClose={() => setShowConfirm(false)}
@@ -215,7 +279,6 @@ const Products = () => {
     );
   }
 
-  // ✅ Product Grid Page
   return (
     <div className="products-page">
       {popup && <div className="popup">{popup}</div>}
@@ -233,7 +296,7 @@ const Products = () => {
         <div className="price-box">
           <label>PRICE</label>
           <div className="price-range">
-            <span>₹{minPrice.toFixed(2)}</span>
+            <span>{formatPrice(minPrice)}</span>
             <input
               type="range"
               min={0}
@@ -252,7 +315,7 @@ const Products = () => {
                 setMaxPrice(Number(e.target.value));
               }}
             />
-            <span>₹{maxPrice.toFixed(2)}</span>
+            <span>{formatPrice(maxPrice)}</span>
           </div>
         </div>
         <select
@@ -275,11 +338,11 @@ const Products = () => {
 
       {loadError && <div style={{ padding: 12, color: "#b00020" }}>{loadError}</div>}
       {!loading && !loadError && (
-        <div style={{ padding: "0 0 12px" }}>Showing {totalItems} products</div>
+        <div style={{ padding: "0 0 12px" }}>Showing {products.length} of {totalItems} products</div>
       )}
 
       <div className="product-grid">
-        {loading && <div style={{ padding: 12 }}>Loading…</div>}
+        {loading && <div style={{ padding: 12 }}>Loading...</div>}
         {!loading &&
           products.map((product) => (
             <div
@@ -288,17 +351,48 @@ const Products = () => {
               onClick={() => setSelectedProduct(product)}
             >
               <img
-                src={product.image || (product.images && product.images[0])}
+                src={getPrimaryProductImage(product)}
                 alt={product.name}
                 className="product-image"
               />
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#6f5a2a",
+                  marginBottom: "0.35rem",
+                }}
+              >
+                {product.brandName || product.brand_name || "Premium"}
+              </span>
               <h3>{product.name}</h3>
-              <p>₹{product.price}</p>
+              <p>{formatPrice(product.price)}</p>
             </div>
           ))}
       </div>
+      {!loading && !loadError && products.length < totalItems && (
+        <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+          <button
+            type="button"
+            onClick={() => setPage((current) => current + 1)}
+            disabled={loadingMore}
+            style={{
+              padding: "0.8rem 1.6rem",
+              borderRadius: "8px",
+              border: "none",
+              background: "#111",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            {loadingMore ? "Loading..." : "Load More"}
+          </button>
+        </div>
+      )}
 
-      {/* Confirmation Modal */}
       <CustomModal
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}

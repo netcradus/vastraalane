@@ -121,13 +121,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
-import { FaBars, FaTimes } from "react-icons/fa"; // Hamburger icons
 import "../scss/_Login.scss";
 
 const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false); // Hamburger menu state
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
 
   const toggleForm = () => {

@@ -3,6 +3,7 @@ import "../scss/_newArrivals.scss";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CustomModal from "../Sidebar/CustomModal"; // ✅ import modal
+import ProductGallery from "../components/ProductGallery";
 
 // 📂 Perfume & Gift Sets
 import ACQUA_DI_GIO_GIORGIO_ARMAN_white from "../assets/_ACQUA_DI_GIO_GIORGIO_ARMAN_white.png";
@@ -210,11 +211,7 @@ const NewArrivals = () => {
 
         <div className="detail-content">
           <div className="detail-left">
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.name}
-              className="detail-image"
-            />
+            <ProductGallery product={selectedProduct} />
           </div>
 
           <div className="detail-right">
