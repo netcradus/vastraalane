@@ -80,15 +80,6 @@ const Navbar = () => {
           <FaShoppingCart className="icon" />
           {safeCart.length > 0 && <span className="icon-badge">{safeCart.length}</span>}
         </Link>
-        {isAuthenticated && (
-          <button
-            type="button"
-            className="nav-action-btn nav-action-btn--desktop"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        )}
       </div>
 
       <div className="menu-toggle" onClick={() => setMenuOpen((open) => !open)}>
