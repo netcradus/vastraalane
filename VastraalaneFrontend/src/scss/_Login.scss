@@ -72,6 +72,11 @@
       color: #fff;
       border: none;
       border-radius: 4px;
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
     }
 
     .toggle-text {

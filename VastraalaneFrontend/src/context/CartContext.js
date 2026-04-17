@@ -1,93 +1,172 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import config from "../config";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { token, isAuthenticated } = useAuth();
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
-  // ✅ Load cart and wishlist from backend on mount
   useEffect(() => {
+    if (!isAuthenticated || !token) {
+      setCart([]);
+      setWishlist([]);
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        console.log(config.API_URL,"test");
-        const cartRes = await axios.get(`${config.API_URL}/api/cart`);
+        const headers = { Authorization: `Bearer ${token}` };
+        const cartRes = await axios.get(`${config.API_URL}/api/cart`, { headers });
         setCart(cartRes.data || []);
 
-        const wishlistRes = await axios.get(`${config.API_URL}/wishlist`);
+        const wishlistRes = await axios.get(`${config.API_URL}/wishlist`, { headers });
         setWishlist(wishlistRes.data || []);
       } catch (err) {
         console.error("Error loading cart/wishlist:", err);
+        setCart([]);
+        setWishlist([]);
       }
     };
+
     fetchData();
-  }, []);
+  }, [isAuthenticated, token]);
 
-  // ✅ Add product to cart
+  const getWishlistIdentity = (product) =>
+    String(product?.productId || product?._id || product?.id || product?.name || "");
+
+  const isProductInWishlist = (product) => {
+    const identity = getWishlistIdentity(product);
+    if (!identity) return false;
+
+    return wishlist.some(
+      (item) =>
+        String(item?._id || "") === identity ||
+        String(item?.productId || "") === identity ||
+        String(item?.id || "") === identity ||
+        String(item?.name || "") === identity
+    );
+  };
+
   const addToCart = async (product) => {
-  try {
-    const cartItem = {
-      name: product.name,
-      price: product.price,
-      quantity: Number(product.quantity || 1),
-      productId: product._id,
-      size: product.size || null,
-      image: product.image || (Array.isArray(product.images) ? product.images[0] : null) || null,
-    };
+    if (!isAuthenticated || !token) {
+      return "auth_required";
+    }
 
-    const res = await axios.post(`${config.API_URL}/api/cart`, cartItem);
-    setCart(res.data);
-  } catch (err) {
-    console.error("Error adding to cart:", err);
-  }
-};
-
-  // const addToCart = async (product) => {
-  //   try {
-  //     const res = await axios.post(`${config.API_URL}/api/cart`, product);
-  //     setCart(res.data);
-  //   } catch (err) {
-  //     console.error("Error adding to cart:", err);
-  //   }
-  // };
-
-  // ✅ Remove product from cart
-  const removeFromCart = async (id) => {
     try {
-      const res = await axios.delete(`${config.API_URL}/api/cart/${id}`);
-      setCart(res.data);
+      const headers = { Authorization: `Bearer ${token}` };
+      const cartItem = {
+        name: product.name,
+        price: product.price,
+        quantity: Number(product.quantity || 1),
+        productId: product.productId || product._id || product.id,
+        size: product.size || null,
+        image:
+          product.image ||
+          (Array.isArray(product.images) ? product.images[0] : null) ||
+          null,
+      };
+
+      const res = await axios.post(`${config.API_URL}/api/cart`, cartItem, { headers });
+      setCart(res.data || []);
+      return true;
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      return null;
+    }
+  };
+
+  const removeFromCart = async (id) => {
+    if (!isAuthenticated || !token) {
+      setCart([]);
+      return;
+    }
+
+    try {
+      const res = await axios.delete(`${config.API_URL}/api/cart/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCart(res.data || []);
     } catch (err) {
       console.error("Error removing from cart:", err);
     }
   };
-  
- 
-  // ✅ Clear cart
+
   const clearCart = async () => {
+    if (!isAuthenticated || !token) {
+      setCart([]);
+      return;
+    }
+
     try {
-      await axios.delete(`${config.API_URL}/api/cart/clear`);
-      setCart([]); // Clear local state
+      await axios.delete(`${config.API_URL}/api/cart/clear`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCart([]);
     } catch (err) {
       console.error("Error clearing cart:", err);
     }
   };
 
-  // ✅ Wishlist methods
   const addToWishlist = async (product) => {
+    if (!isAuthenticated || !token) {
+      return "auth_required";
+    }
+
     try {
-      const res = await axios.post(`${config.API_URL}/wishlist`, product);
-      setWishlist(res.data);
+      const headers = { Authorization: `Bearer ${token}` };
+      const identity = getWishlistIdentity(product);
+      const existingItem = wishlist.find(
+        (item) =>
+          String(item?._id || "") === identity ||
+          String(item?.productId || "") === identity ||
+          String(item?.id || "") === identity ||
+          String(item?.name || "") === identity
+      );
+
+      if (existingItem?._id) {
+        const res = await axios.delete(`${config.API_URL}/wishlist/${existingItem._id}`, {
+          headers,
+        });
+        setWishlist(res.data || []);
+        return false;
+      }
+
+      const wishlistItem = {
+        name: product?.name,
+        price: Number(product?.price || 0),
+        image:
+          product?.image ||
+          (Array.isArray(product?.images) ? product.images[0] : null) ||
+          null,
+        quantity: Number(product?.quantity || 1),
+        size: product?.size || null,
+        productId: identity,
+      };
+
+      const res = await axios.post(`${config.API_URL}/wishlist`, wishlistItem, { headers });
+      setWishlist(res.data || []);
+      return true;
     } catch (err) {
-      console.error("Error adding to wishlist:", err);
+      console.error("Error updating wishlist:", err);
+      return null;
     }
   };
 
   const removeFromWishlist = async (id) => {
+    if (!isAuthenticated || !token) {
+      setWishlist([]);
+      return;
+    }
+
     try {
-      const res = await axios.delete(`${config.API_URL}/wishlist/${id}`);
-      setWishlist(res.data);
+      const res = await axios.delete(`${config.API_URL}/wishlist/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setWishlist(res.data || []);
     } catch (err) {
       console.error("Error removing from wishlist:", err);
     }
@@ -99,10 +178,11 @@ export const CartProvider = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
-        clearCart, // ✅ Expose clearCart
+        clearCart,
         wishlist,
         addToWishlist,
         removeFromWishlist,
+        isProductInWishlist,
         setWishlist,
       }}
     >

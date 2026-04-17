@@ -39,7 +39,7 @@ const Products = () => {
   const [loadError, setLoadError] = useState("");
   const [totalItems, setTotalItems] = useState(0);
 
-  const { addToCart, wishlist, setWishlist } = useCart();
+  const { addToCart, addToWishlist, isProductInWishlist } = useCart();
   const navigate = useNavigate();
 
   const showPopup = (message) => {
@@ -47,19 +47,40 @@ const Products = () => {
     setTimeout(() => setPopup(""), 2000);
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     const availableSizes = normalizeSizes(product);
     const sizeToUse = availableSizes.length ? selectedSize || availableSizes[0] : null;
-    addToCart({ ...product, quantity, size: sizeToUse });
-    showPopup("Product added to Cart!");
+    const result = await addToCart({ ...product, quantity, size: sizeToUse });
+    if (result === "auth_required") {
+      showPopup("Please login to add products to cart.");
+      setTimeout(() => navigate("/login"), 600);
+      return;
+    }
+
+    if (result) {
+      showPopup("Product added to Cart!");
+    }
   };
 
-  const handleAddToWishlist = (product) => {
-    setWishlist([...wishlist, product]);
-    showPopup("Product added to Wishlist!");
+  const handleAddToWishlist = async (product) => {
+    const wasAdded = await addToWishlist(product);
+    if (wasAdded === "auth_required") {
+      showPopup("Please login to use wishlist.");
+      setTimeout(() => navigate("/login"), 600);
+    } else if (wasAdded === true) {
+      showPopup("Product added to Wishlist!");
+    } else if (wasAdded === false) {
+      showPopup("Product removed from Wishlist!");
+    }
   };
 
   const handleBuyNow = (product) => {
+    if (!localStorage.getItem("token")) {
+      showPopup("Please login to continue.");
+      setTimeout(() => navigate("/login"), 600);
+      return;
+    }
+
     setSelectedProduct(product);
     setShowConfirm(true);
   };
@@ -203,7 +224,7 @@ const Products = () => {
 
               <div className="product-actions">
                 <button className="btn-wishlist" onClick={() => handleAddToWishlist(selectedProduct)}>
-                  Wishlist
+                  {isProductInWishlist(selectedProduct) ? "Remove from Wishlist" : "Wishlist"}
                 </button>
                 <button className="btn-add-cart" onClick={() => handleAddToCart(selectedProduct)}>
                   Add to Cart

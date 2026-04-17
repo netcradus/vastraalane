@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import config from "../config";
+import { useAuth } from "../context/AuthContext";
 import "../scss/_account.scss";
 
 const AccountPage = () => {
-  const [user, setUser] = useState(null);
+  const { user, token, logout, refreshProfile, setUser } = useAuth();
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         navigate("/login");
         return;
       }
 
-      try {
-        const res = await axios.get(`${config.API_URL}/api/auth/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data);
-        setFormData(res.data); // prefill form with user data
-      } catch (err) {
-        console.error("Error fetching user:", err);
+      const profile = user || (await refreshProfile(token));
+      if (!profile) {
         alert("Unauthorized or token expired. Please login again.");
-        localStorage.removeItem("token");
         navigate("/login");
+        return;
       }
+
+      setFormData(profile);
     };
 
     fetchUser();
-  }, [navigate]);
+  }, [navigate, refreshProfile, token, user]);
 
   if (!user) return <p>Loading user data...</p>;
 
@@ -41,19 +37,24 @@ const AccountPage = () => {
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem("token");
     try {
-      await axios.put(
+      const res = await axios.put(
         `${config.API_URL}/api/auth/profile`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Profile updated successfully!");
-      setUser(formData);
+      setUser(res.data);
+      setFormData(res.data);
     } catch (err) {
       console.error("Error updating profile:", err);
       alert("Failed to update profile.");
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -115,6 +116,9 @@ const AccountPage = () => {
           />
 
           <button onClick={handleSave}>Save Changes</button>
+          <button type="button" className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
     </div>

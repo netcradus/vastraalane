@@ -17,6 +17,7 @@ import AccountPage from "./pages/AccountPage";
 import CustomerCare from "./pages/CustomerCare";
 import About from "./pages/About";
 import TermsConditions from "./pages/TermsConditions";
+import WishlistPage from "./pages/WishlistPage";
 
 // âœ… Category pages
 import FlipFlops from "./data/FlipFlops";
@@ -37,6 +38,7 @@ import DBCategoryPage from "./Sidebar/DBCategoryPage";
 // Cart Context and Page
 import CartPage from "./pages/CartPage";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 
 // Product Render page
 import ProductRender from "./pages/ProductRender";
@@ -47,11 +49,12 @@ import ThankYou from "./Sidebar/ThankYou";         // Adjust path if needed
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <Navbar />
-        <main style={{ minHeight: "80vh" }}>
-          <Routes>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <Navbar />
+          <main style={{ minHeight: "80vh" }}>
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             
@@ -100,15 +103,17 @@ function App() {
 
             {/* Cart */}
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
 
               <Route path="/customer-details" element={<CustomerForm />} />
     <Route path="/thank-you" element={<ThankYou />} />
 
-          </Routes>
-        </main>
-        <Footer />
-      </Router>
-    </CartProvider>
+            </Routes>
+          </main>
+          <Footer />
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

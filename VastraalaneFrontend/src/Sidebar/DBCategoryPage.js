@@ -37,7 +37,7 @@ const CATEGORY_TO_ID = {
 
 const DBCategoryPage = ({ category, title }) => {
   const navigate = useNavigate();
-  const { addToCart, addToWishlist, wishlist } = useCart();
+  const { addToCart, addToWishlist, wishlist, isProductInWishlist } = useCart();
 
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -123,14 +123,33 @@ const DBCategoryPage = ({ category, title }) => {
     ? products.filter((product) => product._id !== selectedProduct._id).slice(0, 8)
     : [];
   const availableSizes = normalizeSizes(selectedProduct);
+  const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
 
   const handleAddToCart = async (product) => {
     const availableSizes = normalizeSizes(product);
     const sizeToUse = availableSizes.length ? selectedSize || availableSizes[0] : null;
-    await addToCart({ ...product, size: sizeToUse });
+    const result = await addToCart({ ...product, size: sizeToUse });
+    if (result === "auth_required") {
+      window.alert("Please login to add products to cart.");
+      navigate("/login");
+    }
+  };
+
+  const handleAddToWishlist = async (product) => {
+    const result = await addToWishlist(product);
+    if (result === "auth_required") {
+      window.alert("Please login to use wishlist.");
+      navigate("/login");
+    }
   };
 
   const handleBuyNow = (product) => {
+    if (!localStorage.getItem("token")) {
+      window.alert("Please login to continue.");
+      navigate("/login");
+      return;
+    }
+
     setSelectedProduct(product);
     setShowConfirm(true);
   };
@@ -249,10 +268,14 @@ const DBCategoryPage = ({ category, title }) => {
             )}
 
             <div className="product-actions">
-              <button className="btn-wishlist" onClick={() => addToWishlist(selectedProduct)}>
-                {wishlist.some(
-                  (item) => item._id === selectedProduct._id || item.productId === selectedProduct._id
-                )
+              <button className="btn-wishlist" onClick={() => handleAddToWishlist(selectedProduct)}>
+                {(typeof isProductInWishlist === "function"
+                  ? isProductInWishlist(selectedProduct)
+                  : safeWishlist.some(
+                      (item) =>
+                        item?._id === selectedProduct?._id ||
+                        item?.productId === selectedProduct?._id
+                    ))
                   ? "In Wishlist"
                   : "Wishlist"}
               </button>

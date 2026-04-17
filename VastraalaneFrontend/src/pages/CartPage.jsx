@@ -1,72 +1,49 @@
-import { useCart } from "../context/CartContext";
-import "../scss/CartPage.scss";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import CustomModal from "../Sidebar/CustomModal";
-import React, { useState, useEffect } from "react";
+import "../scss/CartPage.scss";
 
 const CartPage = () => {
-  // single useCart call
-  const { cart, removeFromCart, clearCart } = useCart();
-
-  // calculate total
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
+  const { cart, removeFromCart } = useCart();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
-
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // If user wants to proceed the whole cart, we open confirm for full cart
+  const safeCart = Array.isArray(cart) ? cart : [];
+  const total = safeCart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
   const handleProceedToBuy = () => {
-    setSelectedProduct(null); // null => whole cart
+    setSelectedProduct(null);
     setShowConfirm(true);
   };
 
   const confirmPurchase = () => {
     setShowConfirm(false);
-    // pass full cart to customer details
-    navigate("/customer-details", { state: { product: cart } });
+    navigate("/customer-details", { state: { product: safeCart } });
   };
-
-  // 🔹 Auto clear cart every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      clearCart();
-      console.log("Cart cleared automatically after 5 minutes");
-    }, 300000); // 300,000 ms = 5 minutes
-
-    return () => clearInterval(interval); // cleanup on unmount
-  }, [clearCart]);
 
   return (
     <div className="cart-page">
-      <h1 className="cart-title">🛒 Your Shopping Cart</h1>
+      <h1 className="cart-title">Your Shopping Cart</h1>
 
-      {cart.length > 0 ? (
+      {safeCart.length > 0 ? (
         <div className="cart-container">
           <div className="cart-items">
-            {cart.map((item) => (
+            {safeCart.map((item) => (
               <div key={item._id} className="cart-item">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="cart-item-img"
-                />
+                <img src={item.image} alt={item.name} className="cart-item-img" />
 
                 <div className="cart-item-details">
                   <h2 className="cart-item-name">{item.name}</h2>
-                  <p className="cart-item-size">Size: {item.size}</p>
+                  <p className="cart-item-size">Size: {item.size || "Standard"}</p>
                   <p className="cart-item-price">
-                    ₹{item.price} x {item.quantity} ={" "}
-                    <strong>₹{item.price * item.quantity}</strong>
+                    Rs {item.price} x {item.quantity} = <strong>Rs {item.price * item.quantity}</strong>
                   </p>
                 </div>
 
                 <div className="cart-item-actions">
-                  <button
-                    className="remove-btn"
-                    onClick={() => removeFromCart(item._id)}
-                  >
+                  <button className="remove-btn" onClick={() => removeFromCart(item._id)}>
                     Remove
                   </button>
                 </div>
@@ -74,14 +51,13 @@ const CartPage = () => {
             ))}
           </div>
 
-          {/* Cart Summary */}
           <aside className="cart-summary">
             <h2>Order Summary</h2>
             <p>
-              Items: <strong>{cart.length}</strong>
+              Items: <strong>{safeCart.length}</strong>
             </p>
             <p>
-              Subtotal: <strong>₹{total}</strong>
+              Subtotal: <strong>Rs {total}</strong>
             </p>
             <button className="checkout-btn" onClick={handleProceedToBuy}>
               Proceed to Buy
@@ -89,7 +65,7 @@ const CartPage = () => {
           </aside>
         </div>
       ) : (
-        <p className="empty-cart">Your cart is empty 🛍️</p>
+        <p className="empty-cart">Your cart is empty.</p>
       )}
 
       <CustomModal

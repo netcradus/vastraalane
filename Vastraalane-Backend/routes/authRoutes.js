@@ -25,7 +25,13 @@ router.put("/profile", authenticateToken, async (req, res) => {
       { $set: req.body }, // Update fields from request body
       { new: true }      // Return the updated document
     );
-    res.json(updatedUser);
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userObject = updatedUser.toObject();
+    delete userObject.password;
+    res.json(userObject);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to update profile" });

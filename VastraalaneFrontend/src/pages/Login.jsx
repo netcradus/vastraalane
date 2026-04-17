@@ -121,12 +121,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
+import { useAuth } from "../context/AuthContext";
 import "../scss/_Login.scss";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -145,13 +148,14 @@ const Login = () => {
     }
 
     try {
+      setSubmitting(true);
       if (isLogin) {
         const res = await axios.post(
           `${config.API_URL}/api/auth/login`,
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
-        localStorage.setItem("token", res.data.token);
+        await login(res.data.token, res.data.user || null);
         navigate("/account");
       } else {
         await axios.post(
@@ -166,6 +170,8 @@ const Login = () => {
     } catch (err) {
       console.error("Error:", err.response ? err.response.data : err);
       alert(err.response?.data?.message || (isLogin ? "Login failed" : "Signup failed"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -213,7 +219,9 @@ const Login = () => {
           value={formData.password}
           onChange={handleChange}
         />
-        <button onClick={handleSubmit}>{isLogin ? "Login" : "Signup"}</button>
+        <button onClick={handleSubmit} disabled={submitting}>
+          {submitting ? "Please wait..." : isLogin ? "Login" : "Signup"}
+        </button>
         <p className="toggle-text">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <span onClick={toggleForm}>{isLogin ? "Signup" : "Login"}</span>

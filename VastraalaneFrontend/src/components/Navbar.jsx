@@ -1,43 +1,97 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaBars, FaHeart, FaShoppingCart, FaTimes, FaUser } from "react-icons/fa";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import "../scss/_navbar.scss";
-import { FaBars, FaTimes, FaUser, FaShoppingCart } from "react-icons/fa";
-
-// ðŸ”¹ Logo import
 import Logo from "../assets/LOGOSTYLE1.jpg";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { cart, wishlist } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const safeCart = Array.isArray(cart) ? cart : [];
+  const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
+  const closeMenu = () => setMenuOpen(false);
+  const displayName = user?.fullName || user?.username || user?.email?.split("@")[0] || "Account";
+
+  const handleLogout = () => {
+    logout();
+    closeMenu();
+  };
 
   return (
     <nav className="navbar">
-      {/* âœ… Logo Image */}
       <div className="logo">
-        <a href="/">
-           <img src={Logo} alt="Vastraaalane Logo" style={{ width: "100px", height: "auto" }}/>
-        </a>
+        <Link to="/" onClick={closeMenu}>
+          <img src={Logo} alt="Vastraaalane Logo" style={{ width: "100px", height: "auto" }} />
+        </Link>
       </div>
 
-      {/* Links + Drawer */}
       <ul className={menuOpen ? "nav-links open" : "nav-links"}>
-        <li><a href="/">Home</a></li>
-        <li><a href="/products">Products</a></li>
-        <li><a href="/category">Category</a></li>
+        <li>
+          <Link to="/" onClick={closeMenu}>
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/products" onClick={closeMenu}>
+            Products
+          </Link>
+        </li>
+        <li>
+          <Link to="/category" onClick={closeMenu}>
+            Category
+          </Link>
+        </li>
+        {isAuthenticated && (
+          <li>
+            <button type="button" className="nav-action-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </li>
+        )}
 
-        {/* âœ… Drawer ke andar icons */}
         <div className="drawer-icons">
-          <a href="/account"> <FaUser className="icon" /></a>
-           <a href="/cart"> <FaShoppingCart className="icon" /></a>
+          <Link to={isAuthenticated ? "/account" : "/login"} onClick={closeMenu} title={displayName}>
+            <FaUser className="icon" />
+          </Link>
+          <Link to="/wishlist" onClick={closeMenu} className="icon-link">
+            <FaHeart className="icon" />
+            {safeWishlist.length > 0 && <span className="icon-badge">{safeWishlist.length}</span>}
+          </Link>
+          <Link to="/cart" onClick={closeMenu} className="icon-link">
+            <FaShoppingCart className="icon" />
+            {safeCart.length > 0 && <span className="icon-badge">{safeCart.length}</span>}
+          </Link>
         </div>
       </ul>
 
-      {/* âœ… Desktop ke liye icons */}
       <div className="nav-icons">
-          <a href="/account"> <FaUser className="icon" /></a>
-         <a href="/cart"> <FaShoppingCart className="icon" /></a>
+        <Link to={isAuthenticated ? "/account" : "/login"} title={displayName}>
+          <FaUser className="icon" />
+        </Link>
+        <Link to="/wishlist" className="icon-link">
+          <FaHeart className="icon" />
+          {safeWishlist.length > 0 && <span className="icon-badge">{safeWishlist.length}</span>}
+        </Link>
+        <Link to="/cart" className="icon-link">
+          <FaShoppingCart className="icon" />
+          {safeCart.length > 0 && <span className="icon-badge">{safeCart.length}</span>}
+        </Link>
+        {isAuthenticated && (
+          <button
+            type="button"
+            className="nav-action-btn nav-action-btn--desktop"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        )}
       </div>
 
-      {/* Mobile Hamburger */}
-      <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+      <div className="menu-toggle" onClick={() => setMenuOpen((open) => !open)}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </div>
     </nav>

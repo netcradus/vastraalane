@@ -143,15 +143,13 @@ const newArrivalsList = newArrivals.map((newArrival) => ({
 }));
 
 const NewArrivals = () => {
-  const { addToCart } = useCart();
+  const { addToCart, addToWishlist } = useCart();
   const navigate = useNavigate();
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [popup, setPopup] = useState("");
   const [selectedSize, setSelectedSize] = useState("M");
-  const [wishlist, setWishlist] = useState([]);
-
   // ✅ Confirmation modal state
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -166,24 +164,45 @@ const NewArrivals = () => {
   const incrementQty = () => setQuantity((prev) => prev + 1);
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     const cartItem = {
       ...product,
       size: selectedSize,
       quantity: Number(quantity),
       image: product.image,
     };
-    addToCart(cartItem);
-    showPopup("Product added to Cart!");
+    const result = await addToCart(cartItem);
+    if (result === "auth_required") {
+      showPopup("Please login to add products to cart.");
+      setTimeout(() => navigate("/login"), 600);
+      return;
+    }
+
+    if (result) {
+      showPopup("Product added to Cart!");
+    }
   };
 
-  const handleAddToWishlist = (product) => {
-    setWishlist([...wishlist, product]);
-    showPopup("Product added to Wishlist!");
+  const handleAddToWishlist = async (product) => {
+    const wasAdded = await addToWishlist(product);
+    if (wasAdded === "auth_required") {
+      showPopup("Please login to use wishlist.");
+      setTimeout(() => navigate("/login"), 600);
+    } else if (wasAdded === true) {
+      showPopup("Product added to Wishlist!");
+    } else if (wasAdded === false) {
+      showPopup("Product removed from Wishlist!");
+    }
   };
 
   // ✅ Buy Now → opens confirmation modal
   const handleBuyNow = () => {
+    if (!localStorage.getItem("token")) {
+      showPopup("Please login to continue.");
+      setTimeout(() => navigate("/login"), 600);
+      return;
+    }
+
     setShowConfirm(true);
   };
 
