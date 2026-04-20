@@ -102,6 +102,10 @@ function buildCategorySafetyFilter(categoryId) {
     /\b(perfume|parfum|fragrance|gift set|cologne|eau de|edp|edt|pour homme|pour femme|sandalwood|acqua[\s-]*di[\s-]*gio|because[\s-]*its[\s-]*you|in[\s-]*love[\s-]*with[\s-]*you|stronger[\s-]*with[\s-]*you|si[\s-]*passione|code[\s-]*black[\s-]*eau)\b/i;
   const bagKeywords =
     /\b(handbag|handbags|tote|wallet|backpack|crossbody|sling bag|shoulder bag|satchel|clutch|purse|duffle|duffel|bagpack|messenger bag|camera bag|keepall|speedy|neverfull)\b/i;
+  const bagInPerfumeKeywords =
+    /\b(bag|hobo|tote|wallet|purse|crossbody|sling bag|shoulder bag|handbag|backpack|satchel|clutch|messenger bag)\b/i;
+  const perfumeAccessoryKeywords =
+    /\b(monogram|3[-\s]*piece|combo|murakami|balenciag)\b/i;
   const sunglassesKeywords =
     /\b(sunglass|sunglasses|aviator|wayfarer|eyewear|frames?)\b/i;
   const cordsetKeywords =
@@ -144,7 +148,17 @@ function buildCategorySafetyFilter(categoryId) {
     return {
       $and: [
         { $or: anyFieldRegex(perfumeKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(shirtKeywords)] },
+        {
+          $nor: [
+            ...anyFieldRegex(watchKeywords),
+            ...anyFieldRegex(shoeKeywords),
+            ...anyFieldRegex(sandalKeywords),
+            ...anyFieldRegex(bagKeywords),
+            ...anyFieldRegex(bagInPerfumeKeywords),
+            ...anyFieldRegex(perfumeAccessoryKeywords),
+            ...anyFieldRegex(shirtKeywords),
+          ],
+        },
       ],
     };
   }

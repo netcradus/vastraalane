@@ -36,6 +36,15 @@ function detectCategory(product) {
     /\b(sandal|sandals|jutti|heel|heels|slipper|sleepers|sliders|slider|slide|slides|flip flop|flipflop|crocs|chappal|kolhapuri|mule|mules)\b/i.test(
       text
     );
+  const hasBagKeywords =
+    /\b(handbag|tote|wallet|backpack|crossbody|cross body|cross-body|sling bag|shoulder bag|duffle|duffel|pouch|satchel|hobo|clutch|luggage|travel bag|top handle|mini ?bag|belt bag|bagpack|\bbag\b|purse|messenger bag|camera bag|boston bag|keepall|speedy|neverfull)\b/i.test(
+      text
+    );
+  const hasCarryBagOnlyContext =
+    /(carry bag|dust bag|with bag|with og bag)/i.test(text) &&
+    !/(handbag|sling bag|shoulder bag|crossbody|tote|wallet|backpack|satchel|clutch|purse|messenger bag|camera bag|boston bag|keepall|speedy|neverfull)/i.test(
+      text
+    );
 
   if (
     /\b(sunglass|sunglasses|wayfarer|aviator|eyewear|goggle|frames?)\b/i.test(text)
@@ -56,6 +65,11 @@ function detectCategory(product) {
     /(track suit|tracksuit|cordset|cord set|co-ord|co ord|coord set|two piece set|matching set)/i.test(text)
   ) {
     return STORE_CATEGORIES.tracksuit;
+  }
+
+  // Keep bag-like products out of perfume/watch categories.
+  if (hasBagKeywords && !hasFootwearKeywords && !hasSandalKeywords && !hasCarryBagOnlyContext) {
+    return STORE_CATEGORIES.bags;
   }
 
   if (
@@ -100,19 +114,6 @@ function detectCategory(product) {
     /\b(shirt|t-shirt|tshirt|tee|polo|hoodie|sweatshirt|jersey|oversized tee|shacket)\b/i.test(text)
   ) {
     return STORE_CATEGORIES.shirts;
-  }
-
-  const hasBagKeywords =
-    /\b(handbag|tote|wallet|backpack|crossbody|cross body|cross-body|sling bag|shoulder bag|duffle|duffel|pouch|satchel|hobo|clutch|luggage|travel bag|top handle|mini ?bag|belt bag|bagpack|\bbag\b|purse|messenger bag|camera bag|boston bag|keepall|speedy|neverfull)\b/i.test(
-      text
-    );
-  const hasCarryBagOnlyContext =
-    /(carry bag|dust bag|with bag|with og bag)/i.test(text) &&
-    !/(handbag|sling bag|shoulder bag|crossbody|tote|wallet|backpack|satchel|clutch|purse|messenger bag|camera bag|boston bag|keepall|speedy|neverfull)/i.test(
-      text
-    );
-  if (hasBagKeywords && !hasFootwearKeywords && !hasSandalKeywords && !hasCarryBagOnlyContext) {
-    return STORE_CATEGORIES.bags;
   }
 
   if (

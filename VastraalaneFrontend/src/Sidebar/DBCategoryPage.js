@@ -78,6 +78,20 @@ function passesCategoryGuard(product, categoryId) {
     return hasSandal && !hasMenOrSportsMarkers && !hasBag;
   }
 
+  if (categoryId === "perfumes") {
+    const hasPerfume =
+      /\b(perfume|parfum|fragrance|edp|edt|cologne|gift set|eau de|pour homme|pour femme|sandalwood|acqua[\s-]*di[\s-]*gio|because[\s-]*its[\s-]*you|in[\s-]*love[\s-]*with[\s-]*you|stronger[\s-]*with[\s-]*you|si[\s-]*passione|code[\s-]*black[\s-]*eau)\b/i.test(
+        text
+      );
+    const hasBag =
+      /\b(bag|handbag|hobo|tote|wallet|purse|crossbody|sling bag|shoulder bag|backpack|satchel|clutch|messenger bag)\b/i.test(
+        text
+      );
+    const hasAccessorySetPattern =
+      /\b(monogram|3[-\s]*piece|combo|murakami|balenciag)\b/i.test(text);
+    return hasPerfume && !hasBag && !hasAccessorySetPattern;
+  }
+
   return true;
 }
 
