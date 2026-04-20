@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "slick-carousel/slick/slick.css"; 
 
 import Layout from "./components/Layout";
+import ScrollToTop from "./components/ScrollToTop";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -52,6 +53,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
+          <ScrollToTop />
           <Navbar />
           <main style={{ minHeight: "80vh" }}>
             <Routes>

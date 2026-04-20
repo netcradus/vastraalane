@@ -119,8 +119,13 @@
     padding: 138px 16px 32px;
   }
 
+  .products-section {
+    order: 1;
+  }
+
   .category-sidebar {
     position: static;
+    order: 2;
   }
 
   .products-grid {

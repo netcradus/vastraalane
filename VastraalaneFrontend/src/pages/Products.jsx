@@ -251,10 +251,12 @@ const Products = () => {
             </p>
             <h2>{selectedProduct.name}</h2>
             <p className="product-price">{formatPrice(selectedProduct.price)}</p>
-            <div className="size-summary">
-              <strong>Available Sizes:</strong>{" "}
-              {availableSizes.length > 0 ? availableSizes.join(", ") : "Not available"}
-            </div>
+            {availableSizes.length > 0 && (
+              <div className="size-summary">
+                <strong>Available Sizes:</strong>{" "}
+                {availableSizes.join(", ")}
+              </div>
+            )}
             {selectedProduct.description && <p>{selectedProduct.description}</p>}
 
             <ul className="product-points">
@@ -425,3 +427,4 @@ const Products = () => {
 };
 
 export default Products;
+

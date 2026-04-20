@@ -22,6 +22,29 @@ function normalizeSizes(product) {
   );
 }
 
+function passesCategoryGuard(product, categoryId) {
+  const text = [product?.name, product?.slug, product?.productUrl]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (!text) return true;
+
+  if (categoryId === "luxury") {
+    const hasWatch =
+      /\b(watch|rolex|omega|hublot|tissot|patek|audemars|chronograph|moonwatch|daytona|nautilus|speedmaster|seamaster|datejust|oyster|quartz)\b/i.test(
+        text
+      );
+    const hasNonWatch =
+      /\b(sunglass|sunglasses|aviator|frames?|shoe|shoes|sneaker|sneakers|loafer|sandals?|slides?|slipper|crocs|jutti|mules?|perfume|parfum|fragrance|edp|edt|cologne|gift set|eau de|pour homme|pour femme|sandalwood|acqua[\s-]*di[\s-]*gio|because[\s-]*its[\s-]*you|in[\s-]*love[\s-]*with[\s-]*you|stronger[\s-]*with[\s-]*you|si[\s-]*passione|code[\s-]*black[\s-]*eau|hoodie|t-?shirt|shirt|handbag|sling bag|shoulder bag|wallet)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i.test(
+        text
+      );
+    return hasWatch && !hasNonWatch;
+  }
+
+  return true;
+}
+
 const CATEGORY_TO_ID = {
   "Shirts & Tshirt": "shirts",
   Loafers: "loafers",
@@ -73,13 +96,16 @@ const DBCategoryPage = ({ category, title }) => {
         const res = await axios.get(`${apiBase}/api/products/category/${categoryId}`, {
           params: {
             page,
-            limit: 48,
+            limit: 24,
             sort: "featured",
+            compact: true,
           },
         });
         if (cancelled) return;
 
-        const returnedProducts = res.data?.products || [];
+        const returnedProducts = (res.data?.products || []).filter((product) =>
+          passesCategoryGuard(product, categoryId)
+        );
         const totalFromApi = Number(res.data?.totalItems || 0);
         setProducts((current) => {
           if (page === 1) return returnedProducts;
@@ -201,6 +227,8 @@ const DBCategoryPage = ({ category, title }) => {
                   src={getPrimaryProductImage(product)}
                   alt={product.name}
                   className="product-image"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span
                   style={{
@@ -304,10 +332,12 @@ const DBCategoryPage = ({ category, title }) => {
           </p>
           <h2>{selectedProduct.name}</h2>
           <p className="product-price">{formatPrice(selectedProduct.price)}</p>
-          <div className="size-summary">
-            <strong>Available Sizes:</strong>{" "}
-            {availableSizes.length > 0 ? availableSizes.join(", ") : "Not available"}
-          </div>
+          {availableSizes.length > 0 && (
+            <div className="size-summary">
+              <strong>Available Sizes:</strong>{" "}
+              {availableSizes.join(", ")}
+            </div>
+          )}
           {selectedProduct.description && <p>{selectedProduct.description}</p>}
 
           <ul className="product-points">
@@ -334,6 +364,8 @@ const DBCategoryPage = ({ category, title }) => {
                   src={getPrimaryProductImage(product)}
                   alt={product.name}
                   className="related-image"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <h4>{product.name}</h4>
                 <p>{formatPrice(product.price)}</p>
@@ -354,3 +386,5 @@ const DBCategoryPage = ({ category, title }) => {
 };
 
 export default DBCategoryPage;
+
+

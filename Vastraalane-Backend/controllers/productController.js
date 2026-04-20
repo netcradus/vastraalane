@@ -77,6 +77,157 @@ function getSortSpec(sort) {
   return { createdAt: -1 };
 }
 
+function isCompactResponse(req) {
+  return String(req.query.compact || "").trim().toLowerCase() === "true";
+}
+
+function anyFieldRegex(regex) {
+  return [{ name: regex }, { slug: regex }, { productUrl: regex }];
+}
+
+function buildCategorySafetyFilter(categoryId) {
+  const id = String(categoryId || "").trim().toLowerCase();
+
+  // Guardrails for known misclassification patterns in source data.
+  const watchKeywords =
+    /\b(watch|rolex|omega|hublot|tissot|patek|audemars|chronograph|moonwatch|daytona|nautilus|speedmaster|seamaster|datejust|oyster|quartz)\b/i;
+  const shoeKeywords =
+    /\b(shoe|shoes|sneaker|sneakers|trainer|running|air ?force|yeezy|jordan|onitsuka|hoka|new ?balance|adidas|nike|puma|boot|boots|dunk|gazelle|samba)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i;
+  const loaferKeywords = /\b(loafer|loafers|moccasin|moccasins|driving shoe|boat shoe|loro piana)\b/i;
+  const sandalKeywords =
+    /\b(sandal|sandals|jutti|slipper|slippers|sleepers|slide|slides|flip ?flop|crocs|chappal|heel|heels|mule|mules|kolhapuri)\b/i;
+  const shirtKeywords =
+    /\b(shirt|shirts|t-?shirt|tshirts?|tee|polo|hoodie|sweatshirt|jersey)\b/i;
+  const perfumeKeywords =
+    /\b(perfume|parfum|fragrance|gift set|cologne|eau de|edp|edt|pour homme|pour femme|sandalwood|acqua[\s-]*di[\s-]*gio|because[\s-]*its[\s-]*you|in[\s-]*love[\s-]*with[\s-]*you|stronger[\s-]*with[\s-]*you|si[\s-]*passione|code[\s-]*black[\s-]*eau)\b/i;
+  const bagKeywords =
+    /\b(handbag|handbags|tote|wallet|backpack|crossbody|sling bag|shoulder bag|satchel|clutch|purse|duffle|duffel|bagpack|messenger bag|camera bag|keepall|speedy|neverfull)\b/i;
+  const sunglassesKeywords =
+    /\b(sunglass|sunglasses|aviator|wayfarer|eyewear|frames?)\b/i;
+  const cordsetKeywords =
+    /\b(cordset|track suit|tracksuit|co-ord|coord set|matching set|two piece set)\b/i;
+  const jeansKeywords =
+    /\b(jeans|trouser|trousers|trackpant|track pant|cargo pant|jogger|joggers|pants?)\b/i;
+
+  if (id === "shirts") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(shirtKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "luxury") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(watchKeywords) },
+        {
+          $nor: [
+            ...anyFieldRegex(perfumeKeywords),
+            ...anyFieldRegex(shoeKeywords),
+            ...anyFieldRegex(sandalKeywords),
+            ...anyFieldRegex(sunglassesKeywords),
+            ...anyFieldRegex(bagKeywords),
+            ...anyFieldRegex(shirtKeywords),
+          ],
+        },
+      ],
+    };
+  }
+
+  if (id === "perfumes") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(perfumeKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(shirtKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "handbags") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(bagKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(shirtKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "sunglasses") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(sunglassesKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(shirtKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "sandals") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(sandalKeywords) },
+        {
+          $nor: [
+            ...anyFieldRegex(loaferKeywords),
+            ...anyFieldRegex(shirtKeywords),
+            ...anyFieldRegex(watchKeywords),
+            ...anyFieldRegex(perfumeKeywords),
+            ...anyFieldRegex(bagKeywords),
+          ],
+        },
+      ],
+    };
+  }
+
+  if (id === "shoes") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(shoeKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords), ...anyFieldRegex(shirtKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "loafers") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(loaferKeywords) },
+        {
+          $nor: [
+            ...anyFieldRegex(sandalKeywords),
+            ...anyFieldRegex(shoeKeywords),
+            ...anyFieldRegex(watchKeywords),
+            ...anyFieldRegex(perfumeKeywords),
+            ...anyFieldRegex(shirtKeywords),
+            ...anyFieldRegex(bagKeywords),
+          ],
+        },
+      ],
+    };
+  }
+
+  if (id === "jeans") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(jeansKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords)] },
+      ],
+    };
+  }
+
+  if (id === "cordset") {
+    return {
+      $and: [
+        { $or: anyFieldRegex(cordsetKeywords) },
+        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords)] },
+      ],
+    };
+  }
+
+  return {};
+}
+
 async function fetchProducts(req, res, extraFilter = {}) {
   try {
     const page = Math.max(1, toInt(req.query.page, 1));
@@ -93,8 +244,26 @@ async function fetchProducts(req, res, extraFilter = {}) {
     const totalItems = await Product.countDocuments(filter);
     const sortSpec = getSortSpec(req.query.sort);
     const skip = wantsAll || !limit ? 0 : (page - 1) * limit;
+    const projection = isCompactResponse(req)
+      ? {
+          name: 1,
+          price: 1,
+          mrp: 1,
+          originalPrice: 1,
+          images: 1,
+          image: 1,
+          slug: 1,
+          productUrl: 1,
+          category: 1,
+          brandName: 1,
+          brand_name: 1,
+          sizes: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        }
+      : null;
 
-    let query = Product.find(filter).sort(sortSpec).allowDiskUse(true).skip(skip);
+    let query = Product.find(filter, projection).sort(sortSpec).allowDiskUse(true).skip(skip);
     if (!wantsAll && limit !== null) {
       query = query.limit(limit);
     }
@@ -126,8 +295,10 @@ exports.getProductsByCategory = async (req, res) => {
     return res.status(404).json({ message: "Category not found" });
   }
 
+  const safetyFilter = buildCategorySafetyFilter(categoryMeta.id);
+
   return fetchProducts(req, res, {
-    category: { $in: categoryMeta.sourceCategories },
+    $and: [{ category: { $in: categoryMeta.sourceCategories } }, safetyFilter],
   });
 };
 
@@ -234,3 +405,4 @@ exports.getCategoryById = async (req, res) => {
     return res.status(500).json({ message: "Failed to fetch category" });
   }
 };
+
