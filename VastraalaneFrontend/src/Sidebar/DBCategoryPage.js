@@ -23,7 +23,13 @@ function normalizeSizes(product) {
 }
 
 function passesCategoryGuard(product, categoryId) {
-  const text = [product?.name, product?.slug, product?.productUrl]
+  const text = [
+    product?.name,
+    product?.slug,
+    product?.productUrl,
+    product?.image,
+    ...(Array.isArray(product?.images) ? product.images : []),
+  ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -40,6 +46,36 @@ function passesCategoryGuard(product, categoryId) {
         text
       );
     return hasWatch && !hasNonWatch;
+  }
+
+  if (categoryId === "shoes") {
+    const hasShoe =
+      /\b(shoe|shoes|sneaker|sneakers|trainer|running|air ?force|yeezy|jordan|onitsuka|hoka|new ?balance|adidas|nike|puma|boot|boots|dunk|gazelle|samba)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i.test(
+        text
+      );
+    const hasSandal =
+      /\b(sandal|sandals|slide|slides|slipper|sleepers|flip ?flop|crocs|jutti|mule|mules|chappal|heel|heels|kolhapuri)\b/i.test(
+        text
+      );
+    const hasHardExclude =
+      /\b(heel|heels|pump|pumps|stiletto|ankle[\s-]*boot|ankle[\s-]*boots|handbag|sling[\s-]*bag|shoulder[\s-]*bag|messenger[\s-]*bag|tote|wallet|purse|duffle|duffel|backpack|t-?shirt|hoodie|shirt)\b/i.test(
+        text
+      );
+    return hasShoe && !hasSandal && !hasHardExclude;
+  }
+
+  if (categoryId === "sandals") {
+    const hasSandal =
+      /\b(sandal|sandals|slide|slides|slipper|sleepers|flip ?flop|crocs|jutti|mule|mules|chappal|heel|heels|kolhapuri)\b/i.test(
+        text
+      );
+    const hasMenOrSportsMarkers =
+      /\b(men|mens|men's|boys|unisex|nike|adidas|puma|jordan|air ?max|air ?force|skechers|yeezy|onitsuka|birkenstock|amiri)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i.test(
+        text
+      );
+    const hasBag =
+      /\b(handbag|bag|sling bag|shoulder bag|tote|wallet|purse)\b/i.test(text);
+    return hasSandal && !hasMenOrSportsMarkers && !hasBag;
   }
 
   return true;

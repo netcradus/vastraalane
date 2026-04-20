@@ -108,6 +108,10 @@ function buildCategorySafetyFilter(categoryId) {
     /\b(cordset|track suit|tracksuit|co-ord|coord set|matching set|two piece set)\b/i;
   const jeansKeywords =
     /\b(jeans|trouser|trousers|trackpant|track pant|cargo pant|jogger|joggers|pants?)\b/i;
+  const menSportsMarkers =
+    /\b(men|mens|men's|boys|unisex|nike|adidas|puma|jordan|air ?max|air ?force|skechers|yeezy|onitsuka|birkenstock|amiri)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i;
+  const shoesHardExcludeKeywords =
+    /\b(heel|heels|pump|pumps|stiletto|ankle[\s-]*boot|ankle[\s-]*boots|handbag|sling[\s-]*bag|shoulder[\s-]*bag|messenger[\s-]*bag|tote|wallet|purse|duffle|duffel|backpack|t-?shirt|hoodie|shirt)\b/i;
 
   if (id === "shirts") {
     return {
@@ -174,6 +178,7 @@ function buildCategorySafetyFilter(categoryId) {
             ...anyFieldRegex(watchKeywords),
             ...anyFieldRegex(perfumeKeywords),
             ...anyFieldRegex(bagKeywords),
+            ...anyFieldRegex(menSportsMarkers),
           ],
         },
       ],
@@ -184,7 +189,17 @@ function buildCategorySafetyFilter(categoryId) {
     return {
       $and: [
         { $or: anyFieldRegex(shoeKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords), ...anyFieldRegex(shirtKeywords)] },
+        {
+          $nor: [
+            ...anyFieldRegex(watchKeywords),
+            ...anyFieldRegex(perfumeKeywords),
+            ...anyFieldRegex(bagKeywords),
+            ...anyFieldRegex(sunglassesKeywords),
+            ...anyFieldRegex(shirtKeywords),
+            ...anyFieldRegex(sandalKeywords),
+            ...anyFieldRegex(shoesHardExcludeKeywords),
+          ],
+        },
       ],
     };
   }
