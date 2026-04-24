@@ -19,10 +19,26 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
+const allowedOrigins = new Set(
+  [
+    process.env.CLIENT_URL,
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://www.vastraalane.com",
+    "https://vastraalane.com",
+  ].filter(Boolean)
+);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("CORS origin not allowed"));
+    },
     credentials: true,
   })
 );

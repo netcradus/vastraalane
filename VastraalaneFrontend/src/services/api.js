@@ -1,8 +1,15 @@
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
+function resolveApiBaseUrl() {
+  const rawBaseUrl = String(import.meta.env.VITE_API_URL || "http://localhost:5000/api").trim();
+  return /\/api\/?$/i.test(rawBaseUrl) ? rawBaseUrl.replace(/\/+$/, "") : `${rawBaseUrl.replace(/\/+$/, "")}/api`;
+}
+
+const apiBaseUrl = resolveApiBaseUrl();
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: apiBaseUrl,
   withCredentials: true,
 });
 
@@ -22,7 +29,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/refresh`,
+          `${apiBaseUrl}/auth/refresh`,
           {},
           { withCredentials: true }
         );
