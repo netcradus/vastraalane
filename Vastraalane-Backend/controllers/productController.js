@@ -1,437 +1,366 @@
-const Product = require("../models/Product");
-const {
-  getAllCategoryMeta,
-  getCategoryMetaById,
-  getCategoryMetaBySourceName,
-} = require("../utils/categoryMetadata");
+import asyncHandler from "express-async-handler";
+import Product from "../models/Product.js";
+import { buildPagination } from "../utils/formatters.js";
+import { normalizeCatalogProductName } from "../utils/normalizeProductName.js";
 
-function toInt(value, fallback) {
-  const parsed = Number.parseInt(String(value), 10);
-  return Number.isFinite(parsed) ? parsed : fallback;
+function slugifyCategory(value = "") {
+  return String(value)
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-function getCategoryAliases(category) {
-  const categoryMeta = getCategoryMetaById(category) || getCategoryMetaBySourceName(category);
-  if (!categoryMeta) return [String(category || "").trim()].filter(Boolean);
-  return categoryMeta.sourceCategories;
+const PRODUCT_LIST_PROJECTION = [
+  "_id",
+  "name",
+  "slug",
+  "description",
+  "category",
+  "brand",
+  "tags",
+  "basePrice",
+  "price",
+  "mrp",
+  "originalPrice",
+  "discountPercent",
+  "salePrice",
+  "image",
+  "images",
+  "variants",
+  "ratings",
+  "isFeatured",
+  "isActive",
+  "createdAt",
+  "updatedAt",
+].join(" ");
+
+function humanizeProductTitle(source) {
+  const candidates = [source.slug, source.productUrl, source.name];
+
+  for (const candidate of candidates) {
+    const value = String(candidate || "").trim();
+    if (!value) continue;
+
+    const cleaned = value
+      .replace(/^\/+/, "")
+      .replace(/\.html?$/i, "")
+      .replace(/^https?:\/\/[^/]+\//i, "")
+      .replace(/footshoppers/gi, "")
+      .replace(/\b\d{5,}\b/g, "")
+      .replace(/\bamp\b/gi, "")
+      .replace(/\bhtml\b/gi, "")
+      .replace(/[-_]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (cleaned && cleaned.length > 4) {
+      const title = cleaned
+        .split(" ")
+        .slice(0, 12)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+
+      if (!/^Premium\s+(Product|Bag)$/i.test(title) || candidate !== source.name) {
+        return title;
+      }
+    }
+  }
+
+  return "Product";
 }
 
-function normalizeProductResponse(product) {
-  const images = Array.from(
+function normalizeMoney(value = 0) {
+  const numericValue = Number(value) || 0;
+  return numericValue > 0 && numericValue < 1000000 ? Math.round(numericValue * 100) : numericValue;
+}
+
+function normalizeImages(product) {
+  const imageCandidates = Array.isArray(product.images) ? product.images : [];
+  const normalizedImages = imageCandidates
+    .map((image) => {
+      if (typeof image === "string") {
+        return { url: image, publicId: "" };
+      }
+
+      if (image?.url) {
+        return { url: image.url, publicId: image.publicId || "" };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+
+  if (!normalizedImages.length && product.image) {
+    normalizedImages.push({ url: product.image, publicId: "" });
+  }
+
+  return normalizedImages;
+}
+
+function serializeProduct(product) {
+  const source = product.toObject ? product.toObject() : product;
+  const categoryName =
+    typeof source.category === "string"
+      ? source.category
+      : source.category?.name || source.category?.title || "Uncategorized";
+  const basePrice = source.basePrice || source.originalPrice || source.mrp || source.price || 0;
+  const salePrice = source.salePrice || source.price || basePrice;
+  const normalizedImages = normalizeImages(source);
+  const resolvedSlug = source.slug?.startsWith("/") ? source.slug.slice(1) : source.slug || "";
+  const humanizedName = humanizeProductTitle(source);
+  const displayName = normalizeCatalogProductName(humanizedName, categoryName);
+  const normalizedSizes = Array.from(
     new Set(
-      [product?.image, ...(Array.isArray(product?.images) ? product.images : [])]
-        .map((value) => String(value || "").trim())
-        .filter(Boolean)
+      [
+        ...(Array.isArray(source.sizes) ? source.sizes : []),
+        ...(Array.isArray(source.variants) ? source.variants.map((variant) => variant?.size).filter(Boolean) : []),
+      ].filter(Boolean)
     )
   );
-
-  const categoryMeta = getCategoryMetaBySourceName(product?.category);
+  const normalizedColors = Array.from(
+    new Set(
+      [
+        ...(Array.isArray(source.colors) ? source.colors : []),
+        ...(Array.isArray(source.variants) ? source.variants.map((variant) => variant?.color).filter(Boolean) : []),
+      ].filter(Boolean)
+    )
+  );
+  const variants = Array.isArray(source.variants) ? source.variants : [];
+  const hasTrackedVariants = variants.some(
+    (variant) =>
+      variant &&
+      (variant.size || variant.color || variant.sku || variant.stock !== undefined)
+  );
+  const totalStock = variants.reduce((sum, variant) => sum + Math.max(0, Number(variant?.stock) || 0), 0);
+  const inStock = hasTrackedVariants ? totalStock > 0 : true;
 
   return {
-    ...product,
-    images,
-    image: images[0] || null,
-    brandName: product?.brandName || product?.brand_name || null,
-    brand_name: product?.brandName || product?.brand_name || null,
-    categoryId: categoryMeta?.id || null,
-    categoryLabel: categoryMeta?.label || product?.category || null,
+    ...source,
+    name: displayName,
+    displayName,
+    slug: resolvedSlug,
+    category: {
+      name: categoryName,
+      slug: slugifyCategory(categoryName),
+    },
+    images: normalizedImages,
+    image: normalizedImages[0]?.url || "",
+    basePrice: normalizeMoney(basePrice),
+    salePrice: normalizeMoney(salePrice),
+    mrp: normalizeMoney(source.mrp || basePrice),
+    originalPrice: normalizeMoney(source.originalPrice || basePrice),
+    discountPercent:
+      source.discountPercent ||
+      (basePrice > 0 ? Math.max(0, Math.round(((basePrice - salePrice) / basePrice) * 100)) : 0),
+    description: source.description || source.name,
+    variants,
+    totalStock,
+    inStock,
+    sizes: normalizedSizes,
+    colors: normalizedColors,
+    ratings: source.ratings || { average: 0, count: 0 },
+    isFeatured: typeof source.isFeatured === "boolean" ? source.isFeatured : false,
+    isActive: typeof source.isActive === "boolean" ? source.isActive : true,
   };
 }
 
-function buildProductFilter(req) {
-  const search = (req.query.search || "").toString().trim();
-  const category = (req.query.category || "").toString().trim();
-  const categoryId = (req.query.categoryId || req.params.categoryId || "").toString().trim();
-  const minPrice = req.query.minPrice !== undefined ? Number(req.query.minPrice) : null;
-  const maxPrice = req.query.maxPrice !== undefined ? Number(req.query.maxPrice) : null;
+function buildProductQuery(query, includeInactive = false) {
+  const andConditions = [];
 
-  const filter = {};
-
-  if (search) {
-    filter.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { brandName: { $regex: search, $options: "i" } },
-      { brand_name: { $regex: search, $options: "i" } },
-    ];
+  if (!includeInactive) {
+    andConditions.push({ $or: [{ isActive: { $exists: false } }, { isActive: true }] });
   }
 
-  const categoryAliases = getCategoryAliases(categoryId || category);
-  if (categoryAliases.length) {
-    filter.category = { $in: categoryAliases };
+  if (query.brand) {
+    andConditions.push({ brand: { $in: String(query.brand).split(",") } });
   }
 
-  if (Number.isFinite(minPrice) || Number.isFinite(maxPrice)) {
-    filter.price = {};
-    if (Number.isFinite(minPrice)) filter.price.$gte = minPrice;
-    if (Number.isFinite(maxPrice)) filter.price.$lte = maxPrice;
+  if (query.tags) {
+    andConditions.push({ tags: { $in: String(query.tags).split(",") } });
   }
 
-  return filter;
-}
+  if (query.price_min || query.price_max) {
+    const priceMinPaise = Number(query.price_min || 0);
+    const priceMaxPaise = Number(query.price_max || 0);
+    const priceMinRupees = priceMinPaise ? Math.floor(priceMinPaise / 100) : 0;
+    const priceMaxRupees = priceMaxPaise ? Math.ceil(priceMaxPaise / 100) : 0;
 
-function getSortSpec(sort) {
-  const sortKey = String(sort || "featured").trim().toLowerCase();
-  if (sortKey === "low-high") return { price: 1, createdAt: -1 };
-  if (sortKey === "high-low") return { price: -1, createdAt: -1 };
-  if (sortKey === "rating") return { price: -1, createdAt: -1 };
-  return { createdAt: -1 };
-}
+    const paiseCondition = {};
+    const rupeeCondition = {};
 
-function isCompactResponse(req) {
-  return String(req.query.compact || "").trim().toLowerCase() === "true";
-}
-
-function anyFieldRegex(regex) {
-  return [{ name: regex }, { slug: regex }, { productUrl: regex }];
-}
-
-function buildCategorySafetyFilter(categoryId) {
-  const id = String(categoryId || "").trim().toLowerCase();
-
-  // Guardrails for known misclassification patterns in source data.
-  const watchKeywords =
-    /\b(watch|rolex|omega|hublot|tissot|patek|audemars|chronograph|moonwatch|daytona|nautilus|speedmaster|seamaster|datejust|oyster|quartz)\b/i;
-  const shoeKeywords =
-    /\b(shoe|shoes|sneaker|sneakers|trainer|running|air ?force|yeezy|jordan|onitsuka|hoka|new ?balance|adidas|nike|puma|boot|boots|dunk|gazelle|samba)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i;
-  const loaferKeywords = /\b(loafer|loafers|moccasin|moccasins|driving shoe|boat shoe|loro piana)\b/i;
-  const sandalKeywords =
-    /\b(sandal|sandals|jutti|slipper|slippers|sleepers|slide|slides|flip ?flop|crocs|chappal|heel|heels|mule|mules|kolhapuri)\b/i;
-  const shirtKeywords =
-    /\b(shirt|shirts|t-?shirt|tshirts?|tee|polo|hoodie|sweatshirt|jersey)\b/i;
-  const perfumeKeywords =
-    /\b(perfume|parfum|fragrance|gift set|cologne|eau de|edp|edt|pour homme|pour femme|sandalwood|acqua[\s-]*di[\s-]*gio|because[\s-]*its[\s-]*you|in[\s-]*love[\s-]*with[\s-]*you|stronger[\s-]*with[\s-]*you|si[\s-]*passione|code[\s-]*black[\s-]*eau)\b/i;
-  const bagKeywords =
-    /\b(handbag|handbags|tote|wallet|backpack|crossbody|sling bag|shoulder bag|satchel|clutch|purse|duffle|duffel|bagpack|messenger bag|camera bag|keepall|speedy|neverfull)\b/i;
-  const bagInPerfumeKeywords =
-    /\b(bag|hobo|tote|wallet|purse|crossbody|sling bag|shoulder bag|handbag|backpack|satchel|clutch|messenger bag)\b/i;
-  const perfumeAccessoryKeywords =
-    /\b(monogram|3[-\s]*piece|combo|murakami|balenciag)\b/i;
-  const sunglassesKeywords =
-    /\b(sunglass|sunglasses|aviator|wayfarer|eyewear|frames?)\b/i;
-  const cordsetKeywords =
-    /\b(cordset|track suit|tracksuit|co-ord|coord set|matching set|two piece set)\b/i;
-  const jeansKeywords =
-    /\b(jeans|trouser|trousers|trackpant|track pant|cargo pant|jogger|joggers|pants?)\b/i;
-  const menSportsMarkers =
-    /\b(men|mens|men's|boys|unisex|nike|adidas|puma|jordan|air ?max|air ?force|skechers|yeezy|onitsuka|birkenstock|amiri)\b|adid[\W_]*as|nik[\W_]*e|pum[\W_]*a/i;
-  const shoesHardExcludeKeywords =
-    /\b(heel|heels|pump|pumps|stiletto|ankle[\s-]*boot|ankle[\s-]*boots|handbag|sling[\s-]*bag|shoulder[\s-]*bag|messenger[\s-]*bag|tote|wallet|purse|duffle|duffel|backpack|t-?shirt|hoodie|shirt)\b/i;
-
-  if (id === "shirts") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(shirtKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords)] },
-      ],
-    };
-  }
-
-  if (id === "luxury") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(watchKeywords) },
-        {
-          $nor: [
-            ...anyFieldRegex(perfumeKeywords),
-            ...anyFieldRegex(shoeKeywords),
-            ...anyFieldRegex(sandalKeywords),
-            ...anyFieldRegex(sunglassesKeywords),
-            ...anyFieldRegex(bagKeywords),
-            ...anyFieldRegex(shirtKeywords),
-          ],
-        },
-      ],
-    };
-  }
-
-  if (id === "perfumes") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(perfumeKeywords) },
-        {
-          $nor: [
-            ...anyFieldRegex(watchKeywords),
-            ...anyFieldRegex(shoeKeywords),
-            ...anyFieldRegex(sandalKeywords),
-            ...anyFieldRegex(bagKeywords),
-            ...anyFieldRegex(bagInPerfumeKeywords),
-            ...anyFieldRegex(perfumeAccessoryKeywords),
-            ...anyFieldRegex(shirtKeywords),
-          ],
-        },
-      ],
-    };
-  }
-
-  if (id === "handbags") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(bagKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(shirtKeywords)] },
-      ],
-    };
-  }
-
-  if (id === "sunglasses") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(sunglassesKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(shirtKeywords)] },
-      ],
-    };
-  }
-
-  if (id === "sandals") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(sandalKeywords) },
-        {
-          $nor: [
-            ...anyFieldRegex(loaferKeywords),
-            ...anyFieldRegex(shirtKeywords),
-            ...anyFieldRegex(watchKeywords),
-            ...anyFieldRegex(perfumeKeywords),
-            ...anyFieldRegex(bagKeywords),
-            ...anyFieldRegex(menSportsMarkers),
-          ],
-        },
-      ],
-    };
-  }
-
-  if (id === "shoes") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(shoeKeywords) },
-        {
-          $nor: [
-            ...anyFieldRegex(watchKeywords),
-            ...anyFieldRegex(perfumeKeywords),
-            ...anyFieldRegex(bagKeywords),
-            ...anyFieldRegex(sunglassesKeywords),
-            ...anyFieldRegex(shirtKeywords),
-            ...anyFieldRegex(sandalKeywords),
-            ...anyFieldRegex(shoesHardExcludeKeywords),
-          ],
-        },
-      ],
-    };
-  }
-
-  if (id === "loafers") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(loaferKeywords) },
-        {
-          $nor: [
-            ...anyFieldRegex(sandalKeywords),
-            ...anyFieldRegex(shoeKeywords),
-            ...anyFieldRegex(watchKeywords),
-            ...anyFieldRegex(perfumeKeywords),
-            ...anyFieldRegex(shirtKeywords),
-            ...anyFieldRegex(bagKeywords),
-          ],
-        },
-      ],
-    };
-  }
-
-  if (id === "jeans") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(jeansKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords)] },
-      ],
-    };
-  }
-
-  if (id === "cordset") {
-    return {
-      $and: [
-        { $or: anyFieldRegex(cordsetKeywords) },
-        { $nor: [...anyFieldRegex(watchKeywords), ...anyFieldRegex(shoeKeywords), ...anyFieldRegex(sandalKeywords), ...anyFieldRegex(perfumeKeywords), ...anyFieldRegex(bagKeywords), ...anyFieldRegex(sunglassesKeywords)] },
-      ],
-    };
-  }
-
-  return {};
-}
-
-async function fetchProducts(req, res, extraFilter = {}) {
-  try {
-    const page = Math.max(1, toInt(req.query.page, 1));
-    const wantsAll =
-      String(req.query.all || "").toLowerCase() === "true" ||
-      String(req.query.limit || "").toLowerCase() === "all";
-    const limit = wantsAll ? null : Math.min(120, Math.max(1, toInt(req.query.limit, 24)));
-
-    const filter = {
-      ...buildProductFilter(req),
-      ...extraFilter,
-    };
-
-    const totalItems = await Product.countDocuments(filter);
-    const sortSpec = getSortSpec(req.query.sort);
-    const skip = wantsAll || !limit ? 0 : (page - 1) * limit;
-    const projection = isCompactResponse(req)
-      ? {
-          name: 1,
-          price: 1,
-          mrp: 1,
-          originalPrice: 1,
-          images: 1,
-          image: 1,
-          slug: 1,
-          productUrl: 1,
-          category: 1,
-          brandName: 1,
-          brand_name: 1,
-          sizes: 1,
-          createdAt: 1,
-          updatedAt: 1,
-        }
-      : null;
-
-    let query = Product.find(filter, projection).sort(sortSpec).allowDiskUse(true).skip(skip);
-    if (!wantsAll && limit !== null) {
-      query = query.limit(limit);
+    if (query.price_min) {
+      paiseCondition.$gte = priceMinPaise;
+      rupeeCondition.$gte = priceMinRupees;
     }
 
-    const products = (await query.lean()).map(normalizeProductResponse);
-    const totalPages = wantsAll || !limit ? 1 : Math.max(1, Math.ceil(totalItems / limit));
+    if (query.price_max) {
+      paiseCondition.$lte = priceMaxPaise;
+      rupeeCondition.$lte = priceMaxRupees;
+    }
 
-    return res.json({
-      products,
-      page,
-      limit: wantsAll ? totalItems : limit,
-      totalItems,
-      totalPages,
-      showingFrom: totalItems === 0 ? 0 : skip + 1,
-      showingTo: totalItems === 0 ? 0 : skip + products.length,
+    andConditions.push({
+      $or: [
+        { salePrice: paiseCondition },
+        { basePrice: paiseCondition },
+        { price: rupeeCondition },
+      ],
     });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Failed to fetch products" });
+  }
+
+  if (query.size) {
+    andConditions.push({ "variants.size": { $in: String(query.size).split(",") } });
+  }
+
+  if (query.color) {
+    andConditions.push({ "variants.color": { $in: String(query.color).split(",") } });
+  }
+
+  return andConditions.length ? { $and: andConditions } : {};
+}
+
+function buildSort(sort) {
+  switch (sort) {
+    case "price_asc":
+      return { price: 1, salePrice: 1, createdAt: -1 };
+    case "price_desc":
+      return { price: -1, salePrice: -1, createdAt: -1 };
+    case "rating":
+      return { "ratings.average": -1 };
+    case "newest":
+      return { createdAt: -1 };
+    default:
+      return { isFeatured: -1, createdAt: -1 };
   }
 }
 
-exports.getProducts = async (req, res) => fetchProducts(req, res);
+export const getProducts = asyncHandler(async (req, res) => {
+  const { page, limit, skip } = buildPagination(req.query.page, req.query.limit);
+  const filters = buildProductQuery(req.query);
+  if (req.query.category && String(req.query.category).toLowerCase() !== "all") {
+    const requestedSlug = slugifyCategory(req.query.category);
+    const categories = await Product.distinct("category", { category: { $exists: true, $ne: null, $ne: "" } });
+    const matchedCategories = categories.filter((category) => slugifyCategory(category) === requestedSlug);
 
-exports.getProductsByCategory = async (req, res) => {
-  const categoryMeta = getCategoryMetaById(req.params.categoryId);
-
-  if (!categoryMeta) {
-    return res.status(404).json({ message: "Category not found" });
+    filters.$and = filters.$and || [];
+    filters.$and.push({
+      category: { $in: matchedCategories.length ? matchedCategories : ["__no_match__"] },
+    });
   }
 
-  const safetyFilter = buildCategorySafetyFilter(categoryMeta.id);
+  const [items, total] = await Promise.all([
+    Product.find(filters)
+      .select(PRODUCT_LIST_PROJECTION)
+      .sort(buildSort(req.query.sort))
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+    Product.countDocuments(filters),
+  ]);
 
-  return fetchProducts(req, res, {
-    $and: [{ category: { $in: categoryMeta.sourceCategories } }, safetyFilter],
+  res.json({
+    success: true,
+    items: items.map(serializeProduct),
+    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
   });
-};
+});
 
-exports.getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id).lean();
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    return res.json({ product: normalizeProductResponse(product) });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Failed to fetch product" });
+export const searchProducts = asyncHandler(async (req, res) => {
+  const q = String(req.query.q || "").trim();
+  if (!q) {
+    return res.json({ success: true, items: [] });
   }
-};
 
-exports.getCategories = async (_req, res) => {
-  try {
-    const counts = await Product.aggregate([
-      { $match: { category: { $exists: true, $ne: null, $ne: "" } } },
-      { $sort: { createdAt: -1 } },
+  const items = await Product.find({
+    $and: [
+      { $or: [{ isActive: { $exists: false } }, { isActive: true }] },
       {
-        $group: {
-          _id: "$category",
-          count: { $sum: 1 },
-          categoryImage: { $first: { $ifNull: ["$image", { $arrayElemAt: ["$images", 0] }] } },
-        },
+        $or: [
+          { name: { $regex: q, $options: "i" } },
+          { category: { $regex: q, $options: "i" } },
+          { brand: { $regex: q, $options: "i" } },
+          { tags: { $elemMatch: { $regex: q, $options: "i" } } },
+        ],
       },
-    ]);
+    ],
+  })
+    .select(PRODUCT_LIST_PROJECTION)
+    .sort({ updatedAt: -1 })
+    .limit(20)
+    .lean();
 
-    const countsByCategory = new Map(counts.map((item) => [String(item._id), item]));
+  res.json({ success: true, items: items.map(serializeProduct) });
+});
 
-    const categories = getAllCategoryMeta()
-      .map((meta) => {
-        const matchedEntries = meta.sourceCategories
-          .map((sourceCategory) => countsByCategory.get(sourceCategory))
-          .filter(Boolean);
+export const getFeaturedProducts = asyncHandler(async (req, res) => {
+  let items = await Product.find({ isFeatured: true, $or: [{ isActive: { $exists: false } }, { isActive: true }] })
+    .select(PRODUCT_LIST_PROJECTION)
+    .sort({ createdAt: -1 })
+    .limit(12)
+    .lean();
 
-        const productCount = matchedEntries.reduce((sum, item) => sum + Number(item.count || 0), 0);
-        if (!productCount) return null;
-
-        const representative =
-          matchedEntries.find((item) => item.categoryImage)?.categoryImage || null;
-
-        return {
-          _id: meta.id,
-          slug: meta.id,
-          name: meta.name,
-          label: meta.label,
-          sourceCategories: meta.sourceCategories,
-          productCount,
-          imageUrl: representative,
-        };
-      })
-      .filter(Boolean)
-      .sort((left, right) => right.productCount - left.productCount || left.name.localeCompare(right.name));
-
-    return res.json({ categories });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Failed to fetch categories" });
+  if (!items.length) {
+    items = await Product.find({ $or: [{ isActive: { $exists: false } }, { isActive: true }] })
+      .select(PRODUCT_LIST_PROJECTION)
+      .sort({ updatedAt: -1 })
+      .limit(12)
+      .lean();
   }
-};
 
-exports.getCategoryById = async (req, res) => {
-  try {
-    const categoryMeta = getCategoryMetaById(req.params.categoryId);
-    if (!categoryMeta) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+  res.json({ success: true, items: items.map(serializeProduct) });
+});
 
-    const stats = await Product.aggregate([
-      { $match: { category: { $in: categoryMeta.sourceCategories } } },
-      { $sort: { createdAt: -1 } },
-      {
-        $group: {
-          _id: null,
-          productCount: { $sum: 1 },
-          imageUrl: { $first: { $ifNull: ["$image", { $arrayElemAt: ["$images", 0] }] } },
-        },
-      },
-    ]);
+export const getProductById = asyncHandler(async (req, res) => {
+  const item = await Product.findById(req.params.id).lean();
 
-    const summary = stats[0];
-    if (!summary?.productCount) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-
-    return res.json({
-      category: {
-        _id: categoryMeta.id,
-        slug: categoryMeta.id,
-        name: categoryMeta.name,
-        label: categoryMeta.label,
-        sourceCategories: categoryMeta.sourceCategories,
-        productCount: Number(summary.productCount || 0),
-        imageUrl: summary.imageUrl || null,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Failed to fetch category" });
+  if (!item) {
+    res.status(404);
+    throw new Error("Product not found");
   }
-};
 
+  const serializedItem = serializeProduct(item);
+  const related = await Product.find({
+    _id: { $ne: item._id },
+    category: item.category,
+    $or: [{ isActive: { $exists: false } }, { isActive: true }],
+  })
+    .limit(8)
+    .select("name slug images image salePrice basePrice price originalPrice mrp ratings category")
+    .lean();
+
+  res.json({ success: true, item: serializedItem, related: related.map(serializeProduct) });
+});
+
+export const createReview = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  const { rating, comment } = req.body;
+  const existingReview = product.reviews.find(
+    (review) => review.user.toString() === req.user._id.toString()
+  );
+
+  if (existingReview) {
+    res.status(400);
+    throw new Error("You already reviewed this product");
+  }
+
+  product.reviews.push({
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  });
+  product.ratings.count = product.reviews.length;
+  product.ratings.average =
+    product.reviews.reduce((sum, review) => sum + review.rating, 0) /
+    product.reviews.length;
+
+  await product.save();
+
+  res.status(201).json({ success: true, item: product });
+});

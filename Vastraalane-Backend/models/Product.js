@@ -1,112 +1,76 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-function compactUniqueStrings(values) {
-  if (!Array.isArray(values)) return [];
-  const seen = new Set();
-  const result = [];
+const mixedSchema = new mongoose.Schema({}, { _id: false, strict: false });
 
-  for (const value of values) {
-    const normalized = String(value || "").trim();
-    if (!normalized || seen.has(normalized)) continue;
-    seen.add(normalized);
-    result.push(normalized);
-  }
-
-  return result;
-}
-
-function normalizeUrlForIdentity(value) {
-  if (!value) return "";
-
-  try {
-    const parsed = new URL(String(value).trim());
-    parsed.hash = "";
-    parsed.search = "";
-    return parsed.toString().replace(/\/+$/, "");
-  } catch {
-    return String(value).trim().replace(/\/+$/, "");
-  }
-}
-
-function normalizeText(value) {
-  return String(value || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function normalizeBrand(value) {
-  return String(value || "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function buildIdentityKey(doc) {
-  const slug = String(doc.slug || "").trim().toLowerCase();
-  const productUrl = normalizeUrlForIdentity(doc.productUrl);
-  const name = normalizeText(doc.name);
-
-  if (slug) return `slug:${slug}`;
-  if (productUrl) return `url:${productUrl}`;
-  return `name:${name}`;
-}
-
-const ProductSchema = new mongoose.Schema(
+const variantSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, index: true },
+    size: { type: String, default: "" },
+    color: { type: String, default: "" },
+    colorHex: { type: String, default: "#d4a373" },
+    stock: { type: Number, default: 0 },
+    sku: { type: String, default: "" },
+  },
+  { _id: false }
+);
 
-    // Selling price (e.g., "Rs 2499.00")
-    price: { type: Number, required: true },
-
-    // Crossed-out price if available (e.g., "Rs 46999.00")
-    mrp: { type: Number },
-    originalPrice: { type: Number },
-
-    // External CDN image URLs
-    images: { type: [String], default: [] },
-    // Back-compat if UI expects a single image
-    image: { type: String },
-
-    category: { type: String },
-    brandName: { type: String, index: true },
-    brand_name: { type: String },
-
-    // Available sizes (e.g., [ "6", "7", "8" ] or [ "S", "M" ])
-    sizes: [{ type: String }],
-
-    description: { type: String },
-
-    // Card link from listing page (and/or detail page slug)
-    productUrl: { type: String, index: true },
-    slug: { type: String, index: true },
-    identityKey: { type: String, required: true },
+const reviewSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    name: { type: String, required: true },
+    rating: { type: Number, min: 1, max: 5, required: true },
+    comment: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-ProductSchema.index({ identityKey: 1 }, { unique: true });
-ProductSchema.index({ createdAt: -1 });
-ProductSchema.index({ category: 1, createdAt: -1 });
-ProductSchema.index({ price: 1, createdAt: -1 });
-ProductSchema.index({ price: -1, createdAt: -1 });
+const productSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    slug: { type: String, default: "", trim: true },
+    description: { type: String, default: "" },
+    category: { type: mongoose.Schema.Types.Mixed, default: "" },
+    brand: { type: String, default: "" },
+    tags: [{ type: String }],
+    basePrice: { type: Number, default: 0, min: 0 },
+    price: { type: Number, default: 0, min: 0 },
+    mrp: { type: Number, default: 0, min: 0 },
+    originalPrice: { type: Number, default: 0, min: 0 },
+    discountPercent: { type: Number, default: 0, min: 0, max: 100 },
+    salePrice: { type: Number, default: 0, min: 0 },
+    image: { type: String, default: "" },
+    images: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    modelUrl: { type: String, default: "" },
+    variants: [variantSchema],
+    ratings: {
+      average: { type: Number, default: 0 },
+      count: { type: Number, default: 0 },
+    },
+    reviews: [reviewSchema],
+    isFeatured: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
+    weight: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
 
-ProductSchema.pre("validate", function normalizeProduct(next) {
-  this.name = String(this.name || "").trim();
-  this.slug = String(this.slug || "").trim().toLowerCase() || undefined;
-  this.productUrl = normalizeUrlForIdentity(this.productUrl) || undefined;
-  this.description = String(this.description || "").trim() || undefined;
-  this.category = String(this.category || "").trim() || undefined;
-  this.brandName = normalizeBrand(this.brandName || this.brand_name) || undefined;
-  this.brand_name = this.brandName;
-  this.images = compactUniqueStrings([
-    ...(Array.isArray(this.images) ? this.images : []),
-    this.image,
-  ]);
-  this.image = this.images[0] || undefined;
-  this.sizes = compactUniqueStrings(this.sizes);
-  this.identityKey = buildIdentityKey(this);
+productSchema.index({ name: "text", description: "text", brand: "text", tags: "text" });
+productSchema.index({ isActive: 1, isFeatured: -1, createdAt: -1 });
+productSchema.index({ isActive: 1, category: 1, createdAt: -1 });
+productSchema.index({ isActive: 1, updatedAt: -1 });
+
+productSchema.pre("save", function updateSalePrice(next) {
+  const resolvedBasePrice = this.basePrice || this.originalPrice || this.mrp || this.price || 0;
+  const resolvedSalePrice = this.price || this.salePrice || resolvedBasePrice;
+
+  this.basePrice = resolvedBasePrice;
+  this.salePrice = resolvedSalePrice;
+  this.discountPercent =
+    resolvedBasePrice > 0
+      ? Math.max(0, Math.round(((resolvedBasePrice - resolvedSalePrice) / resolvedBasePrice) * 100))
+      : this.discountPercent;
+
   next();
 });
 
-module.exports = mongoose.model("Product", ProductSchema);
-
+const Product = mongoose.model("Product", productSchema);
+export default Product;

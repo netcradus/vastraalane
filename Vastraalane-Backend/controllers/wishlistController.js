@@ -1,35 +1,29 @@
-const Wishlist = require("../models/Wishlist");
+import asyncHandler from "express-async-handler";
+import User from "../models/User.js";
 
-exports.getWishlist = async (req, res) => {
-  try {
-    const items = await Wishlist.find({ userId: req.user.id });
-    res.json(items);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+export const getWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).populate("wishlist");
+  res.json({ success: true, items: user.wishlist });
+});
+
+export const addToWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const productId = req.params.productId;
+
+  if (!user.wishlist.some((item) => item.toString() === productId)) {
+    user.wishlist.push(productId);
+    await user.save();
   }
-};
 
-exports.addWishlistItem = async (req, res) => {
-  try {
-    const item = new Wishlist({
-      ...req.body,
-      userId: req.user.id,
-    });
+  await user.populate("wishlist");
+  res.status(201).json({ success: true, items: user.wishlist });
+});
 
-    await item.save();
-    const items = await Wishlist.find({ userId: req.user.id });
-    res.status(201).json(items);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+export const removeFromWishlist = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  user.wishlist = user.wishlist.filter((item) => item.toString() !== req.params.productId);
+  await user.save();
+  await user.populate("wishlist");
 
-exports.removeWishlistItem = async (req, res) => {
-  try {
-    await Wishlist.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
-    const items = await Wishlist.find({ userId: req.user.id });
-    res.json(items);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+  res.json({ success: true, items: user.wishlist });
+});

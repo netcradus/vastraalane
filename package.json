@@ -2,8 +2,8 @@
   "name": "Vastraalane",
   "private": true,
   "scripts": {
-    "postinstall": "npm install --prefix Vastraalane-Backend",
-    "build": "npm --prefix Vastraalane-Backend run build",
+    "postinstall": "npm install --prefix Vastraalane-Backend && npm install --prefix VastraalaneFrontend",
+    "build": "npm --prefix VastraalaneFrontend run build",
     "start": "npm --prefix Vastraalane-Backend start"
   }
 }

@@ -1,25 +1,17 @@
+import mongoose from "mongoose";
 
-const mongoose = require("mongoose");
-
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
-    username: { type: String, default: "" },
-    fullName: { type: String, default: "" },
-    mobile: { type: String, default: "" },
-    email: { 
-      type: String, 
-      required: true, 
-      unique: true,
-      match: [/.+\@.+\..+/, "Please fill a valid email address"]
-    },
-    gender: { type: String, default: "" },
-    dob: { type: String, default: "" },
-    location: { type: String, default: "" },
-    altMobile: { type: String, default: "" },
-    hintName: { type: String, default: "" },
-    password: { type: String, required: true }, // hashed
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    passwordHash: { type: String, required: true },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    avatar: { type: String, default: "" },
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    refreshToken: { type: String, default: "" },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", userSchema);
+export default User;

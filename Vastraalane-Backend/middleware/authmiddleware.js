@@ -1,16 +1,40 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
+import User from "../models/User.js";
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+function resolveToken(req) {
+  const authHeader = req.headers.authorization || "";
+  if (authHeader.startsWith("Bearer ")) {
+    return authHeader.replace("Bearer ", "");
+  }
 
-  if (!token) return res.status(401).json({ message: "No token provided" });
+  return req.cookies?.accessToken || null;
+}
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
-    req.user = user; // user id from token
-    next();
-  });
-};
+export const protect = asyncHandler(async (req, res, next) => {
+  const token = resolveToken(req);
 
-module.exports = authenticateToken;
+  if (!token) {
+    res.status(401);
+    throw new Error("Not authorized");
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = await User.findById(decoded.userId).select("-passwordHash -refreshToken");
+
+  if (!req.user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  next();
+});
+
+export function adminOnly(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Admin access required");
+  }
+
+  next();
+}
