@@ -113,6 +113,22 @@ function escapeRegex(value = "") {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function extractCategoryName(category) {
+  if (typeof category === "string") {
+    return category;
+  }
+
+  if (category?.name) {
+    return category.name;
+  }
+
+  if (category?.title) {
+    return category.title;
+  }
+
+  return "";
+}
+
 async function buildCategoryMatchCondition(rawCategory) {
   const requestedValue = String(rawCategory || "").trim();
   if (!requestedValue || requestedValue.toLowerCase() === "all") {
@@ -134,6 +150,54 @@ async function buildCategoryMatchCondition(rawCategory) {
   }
 
   return { $or: clauses };
+}
+
+async function buildLegacyCategoryFallbackCondition(requestedSlug) {
+  const categories = await Product.distinct("category", {
+    category: { $exists: true, $ne: null, $ne: "" },
+  });
+
+  const matchedStringCategories = [];
+  const matchedObjectCategories = [];
+
+  for (const category of categories) {
+    const categoryName = extractCategoryName(category);
+    if (!categoryName || slugifyCategory(categoryName) !== requestedSlug) {
+      continue;
+    }
+
+    if (typeof category === "string") {
+      matchedStringCategories.push(category);
+      continue;
+    }
+
+    matchedObjectCategories.push(categoryName);
+    if (category?.slug) {
+      matchedObjectCategories.push(category.slug);
+    }
+  }
+
+  const uniqueStringCategories = Array.from(new Set(matchedStringCategories));
+  const uniqueObjectNames = Array.from(new Set(matchedObjectCategories));
+
+  if (!uniqueStringCategories.length && !uniqueObjectNames.length) {
+    return null;
+  }
+
+  const clauses = [];
+
+  if (uniqueStringCategories.length) {
+    clauses.push({ category: { $in: uniqueStringCategories } });
+  }
+
+  if (uniqueObjectNames.length) {
+    clauses.push(
+      { "category.name": { $in: uniqueObjectNames } },
+      { "category.slug": requestedSlug }
+    );
+  }
+
+  return clauses.length ? { $or: clauses } : null;
 }
 
 function serializeProduct(product) {
@@ -275,13 +339,17 @@ function buildSort(sort) {
 export const getProducts = asyncHandler(async (req, res) => {
   const { page, limit, skip } = buildPagination(req.query.page, req.query.limit);
   const filters = buildProductQuery(req.query);
+  const requestedCategorySlug =
+    req.query.category && String(req.query.category).toLowerCase() !== "all"
+      ? slugifyCategory(req.query.category)
+      : "";
   const categoryCondition = await buildCategoryMatchCondition(req.query.category);
   if (categoryCondition) {
     filters.$and = filters.$and || [];
     filters.$and.push(categoryCondition);
   }
 
-  const [items, total] = await Promise.all([
+  let [items, total] = await Promise.all([
     Product.find(filters)
       .select(PRODUCT_CARD_PROJECTION)
       .sort(buildSort(req.query.sort))
@@ -290,6 +358,25 @@ export const getProducts = asyncHandler(async (req, res) => {
       .lean(),
     Product.countDocuments(filters),
   ]);
+
+  if (!items.length && requestedCategorySlug) {
+    const fallbackCategoryCondition = await buildLegacyCategoryFallbackCondition(requestedCategorySlug);
+    if (fallbackCategoryCondition) {
+      const fallbackFilters = buildProductQuery(req.query);
+      fallbackFilters.$and = fallbackFilters.$and || [];
+      fallbackFilters.$and.push(fallbackCategoryCondition);
+
+      [items, total] = await Promise.all([
+        Product.find(fallbackFilters)
+          .select(PRODUCT_CARD_PROJECTION)
+          .sort(buildSort(req.query.sort))
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+        Product.countDocuments(fallbackFilters),
+      ]);
+    }
+  }
 
   res.set("Cache-Control", "public, max-age=60");
   res.json({
