@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 import { buildPagination } from "../utils/formatters.js";
 import { normalizeCatalogProductName } from "../utils/normalizeProductName.js";
@@ -12,14 +13,12 @@ function slugifyCategory(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
-const PRODUCT_LIST_PROJECTION = [
+const PRODUCT_CARD_PROJECTION = [
   "_id",
   "name",
   "slug",
-  "description",
   "category",
   "brand",
-  "tags",
   "basePrice",
   "price",
   "mrp",
@@ -30,10 +29,21 @@ const PRODUCT_LIST_PROJECTION = [
   "images",
   "variants",
   "ratings",
-  "isFeatured",
-  "isActive",
-  "createdAt",
-  "updatedAt",
+].join(" ");
+
+const SEARCH_PROJECTION = [
+  "_id",
+  "name",
+  "slug",
+  "category",
+  "brand",
+  "basePrice",
+  "price",
+  "mrp",
+  "originalPrice",
+  "salePrice",
+  "image",
+  "images",
 ].join(" ");
 
 function humanizeProductTitle(source) {
@@ -97,6 +107,33 @@ function normalizeImages(product) {
   }
 
   return normalizedImages;
+}
+
+function escapeRegex(value = "") {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function buildCategoryMatchCondition(rawCategory) {
+  const requestedValue = String(rawCategory || "").trim();
+  if (!requestedValue || requestedValue.toLowerCase() === "all") {
+    return null;
+  }
+
+  const requestedSlug = slugifyCategory(requestedValue);
+  const exactNameRegex = new RegExp(`^${escapeRegex(requestedValue)}$`, "i");
+  const clauses = [{ category: exactNameRegex }, { "category.name": exactNameRegex }];
+
+  const categoryDoc = await Category.findOne({ slug: requestedSlug }).select("_id name slug").lean();
+  if (categoryDoc) {
+    clauses.push(
+      { category: categoryDoc.name },
+      { category: String(categoryDoc._id) },
+      { "category.name": categoryDoc.name },
+      { "category.slug": categoryDoc.slug }
+    );
+  }
+
+  return { $or: clauses };
 }
 
 function serializeProduct(product) {
@@ -238,20 +275,15 @@ function buildSort(sort) {
 export const getProducts = asyncHandler(async (req, res) => {
   const { page, limit, skip } = buildPagination(req.query.page, req.query.limit);
   const filters = buildProductQuery(req.query);
-  if (req.query.category && String(req.query.category).toLowerCase() !== "all") {
-    const requestedSlug = slugifyCategory(req.query.category);
-    const categories = await Product.distinct("category", { category: { $exists: true, $ne: null, $ne: "" } });
-    const matchedCategories = categories.filter((category) => slugifyCategory(category) === requestedSlug);
-
+  const categoryCondition = await buildCategoryMatchCondition(req.query.category);
+  if (categoryCondition) {
     filters.$and = filters.$and || [];
-    filters.$and.push({
-      category: { $in: matchedCategories.length ? matchedCategories : ["__no_match__"] },
-    });
+    filters.$and.push(categoryCondition);
   }
 
   const [items, total] = await Promise.all([
     Product.find(filters)
-      .select(PRODUCT_LIST_PROJECTION)
+      .select(PRODUCT_CARD_PROJECTION)
       .sort(buildSort(req.query.sort))
       .skip(skip)
       .limit(limit)
@@ -259,6 +291,7 @@ export const getProducts = asyncHandler(async (req, res) => {
     Product.countDocuments(filters),
   ]);
 
+  res.set("Cache-Control", "public, max-age=60");
   res.json({
     success: true,
     items: items.map(serializeProduct),
@@ -285,7 +318,7 @@ export const searchProducts = asyncHandler(async (req, res) => {
       },
     ],
   })
-    .select(PRODUCT_LIST_PROJECTION)
+    .select(SEARCH_PROJECTION)
     .sort({ updatedAt: -1 })
     .limit(20)
     .lean();
@@ -295,19 +328,20 @@ export const searchProducts = asyncHandler(async (req, res) => {
 
 export const getFeaturedProducts = asyncHandler(async (req, res) => {
   let items = await Product.find({ isFeatured: true, $or: [{ isActive: { $exists: false } }, { isActive: true }] })
-    .select(PRODUCT_LIST_PROJECTION)
+    .select(PRODUCT_CARD_PROJECTION)
     .sort({ createdAt: -1 })
     .limit(12)
     .lean();
 
   if (!items.length) {
     items = await Product.find({ $or: [{ isActive: { $exists: false } }, { isActive: true }] })
-      .select(PRODUCT_LIST_PROJECTION)
+      .select(PRODUCT_CARD_PROJECTION)
       .sort({ updatedAt: -1 })
       .limit(12)
       .lean();
   }
 
+  res.set("Cache-Control", "public, max-age=120");
   res.json({ success: true, items: items.map(serializeProduct) });
 });
 

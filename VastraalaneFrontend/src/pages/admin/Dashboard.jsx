@@ -3,26 +3,19 @@ import adminApi from "../../utils/adminApi";
 import { formatPrice } from "../../utils/formatPrice";
 
 export default function Dashboard() {
-  const ordersQuery = useQuery({
-    queryKey: ["admin-orders"],
-    queryFn: async () => (await adminApi.get("/admin/orders")).data,
-  });
-  const productsQuery = useQuery({
-    queryKey: ["admin-products-dashboard"],
-    queryFn: async () => (await adminApi.get("/admin/products")).data,
-  });
-  const usersQuery = useQuery({
-    queryKey: ["admin-users-dashboard"],
-    queryFn: async () => (await adminApi.get("/admin/users")).data,
+  const dashboardQuery = useQuery({
+    queryKey: ["admin-dashboard"],
+    queryFn: async () => (await adminApi.get("/admin/dashboard")).data,
+    staleTime: 60 * 1000,
   });
 
-  const revenue = (ordersQuery.data?.items || []).reduce((sum, order) => sum + order.total, 0);
+  const dashboard = dashboardQuery.data?.item;
 
   const cards = [
-    { label: "Total Revenue", value: formatPrice(revenue) },
-    { label: "Total Orders", value: ordersQuery.data?.items?.length || 0 },
-    { label: "Total Products", value: productsQuery.data?.pagination?.total || productsQuery.data?.items?.length || 0 },
-    { label: "Total Users", value: usersQuery.data?.items?.length || 0 },
+    { label: "Total Revenue", value: formatPrice(dashboard?.totalRevenue || 0) },
+    { label: "Total Orders", value: dashboard?.totalOrders || 0 },
+    { label: "Total Products", value: dashboard?.totalProducts || 0 },
+    { label: "Total Users", value: dashboard?.totalUsers || 0 },
   ];
 
   return (
@@ -39,29 +32,39 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+      {dashboardQuery.isError ? (
+        <div className="rounded-[2rem] border border-red-100 bg-red-50/90 px-5 py-4 text-sm text-red-700 shadow-card">
+          {dashboardQuery.error?.response?.data?.message || "Unable to load dashboard data right now."}
+        </div>
+      ) : null}
       <div className="grid gap-6 2xl:grid-cols-2">
         <div className="rounded-[2rem] border border-white/60 bg-white/80 p-5 shadow-card backdrop-blur-xl sm:p-6">
           <h2 className="text-lg font-semibold text-ink">Recent Orders</h2>
           <div className="mt-6 space-y-3">
-            {(ordersQuery.data?.items || []).slice(0, 6).map((order) => (
+            {dashboardQuery.isLoading ? <p className="text-sm text-ink/55">Loading recent orders...</p> : null}
+            {(dashboard?.recentOrders || []).map((order) => (
               <div key={order._id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-mist/70 px-4 py-3">
                 <span className="text-sm text-ink/75">{order.user?.name || "Customer"}</span>
                 <span className="text-sm font-medium text-ink">{formatPrice(order.total)}</span>
               </div>
             ))}
+            {!dashboardQuery.isLoading && !(dashboard?.recentOrders || []).length ? (
+              <p className="text-sm text-ink/55">No orders available yet.</p>
+            ) : null}
           </div>
         </div>
         <div className="rounded-[2rem] border border-white/60 bg-white/80 p-5 shadow-card backdrop-blur-xl sm:p-6">
           <h2 className="text-lg font-semibold text-ink">Low Stock Alerts</h2>
           <div className="mt-6 space-y-3">
-            {(productsQuery.data?.items || [])
-              .filter((product) => (product.variants || []).some((variant) => variant.stock < 10))
-              .slice(0, 6)
-              .map((product) => (
-                <div key={product._id} className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                  {product.name}
-                </div>
-              ))}
+            {dashboardQuery.isLoading ? <p className="text-sm text-ink/55">Loading stock alerts...</p> : null}
+            {(dashboard?.lowStockProducts || []).map((product) => (
+              <div key={product._id} className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                {product.name}
+              </div>
+            ))}
+            {!dashboardQuery.isLoading && !(dashboard?.lowStockProducts || []).length ? (
+              <p className="text-sm text-ink/55">No low stock items right now.</p>
+            ) : null}
           </div>
         </div>
       </div>

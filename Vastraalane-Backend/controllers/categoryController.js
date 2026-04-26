@@ -2,6 +2,9 @@ import asyncHandler from "express-async-handler";
 import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 
+const CATEGORY_CACHE_TTL_MS = 5 * 60 * 1000;
+let categoryCache = { expiresAt: 0, payload: null };
+
 function slugifyCategory(value = "") {
   return String(value)
     .toLowerCase()
@@ -11,23 +14,79 @@ function slugifyCategory(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
+function readCategoryCache() {
+  if (categoryCache.payload && categoryCache.expiresAt > Date.now()) {
+    return categoryCache.payload;
+  }
+
+  return null;
+}
+
+function writeCategoryCache(payload) {
+  categoryCache = {
+    payload,
+    expiresAt: Date.now() + CATEGORY_CACHE_TTL_MS,
+  };
+}
+
+function clearCategoryCache() {
+  categoryCache = { expiresAt: 0, payload: null };
+}
+
 export const getCategories = asyncHandler(async (req, res) => {
-  const categories = await Category.find().sort({ name: 1 }).lean();
+  const cachedPayload = readCategoryCache();
+  if (cachedPayload) {
+    res.set("Cache-Control", "public, max-age=300");
+    return res.json(cachedPayload);
+  }
+
+  const categories = await Category.find().select("name slug image").sort({ name: 1 }).lean();
 
   if (categories.length) {
-    const counts = await Product.aggregate([{ $group: { _id: "$category", productCount: { $sum: 1 } } }]);
-    const countMap = new Map(counts.map((entry) => [String(entry._id), entry.productCount]));
+    const counts = await Product.aggregate([
+      {
+        $match: {
+          $or: [{ isActive: { $exists: false } }, { isActive: true }],
+          category: { $exists: true, $ne: null, $ne: "" },
+        },
+      },
+      { $group: { _id: "$category", productCount: { $sum: 1 } } },
+    ]);
+
+    const countMapByName = new Map();
+    const countMapBySlug = new Map();
+
+    for (const entry of counts) {
+      if (typeof entry._id === "string") {
+        countMapByName.set(entry._id, entry.productCount);
+        countMapBySlug.set(slugifyCategory(entry._id), entry.productCount);
+        continue;
+      }
+
+      if (entry._id?.name) {
+        countMapByName.set(entry._id.name, entry.productCount);
+      }
+
+      if (entry._id?.slug) {
+        countMapBySlug.set(entry._id.slug, entry.productCount);
+      }
+    }
+
     const enriched = categories.map((item) => ({
       ...item,
-      productCount: countMap.get(String(item._id)) || 0,
+      productCount: countMapBySlug.get(item.slug) || countMapByName.get(item.name) || 0,
     }));
 
-    return res.json({ success: true, items: enriched });
+    const payload = { success: true, items: enriched };
+    writeCategoryCache(payload);
+    res.set("Cache-Control", "public, max-age=300");
+    return res.json(payload);
   }
 
   const grouped = await Product.aggregate([
     {
       $match: {
+        $or: [{ isActive: { $exists: false } }, { isActive: true }],
         category: { $exists: true, $ne: null, $ne: "" },
       },
     },
@@ -55,11 +114,15 @@ export const getCategories = asyncHandler(async (req, res) => {
     };
   });
 
-  res.json({ success: true, items });
+  const payload = { success: true, items };
+  writeCategoryCache(payload);
+  res.set("Cache-Control", "public, max-age=300");
+  res.json(payload);
 });
 
 export const createCategory = asyncHandler(async (req, res) => {
   const item = await Category.create(req.body);
+  clearCategoryCache();
   res.status(201).json({ success: true, item });
 });
 
@@ -69,6 +132,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Category not found");
   }
+  clearCategoryCache();
   res.json({ success: true, item });
 });
 
@@ -87,6 +151,7 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 
   await Product.updateMany({ category: item._id }, { category: uncategorized._id });
   await item.deleteOne();
+  clearCategoryCache();
 
   res.json({ success: true, message: "Category deleted" });
 });
