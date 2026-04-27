@@ -148,7 +148,7 @@ export default function ProductDetail() {
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     const shareData = {
       title: product.name,
-      text: `Check out ${product.name} on Vastraleena`,
+      text: `Check out ${product.name} on Vastraalane`,
       url: shareUrl,
     };
 
@@ -423,11 +423,11 @@ export default function ProductDetail() {
           <div className="mt-10 grid gap-4">
             <div className="rounded-[1.5rem] bg-white/70 p-5">
               <h3 className="font-semibold">Shipping Info</h3>
-              <p className="mt-2 text-sm text-ink/70">Delivery charges and address confirmation are shown directly during checkout.</p>
+              <p className="mt-2 text-sm text-ink/70">Shipping charges, delivery estimates, and address details are shown clearly at checkout before you place your order.</p>
             </div>
             <div className="rounded-[1.5rem] bg-white/70 p-5">
               <h3 className="font-semibold">Returns Policy</h3>
-              <p className="mt-2 text-sm text-ink/70">Easy returns and exchange states are ready for policy copy and backend rules.</p>
+              <p className="mt-2 text-sm text-ink/70">Eligible items can be returned or exchanged within our policy window, provided they are unused and in their original condition.</p>
             </div>
           </div>
         </div>
