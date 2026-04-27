@@ -46,6 +46,9 @@ const SEARCH_PROJECTION = [
   "images",
 ].join(" ");
 
+const CATEGORY_ALIAS_CACHE_TTL_MS = 5 * 60 * 1000;
+let categoryAliasCache = { expiresAt: 0, map: null };
+
 function humanizeProductTitle(source) {
   const candidates = [source.slug, source.productUrl, source.name];
 
@@ -129,6 +132,92 @@ function extractCategoryName(category) {
   return "";
 }
 
+function readCategoryAliasCache() {
+  if (categoryAliasCache.map && categoryAliasCache.expiresAt > Date.now()) {
+    return categoryAliasCache.map;
+  }
+
+  return null;
+}
+
+function writeCategoryAliasCache(map) {
+  categoryAliasCache = {
+    map,
+    expiresAt: Date.now() + CATEGORY_ALIAS_CACHE_TTL_MS,
+  };
+}
+
+function getAliasBucket(map, slug) {
+  if (!map.has(slug)) {
+    map.set(slug, {
+      rawValues: new Set(),
+      names: new Set(),
+      slugs: new Set(),
+      ids: new Set(),
+    });
+  }
+
+  return map.get(slug);
+}
+
+async function getCategoryAliasMap() {
+  const cachedMap = readCategoryAliasCache();
+  if (cachedMap) {
+    return cachedMap;
+  }
+
+  const [categoryDocs, distinctCategories] = await Promise.all([
+    Category.find().select("_id name slug").lean(),
+    Product.distinct("category", {
+      $or: [{ isActive: { $exists: false } }, { isActive: true }],
+      category: { $exists: true, $ne: null, $ne: "" },
+    }),
+  ]);
+
+  const aliasMap = new Map();
+
+  for (const categoryDoc of categoryDocs) {
+    if (!categoryDoc?.slug) continue;
+    const bucket = getAliasBucket(aliasMap, categoryDoc.slug);
+    if (categoryDoc.name) bucket.names.add(categoryDoc.name);
+    if (categoryDoc.slug) bucket.slugs.add(categoryDoc.slug);
+    if (categoryDoc._id) bucket.ids.add(String(categoryDoc._id));
+  }
+
+  for (const category of distinctCategories) {
+    const categoryName = extractCategoryName(category);
+    const categorySlug =
+      slugifyCategory(
+        (typeof category === "string" ? category : category?.slug || categoryName) || ""
+      ) || slugifyCategory(categoryName);
+
+    if (!categorySlug) continue;
+
+    const bucket = getAliasBucket(aliasMap, categorySlug);
+
+    if (typeof category === "string") {
+      bucket.rawValues.add(category);
+      bucket.names.add(category);
+      continue;
+    }
+
+    if (categoryName) {
+      bucket.names.add(categoryName);
+    }
+
+    if (category?.slug) {
+      bucket.slugs.add(category.slug);
+    }
+
+    if (category?._id) {
+      bucket.ids.add(String(category._id));
+    }
+  }
+
+  writeCategoryAliasCache(aliasMap);
+  return aliasMap;
+}
+
 async function buildCategoryMatchCondition(rawCategory) {
   const requestedValue = String(rawCategory || "").trim();
   if (!requestedValue || requestedValue.toLowerCase() === "all") {
@@ -136,68 +225,37 @@ async function buildCategoryMatchCondition(rawCategory) {
   }
 
   const requestedSlug = slugifyCategory(requestedValue);
+  const aliasMap = await getCategoryAliasMap();
+  const aliasBucket = aliasMap.get(requestedSlug);
   const exactNameRegex = new RegExp(`^${escapeRegex(requestedValue)}$`, "i");
   const clauses = [{ category: exactNameRegex }, { "category.name": exactNameRegex }];
 
-  const categoryDoc = await Category.findOne({ slug: requestedSlug }).select("_id name slug").lean();
-  if (categoryDoc) {
-    clauses.push(
-      { category: categoryDoc.name },
-      { category: String(categoryDoc._id) },
-      { "category.name": categoryDoc.name },
-      { "category.slug": categoryDoc.slug }
-    );
+  if (!aliasBucket) {
+    return { $or: clauses };
+  }
+
+  const rawValues = Array.from(aliasBucket.rawValues);
+  const names = Array.from(aliasBucket.names);
+  const slugs = Array.from(new Set([requestedSlug, ...aliasBucket.slugs]));
+  const ids = Array.from(aliasBucket.ids);
+
+  if (rawValues.length) {
+    clauses.push({ category: { $in: rawValues } });
+  }
+
+  if (names.length) {
+    clauses.push({ "category.name": { $in: names } });
+  }
+
+  if (slugs.length) {
+    clauses.push({ "category.slug": { $in: slugs } });
+  }
+
+  if (ids.length) {
+    clauses.push({ category: { $in: ids } }, { "category._id": { $in: ids } });
   }
 
   return { $or: clauses };
-}
-
-async function buildLegacyCategoryFallbackCondition(requestedSlug) {
-  const categories = await Product.distinct("category", {
-    category: { $exists: true, $ne: null, $ne: "" },
-  });
-
-  const matchedStringCategories = [];
-  const matchedObjectCategories = [];
-
-  for (const category of categories) {
-    const categoryName = extractCategoryName(category);
-    if (!categoryName || slugifyCategory(categoryName) !== requestedSlug) {
-      continue;
-    }
-
-    if (typeof category === "string") {
-      matchedStringCategories.push(category);
-      continue;
-    }
-
-    matchedObjectCategories.push(categoryName);
-    if (category?.slug) {
-      matchedObjectCategories.push(category.slug);
-    }
-  }
-
-  const uniqueStringCategories = Array.from(new Set(matchedStringCategories));
-  const uniqueObjectNames = Array.from(new Set(matchedObjectCategories));
-
-  if (!uniqueStringCategories.length && !uniqueObjectNames.length) {
-    return null;
-  }
-
-  const clauses = [];
-
-  if (uniqueStringCategories.length) {
-    clauses.push({ category: { $in: uniqueStringCategories } });
-  }
-
-  if (uniqueObjectNames.length) {
-    clauses.push(
-      { "category.name": { $in: uniqueObjectNames } },
-      { "category.slug": requestedSlug }
-    );
-  }
-
-  return clauses.length ? { $or: clauses } : null;
 }
 
 function serializeProduct(product) {
@@ -339,10 +397,6 @@ function buildSort(sort) {
 export const getProducts = asyncHandler(async (req, res) => {
   const { page, limit, skip } = buildPagination(req.query.page, req.query.limit);
   const filters = buildProductQuery(req.query);
-  const requestedCategorySlug =
-    req.query.category && String(req.query.category).toLowerCase() !== "all"
-      ? slugifyCategory(req.query.category)
-      : "";
   const categoryCondition = await buildCategoryMatchCondition(req.query.category);
   if (categoryCondition) {
     filters.$and = filters.$and || [];
@@ -358,25 +412,6 @@ export const getProducts = asyncHandler(async (req, res) => {
       .lean(),
     Product.countDocuments(filters),
   ]);
-
-  if (!items.length && requestedCategorySlug) {
-    const fallbackCategoryCondition = await buildLegacyCategoryFallbackCondition(requestedCategorySlug);
-    if (fallbackCategoryCondition) {
-      const fallbackFilters = buildProductQuery(req.query);
-      fallbackFilters.$and = fallbackFilters.$and || [];
-      fallbackFilters.$and.push(fallbackCategoryCondition);
-
-      [items, total] = await Promise.all([
-        Product.find(fallbackFilters)
-          .select(PRODUCT_CARD_PROJECTION)
-          .sort(buildSort(req.query.sort))
-          .skip(skip)
-          .limit(limit)
-          .lean(),
-        Product.countDocuments(fallbackFilters),
-      ]);
-    }
-  }
 
   res.set("Cache-Control", "public, max-age=60");
   res.json({
