@@ -21,20 +21,26 @@ export default function CategoryPage() {
   const [draftPriceMax, setDraftPriceMax] = useState(5000000);
   const [page, setPage] = useState(1);
   const [visibleProducts, setVisibleProducts] = useState([]);
+  const categoriesQuery = useCategories();
+  const selectedCategory = useMemo(
+    () => (categoriesQuery.data?.items || []).find((category) => category.slug === slug),
+    [categoriesQuery.data?.items, slug]
+  );
+  const shouldLoadProducts = slug === "all" || categoriesQuery.isSuccess || categoriesQuery.isError;
+  const categoryTitle = selectedCategory?.name || slug.replace(/-/g, " ");
 
   const params = useMemo(
     () => ({
-      category: slug === "all" ? undefined : slug,
+      category: slug === "all" ? undefined : selectedCategory?.name || slug,
       sort,
       price_max: priceMax,
       page,
       limit: 24,
     }),
-    [slug, sort, priceMax, page]
+    [slug, selectedCategory?.name, sort, priceMax, page]
   );
 
-  const productsQuery = useProducts(params);
-  const categoriesQuery = useCategories();
+  const productsQuery = useProducts(params, { enabled: shouldLoadProducts });
   const totalProducts = productsQuery.data?.pagination?.total || 0;
   const hasMore = visibleProducts.length < totalProducts;
 
@@ -147,10 +153,14 @@ export default function CategoryPage() {
         </aside>
         <div ref={productsSectionRef}>
           <div className="mb-8" data-reveal>
-            <h1 className="font-display text-[clamp(2.3rem,5vw,4.5rem)] capitalize">{slug.replace(/-/g, " ")}</h1>
+            <h1 className="font-display text-[clamp(2.3rem,5vw,4.5rem)] capitalize">{categoryTitle}</h1>
             <p className="mt-3 text-[clamp(0.95rem,1.2vw,1.05rem)] text-ink/60">Explore styles curated under this collection and browse the pieces that best match your mood.</p>
             <p className="mt-2 text-sm text-ink/50">
-              {totalProducts ? `${visibleProducts.length} of ${totalProducts} products loaded` : "Loading category count..."}
+              {totalProducts
+                ? `${visibleProducts.length} of ${totalProducts} products loaded`
+                : shouldLoadProducts
+                  ? "Loading category count..."
+                  : "Preparing category..."}
             </p>
           </div>
           {visibleProducts.length === 0 && !productsQuery.isLoading ? (
