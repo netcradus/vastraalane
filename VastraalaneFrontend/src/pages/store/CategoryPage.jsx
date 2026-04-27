@@ -26,23 +26,29 @@ export default function CategoryPage() {
     () => (categoriesQuery.data?.items || []).find((category) => category.slug === slug),
     [categoriesQuery.data?.items, slug]
   );
-  const shouldLoadProducts = slug === "all" || categoriesQuery.isSuccess || categoriesQuery.isError;
   const categoryTitle = selectedCategory?.name || slug.replace(/-/g, " ");
+  const categoryProductCount = selectedCategory?.productCount || 0;
 
   const params = useMemo(
     () => ({
-      category: slug === "all" ? undefined : selectedCategory?.name || slug,
+      category: slug === "all" ? undefined : slug,
       sort,
       price_max: priceMax,
       page,
       limit: 24,
     }),
-    [slug, selectedCategory?.name, sort, priceMax, page]
+    [slug, sort, priceMax, page]
   );
 
-  const productsQuery = useProducts(params, { enabled: shouldLoadProducts });
-  const totalProducts = productsQuery.data?.pagination?.total || 0;
-  const hasMore = visibleProducts.length < totalProducts;
+  const productsQuery = useProducts(params);
+  const totalProducts = productsQuery.data?.pagination?.total || categoryProductCount || 0;
+  const isInitialCategoryLoad =
+    page === 1 &&
+    (productsQuery.isLoading || productsQuery.isFetching) &&
+    visibleProducts.length === 0;
+  const shouldShowEmptyState =
+    productsQuery.isSuccess && !productsQuery.isFetching && totalProducts === 0 && visibleProducts.length === 0;
+  const hasMore = totalProducts > 0 && visibleProducts.length < totalProducts;
 
   useEffect(() => {
     setPage(1);
@@ -158,19 +164,19 @@ export default function CategoryPage() {
             <p className="mt-2 text-sm text-ink/50">
               {totalProducts
                 ? `${visibleProducts.length} of ${totalProducts} products loaded`
-                : shouldLoadProducts
+                : categoriesQuery.isLoading
                   ? "Loading category count..."
                   : "Preparing category..."}
             </p>
           </div>
-          {visibleProducts.length === 0 && !productsQuery.isLoading ? (
+          {shouldShowEmptyState ? (
             <div className="rounded-[2rem] bg-white/80 p-8 text-ink/70 shadow-card">
               No products matched this category with the current filters. Try increasing the price range or clearing filters.
             </div>
           ) : null}
           <ProductGrid
             products={visibleProducts}
-            isLoading={productsQuery.isLoading && page === 1}
+            isLoading={isInitialCategoryLoad}
             isError={productsQuery.isError}
             errorMessage="This category could not be loaded right now."
           />

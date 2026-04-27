@@ -9,7 +9,6 @@ export function useProducts(params, options = {}) {
     queryFn: () => productService.getProducts(params),
     staleTime: 60 * 1000,
     gcTime: LONG_CACHE_TIME,
-    placeholderData: (previousData) => previousData,
     refetchOnWindowFocus: false,
     ...options,
   });
