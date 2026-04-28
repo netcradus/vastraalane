@@ -283,8 +283,8 @@ export default function Home() {
                 <Link to="/products" className="button-3d inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-mist">
                   Explore All Products <ArrowRight size={16} />
                 </Link>
-                <Link to="/sale" className="button-3d inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-ink">
-                  Shop Sale
+                <Link to="/category/all" className="button-3d inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-ink">
+                  Browse Categories
                 </Link>
               </div>
             </div>

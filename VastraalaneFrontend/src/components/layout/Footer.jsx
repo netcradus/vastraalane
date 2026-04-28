@@ -18,9 +18,7 @@ export function Footer() {
             <h4 className="text-[clamp(1.8rem,3vw,2.4rem)] font-semibold">Customer Care</h4>
             <div className="mt-6 grid gap-3 text-sm leading-7 text-white/80">
               <span>Store Time : 10:00 - 8:00, Monday - Saturday</span>
-              <a href="mailto:info@vastraalane.com" className="transition hover:text-gold">
-                E-Mail : info@vastraalane.com
-              </a>
+              <span>E-Mail : info@vastraalane.com</span>
             </div>
           </div>
 
@@ -28,10 +26,8 @@ export function Footer() {
             <h4 className="text-[clamp(1.8rem,3vw,2.4rem)] font-semibold">Need Help?</h4>
             <div className="mt-6 grid gap-3 text-sm leading-7 text-white/80">
               <span>For any queries, reach us at</span>
-              <a href="mailto:info@vastraalane.com" className="transition hover:text-gold">
-                info@vastraalane.com
-              </a>
-              <span>Customized or sale items are non-returnable.</span>
+              <span>info@vastraalane.com</span>
+              <span>Customized items are non-returnable.</span>
               <span>Monday - Saturday: 10:00 AM - 8:00 PM | Sunday: Closed</span>
             </div>
           </div>

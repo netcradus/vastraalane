@@ -5,9 +5,9 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "build": "node -e \"console.log('No backend build step required')\"",
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "build": "echo 'No build step required'",
     "seed": "node seed.js",
     "seed:admin": "node scripts/seedAdmin.js",
     "migrate:images": "node scripts/migrateImagesToCloudinary.js",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^2.5.1",
+    "cloudinary": "^1.21.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -27,8 +27,7 @@
     "mongoose": "^8.9.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^6.10.1"
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

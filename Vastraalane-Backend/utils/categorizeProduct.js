@@ -7,10 +7,31 @@ export const CATEGORY_NAMES = {
   girlsSandals: "Girls Sandals and jutti",
   perfumes: "Perfumes",
   loafers: "Loafers",
+  flipflopsCrocs: "Flipflops/Crocs",
   tracksuits: "Cordset & Tracksuit",
   bottomwear: "Jeans & Trouser & Trackpant",
   other: "Other",
 };
+
+const MEN_AUDIENCE_PATTERNS = [
+  /\bmen\b/,
+  /\bmens\b/,
+  /\bgents\b/,
+  /\bgent\b/,
+  /\bboys\b/,
+  /\bmale\b/,
+  /\bfor him\b/,
+];
+
+const WOMEN_AUDIENCE_PATTERNS = [
+  /\bwomen\b/,
+  /\bwomens\b/,
+  /\blady\b/,
+  /\bladies\b/,
+  /\bgirls\b/,
+  /\bfemale\b/,
+  /\bfor her\b/,
+];
 
 function normalizeText(value = "") {
   return String(value)
@@ -71,6 +92,48 @@ const bottomwearPriorityPatterns = [
   /\btrack pants\b/,
 ];
 
+const shoePriorityPatterns = [
+  /\bshoe\b/,
+  /\bshoes\b/,
+  /\bsneaker\b/,
+  /\bsneakers\b/,
+  /\bloafer\b/,
+  /\bloafers\b/,
+  /\bair force\b/,
+  /\bairforce\b/,
+  /\bair max\b/,
+  /\bairmax\b/,
+  /\bshox\b/,
+  /\blebron\b/,
+  /\bzoom freak\b/,
+  /\bvapormax\b/,
+  /\bwaffle\b/,
+  /\btriple s\b/,
+  /\bchain reaction\b/,
+  /\brun star\b/,
+  /\balphafly\b/,
+  /\bzoom 2k\b/,
+  /\bsacai\b/,
+];
+
+const flipflopsCrocsPatterns = [
+  /\bcrocs\b/,
+  /\bcroc s\b/,
+  /\bcroccs\b/,
+  /\bcrocccs\b/,
+  /\bcroccss\b/,
+  /\bcroc\b/,
+  /\bcroc literide\b/,
+  /\bcroc sandal\b/,
+  /\bclog\b/,
+  /\bclogs\b/,
+  /\bliteride\b/,
+  /\blite ride\b/,
+  /\bbayaband\b/,
+  /\bmega crush\b/,
+  /\becho\b/,
+];
+
 const rules = [
   {
     category: CATEGORY_NAMES.perfumes,
@@ -97,6 +160,10 @@ const rules = [
       /\bco ord\b/,
       /\bco ords\b/,
     ],
+  },
+  {
+    category: CATEGORY_NAMES.flipflopsCrocs,
+    patterns: flipflopsCrocsPatterns,
   },
   {
     category: CATEGORY_NAMES.shoes,
@@ -141,17 +208,6 @@ const rules = [
       /\badiddas edge runner\b/,
       /\baddida s edge\b/,
       /\bnew balancee xc\b/,
-      /\bcrocs\b/,
-      /\bcroc s\b/,
-      /\bcroccs\b/,
-      /\bcrocccs\b/,
-      /\bcroccss\b/,
-      /\bcroc literide\b/,
-      /\bcroc sandal\b/,
-      /\bclog\b/,
-      /\bclogs\b/,
-      /\bliteride\b/,
-      /\blite ride\b/,
       /\bskechers\b/,
       /\bhyper burst\b/,
       /\baero burst\b/,
@@ -366,6 +422,18 @@ const rules = [
       /\bvomero\b/,
       /\bblazer\b/,
       /\bpalermo\b/,
+      /\bshox\b/,
+      /\blebron\b/,
+      /\bzoom freak\b/,
+      /\bvapormax\b/,
+      /\btriple s\b/,
+      /\bchain reaction\b/,
+      /\brun star\b/,
+      /\balphafly\b/,
+      /\bzoom 2k\b/,
+      /\bld waffle\b/,
+      /\bsacai\b/,
+      /\bfuturecraft\b/,
     ],
   },
   {
@@ -383,11 +451,25 @@ export function inferProductCategory(product) {
     return CATEGORY_NAMES.handbags;
   }
 
-  if (hasAny(text, bottomwearPriorityPatterns)) {
+  if (hasAny(text, bottomwearPriorityPatterns) && !hasAny(text, shoePriorityPatterns)) {
     return CATEGORY_NAMES.bottomwear;
   }
 
   const matchedRule = rules.find((rule) => hasAny(text, rule.patterns));
 
   return matchedRule?.category || CATEGORY_NAMES.other;
+}
+
+export function inferProductAudience(product) {
+  const text = productText(product);
+
+  if (hasAny(text, WOMEN_AUDIENCE_PATTERNS)) {
+    return "women";
+  }
+
+  if (hasAny(text, MEN_AUDIENCE_PATTERNS)) {
+    return "men";
+  }
+
+  return "unisex";
 }

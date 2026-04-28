@@ -8,7 +8,6 @@ const baseDefaults = {
   brand: "",
   description: "",
   basePrice: 0,
-  salePrice: 0,
   discountPercent: 0,
   tags: "",
   size: "",
@@ -48,7 +47,14 @@ export function ProductEditorForm({
 
   async function handleSubmit(event) {
     event.preventDefault();
-    await onSubmit(values, selectedFiles);
+    await onSubmit(
+      {
+        ...values,
+        salePrice: values.basePrice,
+        discountPercent: 0,
+      },
+      selectedFiles,
+    );
   }
 
   return (
@@ -109,18 +115,6 @@ export function ProductEditorForm({
             placeholder="MRP / base price"
             className="rounded-2xl border border-ink/10 bg-white px-4 py-3"
             required
-          />
-        </label>
-
-        <label className="grid gap-2">
-          <span className="text-sm font-medium text-ink">Sale price</span>
-          <input
-            type="number"
-            min="0"
-            value={values.salePrice}
-            onChange={(event) => updateField("salePrice", Number(event.target.value))}
-            placeholder="Discounted price"
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3"
           />
         </label>
 

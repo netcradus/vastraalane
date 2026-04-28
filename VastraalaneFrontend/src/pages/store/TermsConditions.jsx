@@ -29,7 +29,7 @@ export default function TermsConditions() {
 
           <section>
             <h2 className="font-display text-3xl text-ink">Shipping Policy</h2>
-            <p className="mt-3">Standard delivery timeline: 5-7 business days and may vary by location.</p>
+            <p className="mt-3">Standard delivery timeline: 5–7 business days and may vary by location.</p>
             <p>Delays due to unforeseen circumstances such as strikes or weather are not our liability.</p>
             <p>Shipping charges, if applicable, will be displayed at checkout.</p>
           </section>
@@ -37,8 +37,8 @@ export default function TermsConditions() {
           <section>
             <h2 className="font-display text-3xl text-ink">Return & Refund Policy</h2>
             <p className="mt-3">Returns are accepted within 7 days if the product is unused and tags remain intact.</p>
-            <p>Customized or sale items are non-returnable.</p>
-            <p>Refunds are processed within 7-10 business days after product inspection.</p>
+            <p>Customized items are non-returnable.</p>
+            <p>Refunds are processed within 7–10 business days after product inspection.</p>
           </section>
 
           <section>
@@ -57,13 +57,8 @@ export default function TermsConditions() {
 
           <section>
             <h2 className="font-display text-3xl text-ink">Contact Us</h2>
-            <p className="mt-3">
-              Email:{" "}
-              <a href="mailto:info@vastraalane.com" className="transition hover:text-clay">
-                info@vastraalane.com
-              </a>
-            </p>
-            <p>Working Hours: Mon-Sat (10 AM - 8 PM)</p>
+            <p className="mt-3">Email: info@vastraalane.com</p>
+            <p>Working Hours: Mon–Sat (10 AM – 8 PM)</p>
           </section>
         </div>
       </div>

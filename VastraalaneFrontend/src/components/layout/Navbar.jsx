@@ -12,7 +12,6 @@ import { authService } from "../../services/authService";
 const links = [
   { to: "/", label: "Home" },
   { to: "/category/all", label: "Categories" },
-  { to: "/sale", label: "Sale" },
   { to: "/about", label: "About" },
 ];
 

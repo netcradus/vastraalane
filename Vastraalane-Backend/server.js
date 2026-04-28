@@ -19,28 +19,10 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
-app.set("trust proxy", 1);
-
-const allowedOrigins = new Set(
-  [
-    process.env.CLIENT_URL,
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://www.vastraalane.com",
-    "https://vastraalane.com",
-  ].filter(Boolean)
-);
 
 app.use(
   cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error("CORS origin not allowed"));
-    },
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -62,13 +44,6 @@ app.use(
   rateLimit({
     windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000),
     max: Number(process.env.RATE_LIMIT_MAX || 100),
-    standardHeaders: true,
-    legacyHeaders: false,
-    skip: (req) =>
-      req.method === "GET" &&
-      (req.path === "/api/health" ||
-        req.path.startsWith("/api/products") ||
-        req.path.startsWith("/api/categories")),
   })
 );
 

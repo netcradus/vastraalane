@@ -4,7 +4,6 @@ import { LogOut, Menu, ShieldCheck, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const adminLinks = [
-  { to: "/admin", label: "Dashboard" },
   { to: "/admin/products", label: "Products" },
   { to: "/admin/categories", label: "Categories" },
   { to: "/admin/orders", label: "Orders" },
@@ -47,16 +46,15 @@ export function AdminLayout() {
 
       <div className="grid min-h-screen xl:grid-cols-[280px_1fr]">
         <aside className={`${mobileOpen ? "block" : "hidden"} border-r border-white/10 bg-ink px-6 py-8 text-white shadow-[0_20px_60px_rgba(31,26,23,0.22)] xl:block`}>
-          <Link to="/admin" className="font-display text-2xl text-gold" onClick={() => setMobileOpen(false)}>
+          <Link to="/admin/products" className="font-display text-2xl text-gold" onClick={() => setMobileOpen(false)}>
             Vastra Admin
           </Link>
-          <div className="mt-3 text-sm text-white/60">Only the admin account can access and manage this dashboard.</div>
+          <div className="mt-3 text-sm text-white/60">Only the admin account can access and manage this admin panel.</div>
           <div className="mt-10 grid gap-2">
             {adminLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
-                end={link.to === "/admin"}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   `rounded-2xl px-4 py-3 text-sm transition ${isActive ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/5 hover:text-white"}`

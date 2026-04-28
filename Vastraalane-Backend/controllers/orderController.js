@@ -2,9 +2,7 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
-import User from "../models/User.js";
 import { createRazorpayOrder, getRazorpayPublicConfig, verifyRazorpaySignature } from "../utils/razorpay.js";
-import { sendOrderEmails } from "../utils/email.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { items, shippingAddress, shippingMethod, subtotal, shippingCost, discount, coupon, total } = req.body;
@@ -128,18 +126,6 @@ export const verifyOrderPayment = asyncHandler(async (req, res) => {
     await Product.updateOne({ _id: item.product }, { $inc: { "variants.0.stock": -item.quantity } }).catch(
       () => null
     );
-  }
-
-  const orderForEmail = await Order.findById(order._id).lean();
-  const user = await User.findById(req.user._id).select("name email").lean();
-
-  try {
-    await sendOrderEmails({
-      ...orderForEmail,
-      user,
-    });
-  } catch (emailError) {
-    console.error("Order email send failed", emailError);
   }
 
   res.json({ success: true, item: order });

@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
-import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 import { buildPagination } from "../utils/formatters.js";
 import { normalizeCatalogProductName } from "../utils/normalizeProductName.js";
+import { inferProductAudience } from "../utils/categorizeProduct.js";
 
 function slugifyCategory(value = "") {
   return String(value)
@@ -13,12 +13,19 @@ function slugifyCategory(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
-const PRODUCT_CARD_PROJECTION = [
+const FLIPFLOPS_CROCS_SLUG = "flipflops-crocs";
+const FLIPFLOPS_CROCS_GROUP = ["Flipflops/Crocs", "Loafers"];
+const APPAREL_GROUP_SLUG = "cordset-and-tracksuit";
+const APPAREL_GROUP = ["Cordset & Tracksuit", "Jeans & Trouser & Trackpant"];
+
+const PRODUCT_LIST_PROJECTION = [
   "_id",
   "name",
   "slug",
+  "description",
   "category",
   "brand",
+  "tags",
   "basePrice",
   "price",
   "mrp",
@@ -29,25 +36,11 @@ const PRODUCT_CARD_PROJECTION = [
   "images",
   "variants",
   "ratings",
+  "isFeatured",
+  "isActive",
+  "createdAt",
+  "updatedAt",
 ].join(" ");
-
-const SEARCH_PROJECTION = [
-  "_id",
-  "name",
-  "slug",
-  "category",
-  "brand",
-  "basePrice",
-  "price",
-  "mrp",
-  "originalPrice",
-  "salePrice",
-  "image",
-  "images",
-].join(" ");
-
-const CATEGORY_ALIAS_CACHE_TTL_MS = 5 * 60 * 1000;
-let categoryAliasCache = { expiresAt: 0, map: null };
 
 function humanizeProductTitle(source) {
   const candidates = [source.slug, source.productUrl, source.name];
@@ -112,152 +105,6 @@ function normalizeImages(product) {
   return normalizedImages;
 }
 
-function escapeRegex(value = "") {
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function extractCategoryName(category) {
-  if (typeof category === "string") {
-    return category;
-  }
-
-  if (category?.name) {
-    return category.name;
-  }
-
-  if (category?.title) {
-    return category.title;
-  }
-
-  return "";
-}
-
-function readCategoryAliasCache() {
-  if (categoryAliasCache.map && categoryAliasCache.expiresAt > Date.now()) {
-    return categoryAliasCache.map;
-  }
-
-  return null;
-}
-
-function writeCategoryAliasCache(map) {
-  categoryAliasCache = {
-    map,
-    expiresAt: Date.now() + CATEGORY_ALIAS_CACHE_TTL_MS,
-  };
-}
-
-function getAliasBucket(map, slug) {
-  if (!map.has(slug)) {
-    map.set(slug, {
-      rawValues: new Set(),
-      names: new Set(),
-      slugs: new Set(),
-      ids: new Set(),
-    });
-  }
-
-  return map.get(slug);
-}
-
-async function getCategoryAliasMap() {
-  const cachedMap = readCategoryAliasCache();
-  if (cachedMap) {
-    return cachedMap;
-  }
-
-  const [categoryDocs, distinctCategories] = await Promise.all([
-    Category.find().select("_id name slug").lean(),
-    Product.distinct("category", {
-      $or: [{ isActive: { $exists: false } }, { isActive: true }],
-      category: { $exists: true, $ne: null, $ne: "" },
-    }),
-  ]);
-
-  const aliasMap = new Map();
-
-  for (const categoryDoc of categoryDocs) {
-    if (!categoryDoc?.slug) continue;
-    const bucket = getAliasBucket(aliasMap, categoryDoc.slug);
-    if (categoryDoc.name) bucket.names.add(categoryDoc.name);
-    if (categoryDoc.slug) bucket.slugs.add(categoryDoc.slug);
-    if (categoryDoc._id) bucket.ids.add(String(categoryDoc._id));
-  }
-
-  for (const category of distinctCategories) {
-    const categoryName = extractCategoryName(category);
-    const categorySlug =
-      slugifyCategory(
-        (typeof category === "string" ? category : category?.slug || categoryName) || ""
-      ) || slugifyCategory(categoryName);
-
-    if (!categorySlug) continue;
-
-    const bucket = getAliasBucket(aliasMap, categorySlug);
-
-    if (typeof category === "string") {
-      bucket.rawValues.add(category);
-      bucket.names.add(category);
-      continue;
-    }
-
-    if (categoryName) {
-      bucket.names.add(categoryName);
-    }
-
-    if (category?.slug) {
-      bucket.slugs.add(category.slug);
-    }
-
-    if (category?._id) {
-      bucket.ids.add(String(category._id));
-    }
-  }
-
-  writeCategoryAliasCache(aliasMap);
-  return aliasMap;
-}
-
-async function buildCategoryMatchCondition(rawCategory) {
-  const requestedValue = String(rawCategory || "").trim();
-  if (!requestedValue || requestedValue.toLowerCase() === "all") {
-    return null;
-  }
-
-  const requestedSlug = slugifyCategory(requestedValue);
-  const aliasMap = await getCategoryAliasMap();
-  const aliasBucket = aliasMap.get(requestedSlug);
-  const exactNameRegex = new RegExp(`^${escapeRegex(requestedValue)}$`, "i");
-  const clauses = [{ category: exactNameRegex }, { "category.name": exactNameRegex }];
-
-  if (!aliasBucket) {
-    return { $or: clauses };
-  }
-
-  const rawValues = Array.from(aliasBucket.rawValues);
-  const names = Array.from(aliasBucket.names);
-  const slugs = Array.from(new Set([requestedSlug, ...aliasBucket.slugs]));
-  const ids = Array.from(aliasBucket.ids);
-
-  if (rawValues.length) {
-    clauses.push({ category: { $in: rawValues } });
-  }
-
-  if (names.length) {
-    clauses.push({ "category.name": { $in: names } });
-  }
-
-  if (slugs.length) {
-    clauses.push({ "category.slug": { $in: slugs } });
-  }
-
-  if (ids.length) {
-    clauses.push({ category: { $in: ids } }, { "category._id": { $in: ids } });
-  }
-
-  return { $or: clauses };
-}
-
 function serializeProduct(product) {
   const source = product.toObject ? product.toObject() : product;
   const categoryName =
@@ -294,6 +141,7 @@ function serializeProduct(product) {
   );
   const totalStock = variants.reduce((sum, variant) => sum + Math.max(0, Number(variant?.stock) || 0), 0);
   const inStock = hasTrackedVariants ? totalStock > 0 : true;
+  const audience = inferProductAudience(source);
 
   return {
     ...source,
@@ -317,6 +165,7 @@ function serializeProduct(product) {
     variants,
     totalStock,
     inStock,
+    audience,
     sizes: normalizedSizes,
     colors: normalizedColors,
     ratings: source.ratings || { average: 0, count: 0 },
@@ -376,36 +225,92 @@ function buildProductQuery(query, includeInactive = false) {
     andConditions.push({ "variants.color": { $in: String(query.color).split(",") } });
   }
 
+  if (query.audience) {
+    const requestedAudience = String(query.audience).toLowerCase();
+    const audienceRegex =
+      requestedAudience === "women"
+        ? /\b(women|womens|lady|ladies|girls|female|for her)\b/i
+        : requestedAudience === "men"
+          ? /\b(men|mens|gent|gents|boys|male|for him)\b/i
+          : null;
+
+    if (audienceRegex) {
+      andConditions.push({
+        $or: [
+          { name: audienceRegex },
+          { slug: audienceRegex },
+          { description: audienceRegex },
+          { brand: audienceRegex },
+          { tags: { $elemMatch: { $regex: audienceRegex } } },
+        ],
+      });
+    }
+  }
+
+  if (query.subtype && String(query.category).toLowerCase() === FLIPFLOPS_CROCS_SLUG) {
+    const requestedSubtype = String(query.subtype).toLowerCase();
+
+    if (requestedSubtype === "loafers") {
+      andConditions.push({ category: "Loafers" });
+    }
+
+    if (requestedSubtype === "flipflops-crocs") {
+      andConditions.push({ category: "Flipflops/Crocs" });
+    }
+  }
+
+  if (query.subtype && String(query.category).toLowerCase() === APPAREL_GROUP_SLUG) {
+    const requestedSubtype = String(query.subtype).toLowerCase();
+
+    if (requestedSubtype === "cordset-and-tracksuit") {
+      andConditions.push({ category: "Cordset & Tracksuit" });
+    }
+
+    if (requestedSubtype === "jeans-and-trouser-and-trackpant") {
+      andConditions.push({ category: "Jeans & Trouser & Trackpant" });
+    }
+  }
+
   return andConditions.length ? { $and: andConditions } : {};
 }
 
 function buildSort(sort) {
   switch (sort) {
     case "price_asc":
-      return { price: 1, salePrice: 1, createdAt: -1 };
+      return { price: 1, salePrice: 1, createdAt: -1, _id: -1 };
     case "price_desc":
-      return { price: -1, salePrice: -1, createdAt: -1 };
+      return { price: -1, salePrice: -1, createdAt: -1, _id: -1 };
     case "rating":
-      return { "ratings.average": -1 };
+      return { "ratings.average": -1, createdAt: -1, _id: -1 };
     case "newest":
-      return { createdAt: -1 };
+      return { createdAt: -1, _id: -1 };
     default:
-      return { isFeatured: -1, createdAt: -1 };
+      return { isFeatured: -1, createdAt: -1, _id: -1 };
   }
 }
 
 export const getProducts = asyncHandler(async (req, res) => {
   const { page, limit, skip } = buildPagination(req.query.page, req.query.limit);
   const filters = buildProductQuery(req.query);
-  const categoryCondition = await buildCategoryMatchCondition(req.query.category);
-  if (categoryCondition) {
+  if (req.query.category && String(req.query.category).toLowerCase() !== "all") {
+    const requestedSlug = slugifyCategory(req.query.category);
+    const categories = await Product.distinct("category", { category: { $exists: true, $ne: null, $ne: "" } });
+    const matchedCategories =
+      requestedSlug === FLIPFLOPS_CROCS_SLUG
+        ? categories.filter((category) => FLIPFLOPS_CROCS_GROUP.includes(String(category)))
+        : requestedSlug === APPAREL_GROUP_SLUG
+          ? categories.filter((category) => APPAREL_GROUP.includes(String(category)))
+        : categories.filter((category) => slugifyCategory(category) === requestedSlug);
+
     filters.$and = filters.$and || [];
-    filters.$and.push(categoryCondition);
+    filters.$and.push({
+      category: { $in: matchedCategories.length ? matchedCategories : ["__no_match__"] },
+    });
   }
 
-  let [items, total] = await Promise.all([
+  const [items, total] = await Promise.all([
     Product.find(filters)
-      .select(PRODUCT_CARD_PROJECTION)
+      .select(PRODUCT_LIST_PROJECTION)
       .sort(buildSort(req.query.sort))
       .skip(skip)
       .limit(limit)
@@ -413,7 +318,6 @@ export const getProducts = asyncHandler(async (req, res) => {
     Product.countDocuments(filters),
   ]);
 
-  res.set("Cache-Control", "public, max-age=60");
   res.json({
     success: true,
     items: items.map(serializeProduct),
@@ -440,7 +344,7 @@ export const searchProducts = asyncHandler(async (req, res) => {
       },
     ],
   })
-    .select(SEARCH_PROJECTION)
+    .select(PRODUCT_LIST_PROJECTION)
     .sort({ updatedAt: -1 })
     .limit(20)
     .lean();
@@ -450,20 +354,19 @@ export const searchProducts = asyncHandler(async (req, res) => {
 
 export const getFeaturedProducts = asyncHandler(async (req, res) => {
   let items = await Product.find({ isFeatured: true, $or: [{ isActive: { $exists: false } }, { isActive: true }] })
-    .select(PRODUCT_CARD_PROJECTION)
+    .select(PRODUCT_LIST_PROJECTION)
     .sort({ createdAt: -1 })
     .limit(12)
     .lean();
 
   if (!items.length) {
     items = await Product.find({ $or: [{ isActive: { $exists: false } }, { isActive: true }] })
-      .select(PRODUCT_CARD_PROJECTION)
+      .select(PRODUCT_LIST_PROJECTION)
       .sort({ updatedAt: -1 })
       .limit(12)
       .lean();
   }
 
-  res.set("Cache-Control", "public, max-age=120");
   res.json({ success: true, items: items.map(serializeProduct) });
 });
 

@@ -32,6 +32,12 @@ export default function ProductDetail() {
   });
 
   const product = productQuery.data?.item;
+  const categoryLink =
+    product?.category?.slug === "loafers" || product?.category?.slug === "flipflops-crocs"
+      ? "/category/flipflops-crocs"
+      : product?.category?.slug === "jeans-and-trouser-and-trackpant" || product?.category?.slug === "cordset-and-tracksuit"
+        ? "/category/cordset-and-tracksuit"
+      : `/category/${product?.category?.slug || "all"}`;
   const availableSizes = useMemo(
     () => (product?.sizes?.length ? product.sizes : ["One Size"]),
     [product]
@@ -148,7 +154,7 @@ export default function ProductDetail() {
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     const shareData = {
       title: product.name,
-      text: `Check out ${product.name} on Vastraalane`,
+      text: `Check out ${product.name} on Vastraleena`,
       url: shareUrl,
     };
 
@@ -315,7 +321,7 @@ export default function ProductDetail() {
         </div>
 
         <div data-reveal>
-          <Link to={`/category/${product.category?.slug || "all"}`}>
+          <Link to={categoryLink}>
             <Badge>{product.category?.name || "Collection"}</Badge>
           </Link>
           <h1 className="mt-4 font-display text-[clamp(1.9rem,4.1vw,3.9rem)] leading-[1.08]">{product.name}</h1>
@@ -423,11 +429,11 @@ export default function ProductDetail() {
           <div className="mt-10 grid gap-4">
             <div className="rounded-[1.5rem] bg-white/70 p-5">
               <h3 className="font-semibold">Shipping Info</h3>
-              <p className="mt-2 text-sm text-ink/70">Shipping charges, delivery estimates, and address details are shown clearly at checkout before you place your order.</p>
+              <p className="mt-2 text-sm text-ink/70">Delivery charges and address confirmation are shown directly during checkout.</p>
             </div>
             <div className="rounded-[1.5rem] bg-white/70 p-5">
               <h3 className="font-semibold">Returns Policy</h3>
-              <p className="mt-2 text-sm text-ink/70">Eligible items can be returned or exchanged within our policy window, provided they are unused and in their original condition.</p>
+              <p className="mt-2 text-sm text-ink/70">Easy returns and exchange states are ready for policy copy and backend rules.</p>
             </div>
           </div>
         </div>

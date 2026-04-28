@@ -24,7 +24,7 @@ export default function Login() {
 
       if (response.user.role === "admin" && response.tokens.adminToken) {
         localStorage.setItem("adminToken", response.tokens.adminToken);
-        navigate("/admin", { replace: true });
+        navigate("/admin/products", { replace: true });
         return;
       }
 

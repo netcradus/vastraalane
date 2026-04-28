@@ -1,5 +1,4 @@
 import express from "express";
-import { getAdminDashboard } from "../controllers/adminDashboardController.js";
 import {
   bulkStockUpdate,
   createProduct,
@@ -18,7 +17,6 @@ const router = express.Router();
 
 router.use(authAdmin);
 
-router.get("/dashboard", getAdminDashboard);
 router.get("/products", getAdminProducts);
 router.post("/products", upload.array("images", 8), createProduct);
 router.get("/products/:id", getAdminProductById);

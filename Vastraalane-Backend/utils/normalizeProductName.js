@@ -78,6 +78,57 @@ const CATEGORY_FALLBACKS = [
   { match: /\bshirt|tshirt|tracksuit|jeans|trouser|trackpant\b/, generic: "apparel" },
 ];
 
+function inferCategorySpecificGeneric(name = "", category = "") {
+  const source = String(name || "").toLowerCase();
+  const normalizedCategory = String(category || "").toLowerCase();
+
+  if (normalizedCategory.includes("flipflops/crocs")) {
+    if (/\b(crocs|croc s|croccs|crocccs|croccss|clog|clogs|literide|lite ride|bayaband|echo|mega crush)\b/.test(source)) {
+      return "crocs";
+    }
+
+    if (/\b(slide|slides|flip flop|flip flops|slipper|slippers)\b/.test(source)) {
+      return "flip flops";
+    }
+
+    return "crocs";
+  }
+
+  if (normalizedCategory.includes("loafers")) {
+    return "loafers";
+  }
+
+  if (normalizedCategory.includes("cordset") || normalizedCategory.includes("tracksuit")) {
+    if (/\b(tracksuit|track suit)\b/.test(source)) {
+      return "tracksuit";
+    }
+
+    if (/\b(cordset|cord set|co ord|co ords|co-ord)\b/.test(source)) {
+      return "cordset";
+    }
+
+    return "tracksuit";
+  }
+
+  if (normalizedCategory.includes("jeans") || normalizedCategory.includes("trouser") || normalizedCategory.includes("trackpant")) {
+    if (/\b(trackpant|track pant|track pants|lowers)\b/.test(source)) {
+      return "track pants";
+    }
+
+    if (/\btrouser|trousers\b/.test(source)) {
+      return "trousers";
+    }
+
+    if (/\bjeans?\b/.test(source)) {
+      return "jeans";
+    }
+
+    return "track pants";
+  }
+
+  return "";
+}
+
 function normalizeLeetspeak(value = "") {
   return String(value)
     .toLowerCase()
@@ -144,6 +195,9 @@ function looksLikeBrand(span = "") {
 }
 
 function inferGenericName(name = "", category = "") {
+  const categorySpecificGeneric = inferCategorySpecificGeneric(name, category);
+  if (categorySpecificGeneric) return categorySpecificGeneric;
+
   const source = `${name} ${category}`.toLowerCase();
   const directMatch = GENERIC_PATTERNS.find((entry) => entry.patterns.some((pattern) => pattern.test(source)));
   if (directMatch) return directMatch.generic;

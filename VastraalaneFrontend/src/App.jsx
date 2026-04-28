@@ -1,11 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { StoreLayout } from "./components/layout/StoreLayout";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import Home from "./pages/store/Home";
 import CategoryPage from "./pages/store/CategoryPage";
 import ProductDetail from "./pages/store/ProductDetail";
 import Checkout from "./pages/store/Checkout";
-import Sale from "./pages/store/Sale";
 import About from "./pages/store/About";
 import AllProducts from "./pages/store/AllProducts";
 import TermsConditions from "./pages/store/TermsConditions";
@@ -17,7 +16,6 @@ import Profile from "./pages/user/Profile";
 import Orders from "./pages/user/Orders";
 import WishlistPage from "./pages/user/WishlistPage";
 import Settings from "./pages/user/Settings";
-import Dashboard from "./pages/admin/Dashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
 import ProductsAdmin from "./pages/admin/ProductsAdmin";
 import AddProduct from "./pages/admin/AddProduct";
@@ -45,7 +43,6 @@ export default function App() {
           <Route path="/products" element={<AllProducts />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/sale" element={<Sale />} />
           <Route path="/about" element={<About />} />
           <Route path="/customer-care" element={<CustomerCare />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />
@@ -65,7 +62,7 @@ export default function App() {
 
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<Navigate to="products" replace />} />
             <Route path="products" element={<ProductsAdmin />} />
             <Route path="products/add" element={<AddProduct />} />
             <Route path="products/:id/edit" element={<EditProduct />} />

@@ -21,9 +21,7 @@ export default function About() {
               <p className="text-xs uppercase tracking-[0.2em] text-clay">Customer Care</p>
               <p className="mt-3 text-sm leading-7 text-ink/70">Monday - Saturday</p>
               <p className="text-sm leading-7 text-ink/70">10:00 AM - 8:00 PM</p>
-              <a href="mailto:info@vastraalane.com" className="text-sm leading-7 text-ink/70 transition hover:text-clay">
-                info@vastraalane.com
-              </a>
+              <p className="text-sm leading-7 text-ink/70">info@vastraalane.com</p>
             </div>
             <div className="rounded-[2rem] bg-ink p-5 text-white">
               <p className="text-xs uppercase tracking-[0.2em] text-gold">Our Promise</p>

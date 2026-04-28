@@ -1,12 +1,7 @@
 import axios from "axios";
 
-function resolveApiBaseUrl() {
-  const rawBaseUrl = String(import.meta.env.VITE_API_URL || "http://localhost:5000/api").trim();
-  return /\/api\/?$/i.test(rawBaseUrl) ? rawBaseUrl.replace(/\/+$/, "") : `${rawBaseUrl.replace(/\/+$/, "")}/api`;
-}
-
 const adminApi = axios.create({
-  baseURL: resolveApiBaseUrl(),
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
 adminApi.interceptors.request.use((config) => {

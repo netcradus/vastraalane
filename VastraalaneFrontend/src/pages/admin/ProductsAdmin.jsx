@@ -16,7 +16,6 @@ export default function ProductsAdmin() {
     onSuccess: () => {
       toast.success("Product deleted");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-products-dashboard"] });
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Unable to delete product");
