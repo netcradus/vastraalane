@@ -2,6 +2,18 @@ import crypto from "crypto";
 
 const apiBase = "https://api.razorpay.com/v1";
 
+export function isMockPaymentEnabled() {
+  const explicitMockSetting = process.env.MOCK_PAYMENT_ENABLED;
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (String(explicitMockSetting || "").toLowerCase() === "true") {
+    return true;
+  }
+
+  return !keyId || !keySecret || keyId === keySecret;
+}
+
 function getCredentials() {
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
@@ -23,6 +35,17 @@ function getAuthHeader() {
 }
 
 export async function createRazorpayOrder({ amount, receipt, notes = {} }) {
+  if (isMockPaymentEnabled()) {
+    return {
+      id: `mock_order_${Date.now()}`,
+      amount,
+      currency: "INR",
+      receipt,
+      notes,
+      mock: true,
+    };
+  }
+
   const response = await fetch(`${apiBase}/orders`, {
     method: "POST",
     headers: {
@@ -47,6 +70,10 @@ export async function createRazorpayOrder({ amount, receipt, notes = {} }) {
 }
 
 export function verifyRazorpaySignature({ razorpayOrderId, razorpayPaymentId, razorpaySignature }) {
+  if (isMockPaymentEnabled()) {
+    return true;
+  }
+
   const { keySecret } = getCredentials();
   const expectedSignature = crypto
     .createHmac("sha256", keySecret)
@@ -57,6 +84,10 @@ export function verifyRazorpaySignature({ razorpayOrderId, razorpayPaymentId, ra
 }
 
 export function getRazorpayPublicConfig() {
+  if (isMockPaymentEnabled()) {
+    return { keyId: "mock_razorpay_key", mock: true };
+  }
+
   const { keyId } = getCredentials();
   return { keyId };
 }

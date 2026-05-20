@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
+import { sendOrderNotificationEmail } from "../utils/orderEmail.js";
 import { createRazorpayOrder, getRazorpayPublicConfig, verifyRazorpaySignature } from "../utils/razorpay.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
@@ -69,6 +70,10 @@ export const createOrder = asyncHandler(async (req, res) => {
     paymentStatus: "pending",
     paymentGateway: "razorpay",
     razorpayOrderId: razorpayOrder.id,
+  });
+
+  sendOrderNotificationEmail(order, req.user).catch((error) => {
+    console.error("Order notification email failed", error);
   });
 
   res.status(201).json({

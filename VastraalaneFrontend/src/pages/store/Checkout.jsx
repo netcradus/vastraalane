@@ -124,7 +124,6 @@ export default function Checkout() {
     setIsPaying(true);
 
     try {
-      const Razorpay = await loadRazorpayScript();
       const checkoutResponse = await orderService.create({
         items: orderItems,
         shippingAddress: values,
@@ -138,6 +137,18 @@ export default function Checkout() {
 
       const { item: order, payment } = checkoutResponse;
 
+      if (payment?.mock) {
+        if (isBuyNowMode) {
+          sessionStorage.removeItem("va-buy-now");
+        } else {
+          clearCart();
+        }
+        toast.success("Order placed. We received your details.");
+        navigate("/account/orders");
+        return;
+      }
+
+      const Razorpay = await loadRazorpayScript();
       const razorpay = new Razorpay({
         key: payment.keyId,
         amount: payment.amount,
