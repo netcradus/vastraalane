@@ -35,10 +35,9 @@ function getTransporter() {
 export function resolveOrderNotificationRecipient() {
   return (
     process.env.ORDER_NOTIFICATION_EMAIL ||
-    process.env.SUPPORT_EMAIL ||
-    process.env.EMAIL_USER ||
     process.env.SMTP_USER_NAME ||
-    process.env.SMTP_USER
+    process.env.SMTP_USER ||
+    process.env.EMAIL_USER
   );
 }
 
